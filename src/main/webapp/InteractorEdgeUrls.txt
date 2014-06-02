@@ -1,0 +1,10 @@
+IntAct	http://www.ebi.ac.uk/intact/pages/interactions/interactions.xhtml?query=##ACC##%20AND%20##INT##
+MINT	http://mint.bio.uniroma2.it/mint/search/search.do?ac=##ACC##
+BioGrid	http://www.thebiogrid.org/search.php?keywords=##ACC##
+MatrixDB	http://matrixdb.ibcp.fr/cgi-bin/interactome
+MPIDB	http://www.jcvi.org/mpidb/interaction.php?pname=##ACC##&species_txtbox=&species_select=&dbsource=&cvname=&confidence_structure=&confidence_method=&confidence_interologs=&confidence_purification=&confidence_evidences=&submit=search
+reactome-fi	http://genomebiology.com/content/11/5/R53
+reactome	http://www.reactome.org/cgi-bin/link?SOURCE=UNIPROT&ID=##ACC##
+DIP	http://dip.doe-mbi.ucla.edu/dip/Browse.cgi?PK=##INT##&D=1
+STRING	http://string-db.org/version_8_3/newstring_cgi/show_edge_details.pl?identifiers=##ACC##%0D##INT##
+Yale_Encode_TF_Target	http://archive.gersteinlab.org/proj/encodenets/

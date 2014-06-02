@@ -1,0 +1,78 @@
+.toolBarContainer {
+    background-color: #f0ffff;
+    vertical-align: middle;
+    width: 100%;
+}
+.toolBarBanner {
+    margin: 2px;
+    float: left;
+}
+
+.toolBarSpeciesSelector {
+    background-color: #E9EFFA;
+    float: left;
+    position: relative;
+    left: 30px;
+    height: 40px;
+    padding: 7px 10px 0 10px;
+    margin: 2px;
+    border: #0000AA 1px solid;
+    border-radius: 5px;
+}
+.toolBarSpeciesSelector div {
+    margin-top: 3px;
+    font-size: 12px;
+}
+.toolBarSpeciesSelector select {
+    background: transparent;
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 1;
+    border: 1px;
+    border-radius: 0;
+    width: 210px;
+}
+
+.toolBarLayoutButtons {
+    background-color: #E9EFFA;
+    float: left;
+    position: absolute;
+    left: 435px;
+    height: 40px;
+    padding: 5px 8px 0 8px;
+    margin: 2px 0 0 50px;
+    border: #0000AA 1px solid;
+    border-radius: 5px;
+}
+
+.toolBarLayoutButtons div {
+    margin: 0 2px 0 2px;
+}
+
+.toolBarToolsButtons {
+    background-color: #E9EFFA;
+    float: left;
+    position: absolute;
+    left: 550px;
+    height: 40px;
+    padding: 5px 8px 0 8px;
+    margin: 2px 0 0 50px;
+    border: #0000AA 1px solid;
+    border-radius: 5px;
+}
+
+.toolBarToolsButtons div {
+    margin: 0 2px 0 2px;
+}
+
+.toolBarDiagramKey {
+    background-color: #E9EFFA;
+    float: right;
+    height: 40px;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin: 2px;
+    border: #0000AA 1px solid;
+    border-radius: 5px;
+}
+

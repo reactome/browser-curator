@@ -1,0 +1,80 @@
+package org.reactome.web.elv.client.details.model.widgets;
+
+import com.google.gwt.dom.client.Style;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
+import org.reactome.web.elv.client.common.data.model.DatabaseObject;
+import org.reactome.web.elv.client.common.data.model.EntityWithAccessionedSequence;
+import org.reactome.web.elv.client.common.data.model.ReferenceSequence;
+
+/**
+ * @author Antonio Fabregat <fabregat@ebi.ac.uk>
+ */
+public class EntityWithAccessionedSequencePanel extends DetailsPanel implements TransparentPanel {
+    private EntityWithAccessionedSequence ewas;
+
+    @SuppressWarnings("UnusedDeclaration")
+    public EntityWithAccessionedSequencePanel(EntityWithAccessionedSequence ewas) {
+        this(null, ewas);
+    }
+
+    public EntityWithAccessionedSequencePanel(DetailsPanel parentPanel, EntityWithAccessionedSequence ewas) {
+        super(parentPanel);
+        this.ewas = ewas;
+        setLoaded(true);    //EntityWithAccessionedSequence will always be passed as a fully loaded object
+        initialize();
+    }
+
+    private void initialize(){
+        VerticalPanel vp = new VerticalPanel();
+        vp.setWidth("100%");
+        vp.addStyleName("elv-Details-OverviewDisclosure-content");
+        if(this.ewas.getStartCoordinate()!=null && this.ewas.getEndCoordinate()!=null){
+            vp.add(getCoordinatesPanel(this.ewas.getStartCoordinate(), this.ewas.getEndCoordinate()));
+        }
+        vp.add(getReferenceSequencePanel(this.ewas.getReferenceEntity()));
+        initWidget(vp);
+    }
+
+    @Override
+    public DatabaseObject getDatabaseObject() {
+        return this.ewas;
+    }
+
+    private Widget getReferenceSequencePanel(ReferenceSequence referenceSequence){
+        VerticalPanel vp = new VerticalPanel();
+        vp.addStyleName("elv-Details-OverviewDisclosure-content");
+        vp.getElement().getStyle().setMarginBottom(10, Style.Unit.PX);
+        vp.setWidth("99%");
+
+        vp.add(new Label("Reference Entity:"));
+        //We associate our parentPanel as the parent of the next panel because this panel is a kind of auxiliary panel
+        Widget pPanel = new ReferenceEntityPanel(this, referenceSequence);
+        pPanel.getElement().getStyle().setMarginLeft(15, Style.Unit.PX);
+        vp.add(pPanel);
+
+        return vp;
+    }
+
+    private Widget getCoordinatesPanel(int start, int end){
+        HorizontalPanel panel = new HorizontalPanel();
+        panel.addStyleName("elv-Details-OverviewDisclosure-content");
+        panel.getElement().getStyle().setMarginBottom(10, Style.Unit.PX);
+
+        Label title = new Label("Coordinates in the Reference Sequence:");
+        Style titleStyle = title.getElement().getStyle();
+        titleStyle.setFontWeight(Style.FontWeight.BOLD);
+        titleStyle.setMarginRight(5, Style.Unit.PX);
+        panel.add(title);
+
+        StringBuilder coordinates = new StringBuilder();
+        coordinates.append(start);
+        coordinates.append(" .. ");
+        coordinates.append(end);
+        panel.add(new Label(coordinates.toString()));
+
+        return panel;
+    }
+}

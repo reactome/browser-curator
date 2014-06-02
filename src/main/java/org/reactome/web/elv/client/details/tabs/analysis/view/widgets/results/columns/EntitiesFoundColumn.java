@@ -1,0 +1,33 @@
+package org.reactome.web.elv.client.details.tabs.analysis.view.widgets.results.columns;
+
+import com.google.gwt.cell.client.Cell;
+import com.google.gwt.cell.client.ClickableTextCell;
+import com.google.gwt.cell.client.FieldUpdater;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
+import com.google.gwt.user.client.ui.Hyperlink;
+import org.reactome.web.elv.client.common.analysis.model.PathwaySummary;
+
+/**
+ * @author Antonio Fabregat <fabregat@ebi.ac.uk>
+ */
+public class EntitiesFoundColumn extends AbstractColumn<String> {
+    private String title = "Display matching submitted identifiers for the selected pathway";
+
+    public EntitiesFoundColumn(FieldUpdater<PathwaySummary, String> fieldUpdater) {
+        super(new ClickableTextCell(), "Entities", "found");
+        setWidth(65);
+        setFieldUpdater(fieldUpdater);
+    }
+
+    @Override
+    public String getValue(PathwaySummary object) {
+        if (object == null) return null;
+        return object.getEntities().getFound().toString();
+    }
+
+    @Override
+    public void render(Cell.Context context, PathwaySummary object, SafeHtmlBuilder sb) {
+        sb.appendHtmlConstant("<span style='cursor:pointer; text-decoration:underline' title='" + this.title + "'>" +
+                getValue(object) + "</span>");
+    }
+}

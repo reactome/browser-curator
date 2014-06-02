@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module rename-to='pathwaybrowser'>
+    <!-- Inherit the core Web Toolkit stuff -->
+    <inherits name='com.google.gwt.user.User'/>
+    <inherits name="com.google.gwt.http.HTTP"/>
+    <inherits name='com.google.gwt.json.JSON'/>
+    <inherits name="com.google.web.bindery.autobean.AutoBean"/>
+
+    <!-- Configuration properties (super dev mode) -->
+    <!--<add-linker name="xsiframe" />-->
+    <!--<set-configuration-property name='xsiframe.failIfScriptTag' value='FALSE'/>-->
+    <!--<set-configuration-property name="devModeRedirectEnabled" value="true" />-->
+    <!--<set-property name="compiler.useSourceMaps" value="true" />-->
+
+    <!-- Default GWT style sheet -->
+    <inherits name='com.google.gwt.user.theme.standard.Standard'/>
+
+    <!-- Other module inherits -->
+    <inherits name='org.reactome.diagram.PathwayDiagram'/>
+    <inherits name="uk.ac.ebi.pwp.utils.analytics.GoogleAnalytics"/>
+    <inherits name="uk.ac.ebi.pwp.widgets.chebi.ChEBI"/>
+    <inherits name="uk.ac.ebi.pwp.widgets.gxa.GXA"/>
+    <inherits name="uk.ac.ebi.pwp.widgets.pdb.PDB"/>
+    <inherits name="uk.ac.ebi.pwp.widgets.rhea.Rhea"/>
+
+    <!-- Specify the app entry point class -->
+    <entry-point class='org.reactome.web.elv.client.PathwayBrowser'/>
+
+    <!-- Specify the paths for translatable code -->
+    <source path='client'/>
+    <!--<source path='shared'/>-->
+    <!--<source path='model'/>-->
+</module>

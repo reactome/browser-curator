@@ -1,0 +1,30 @@
+/**
+ * CSS used by some text widgets.
+ */
+ 
+.dialogPane {
+  border: 4px solid #CCC;
+  background-color:#D6D6FF;
+  position: absolute; 
+  font: small;
+/*   z-index: 2;  */
+/*   box-shadow:rgba(0,0,0,0.5) 0px 0px 24px;  */
+/*   border-radius:12px;  */
+}
+
+.pathwayTree {
+	background-color:#FFFFFF;
+}
+
+.gwt-DialogBox .Caption {
+	cursor: pointer;
+}
+
+.gwt-MenuBar-vertical {
+	background: none repeat scroll 0 0 white;
+	max-height: 110px;
+	margin-left: 0;
+	margin-top: 0;
+	overflow-y: auto;
+	overflow-x: hidden;
+}
