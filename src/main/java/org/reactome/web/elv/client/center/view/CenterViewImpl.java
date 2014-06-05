@@ -5,9 +5,9 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TabLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 import org.reactome.web.elv.client.center.content.analysis.view.AnalysisView;
+import org.reactome.web.elv.client.center.content.diagram.view.DiagramView;
 import org.reactome.web.elv.client.center.content.welcome.WelcomeMessage;
 import org.reactome.web.elv.client.common.widgets.glass.GlassPanel;
-import org.reactome.web.elv.client.center.content.diagram.view.DiagramView;
 
 /**
  * @author Antonio Fabregat <fabregat@ebi.ac.uk>
@@ -15,11 +15,6 @@ import org.reactome.web.elv.client.center.content.diagram.view.DiagramView;
 public class CenterViewImpl implements CenterView {
 
     private TabLayoutPanel container;
-    private Presenter presenter;
-
-    private DiagramView diagramView;
-    private AnalysisView analysisView;
-    private WelcomeMessage welcomeMessage;
 
     /**
      * The glass element.
@@ -39,13 +34,11 @@ public class CenterViewImpl implements CenterView {
         this.container.setAnimationDuration(500);
         this.container.addStyleName("elv-Diagram-Container");
 
-        this.welcomeMessage = new WelcomeMessage();
-        this.container.add(this.welcomeMessage, "Welcome");
+        WelcomeMessage welcomeMessage = new WelcomeMessage();
+        this.container.add(welcomeMessage, "Welcome");
 
-        this.diagramView = diagramView;
         this.container.add(diagramView.asWidget());
 
-        this.analysisView = analysisView;
         this.container.add(analysisView.asWidget());
     }
 
@@ -61,7 +54,7 @@ public class CenterViewImpl implements CenterView {
 
     @Override
     public void setPresenter(Presenter presenter) {
-        this.presenter = presenter;
+        //Nothing here
     }
 
     @Override
