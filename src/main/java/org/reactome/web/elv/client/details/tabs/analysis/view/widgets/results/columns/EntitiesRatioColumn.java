@@ -9,8 +9,10 @@ import org.reactome.web.elv.client.common.analysis.model.PathwaySummary;
  */
 public class EntitiesRatioColumn extends AbstractColumn<Number> {
 
+    private static final String explanation = "The total entities in the pathway divided by the total number of entities for the entire species for the selected molecular type";
+
     public EntitiesRatioColumn() {
-        super(new NumberCell(NumberFormat.getDecimalFormat()), "Entities", "ratio");
+        super(new NumberCell(NumberFormat.getDecimalFormat()), "Entities", "ratio", explanation);
         setWidth(65);
     }
 

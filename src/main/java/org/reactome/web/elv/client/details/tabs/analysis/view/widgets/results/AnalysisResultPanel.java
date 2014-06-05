@@ -1,12 +1,17 @@
 package org.reactome.web.elv.client.details.tabs.analysis.view.widgets.results;
 
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.view.client.SelectionChangeEvent;
+import org.reactome.web.elv.client.common.ReactomeImages;
 import org.reactome.web.elv.client.common.analysis.model.AnalysisResult;
 import org.reactome.web.elv.client.common.analysis.model.PathwaySummary;
+import org.reactome.web.elv.client.common.widgets.button.CustomButton;
 import org.reactome.web.elv.client.details.tabs.analysis.presenter.providers.AnalysisAsyncDataProvider;
 import org.reactome.web.elv.client.details.tabs.analysis.view.widgets.common.CustomPager;
 import org.reactome.web.elv.client.details.tabs.analysis.view.widgets.results.events.PathwaySelectedEvent;
@@ -81,7 +86,7 @@ public class AnalysisResultPanel extends DockLayoutPanel implements SelectionCha
         }
     }
 
-    public void showResult(AnalysisResult analysisResult, String resource) {
+    public void showResult(final AnalysisResult analysisResult, final String resource) {
 //        ColumnSortEvent.ListHandler<PathwaySummary> sortHandler = new ColumnSortEvent.ListHandler<PathwaySummary>(analysisResult.getPathways());
         this.table = new AnalysisResultTable(analysisResult.getExpression().getColumnNames());
         this.table.addSelectionChangeHandler(this);
@@ -94,10 +99,32 @@ public class AnalysisResultPanel extends DockLayoutPanel implements SelectionCha
         this.dataProvider = new AnalysisAsyncDataProvider(table, pager, analysisResult, resource);
         this.dataProvider.addPageLoadedHanlder(this);
 
+        CustomButton downloadCVS = new CustomButton(ReactomeImages.INSTANCE.downloadFile(), "CSV");
+        downloadCVS.setTitle("Click to download the analysis result in Comma Separated Values format for " + resource);
+        downloadCVS.getElement().getStyle().setFloat(Style.Float.LEFT);
+        downloadCVS.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                Window.open("/AnalysisService/download/" + analysisResult.getSummary().getToken() + "/pathways/" + resource + "/result.csv", "_self", "");
+            }
+        });
+
+        CustomButton downloadMapping = new CustomButton(ReactomeImages.INSTANCE.downloadFile(), "Mapping");
+        downloadMapping.setTitle("Click to download the mapping between the submitted data and the selected resource (" + resource + ")");
+        downloadMapping.getElement().getStyle().setFloat(Style.Float.LEFT);
+        downloadMapping.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                Window.open("/AnalysisService/download/" + analysisResult.getSummary().getToken() + "/entities/found/" + resource + "/mapping.csv", "_self", "");
+            }
+        });
+
         this.clear();
         FlowPanel pagerPanel = new FlowPanel();
         pagerPanel.setWidth("100%");
         pagerPanel.getElement().getStyle().setTextAlign(Style.TextAlign.CENTER);
+        pagerPanel.add(downloadCVS);
+        pagerPanel.add(downloadMapping);
         pagerPanel.add(pager);
         this.addSouth(pagerPanel, 2);
 

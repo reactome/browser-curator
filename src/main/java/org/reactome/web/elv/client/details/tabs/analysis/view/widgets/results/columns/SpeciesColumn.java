@@ -9,8 +9,10 @@ import org.reactome.web.elv.client.common.analysis.model.PathwaySummary;
  */
 public class SpeciesColumn extends AbstractColumn<String> {
 
+    private static final String explanation = "The name of the species for the pathway";
+
     public SpeciesColumn() {
-        super(new TextCell(), Style.TextAlign.LEFT, "", "Species name");
+        super(new TextCell(), Style.TextAlign.LEFT, "", "Species name", explanation);
         setWidth(150);
         setHorizontalAlignment(ALIGN_LEFT);
     }

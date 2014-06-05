@@ -18,8 +18,9 @@ public class CustomHeader extends Header<String> {
      * The HTML templates used to render the cell.
      */
     interface Templates extends SafeHtmlTemplates {
-        @SafeHtmlTemplates.Template("<div style=\"{0}\">{1}<br>{2}</div>")
-        SafeHtml cell(SafeStyles styles, SafeHtml group, SafeHtml name);
+//        @SafeHtmlTemplates.Template("<div style=\"{0}\" title=\"{1}\">{2}<br>{3}</div>")
+        @SafeHtmlTemplates.Template("<div style=\"{0}\"><span style=\"cursor:help\" title=\"{1}\">{2}<br>{3}</span></div>")
+        SafeHtml cell(SafeStyles styles, String title, SafeHtml group, SafeHtml name);
     }
 
     /**
@@ -29,6 +30,7 @@ public class CustomHeader extends Header<String> {
 
     private final String group;
     private final String name;
+    private final String title;
     private final Style.TextAlign textAlign;
 
     /**
@@ -38,11 +40,12 @@ public class CustomHeader extends Header<String> {
      * @param group the group of the header
      * @param name the name of the header
      */
-    public CustomHeader(Cell<String> cell, Style.TextAlign textAlign, String group, String name) {
+    public CustomHeader(Cell<String> cell, Style.TextAlign textAlign, String group, String name, String explanation) {
         super(cell);
         this.textAlign = textAlign;
         this.group = group;
         this.name = name;
+        this.title = explanation;
     }
 
     @Override
@@ -55,7 +58,7 @@ public class CustomHeader extends Header<String> {
         SafeHtml group = (new SafeHtmlBuilder()).appendEscaped(this.group).toSafeHtml();
         SafeHtml name = (new SafeHtmlBuilder()).appendEscaped(this.name).toSafeHtml();
         SafeStyles safeStyles = SafeStylesUtils.forTextAlign(this.textAlign);
-        SafeHtml rendered = templates.cell(safeStyles, group, name);
+        SafeHtml rendered = templates.cell(safeStyles, this.title, group, name);
         sb.append(rendered);
         super.render(context, sb);
     }

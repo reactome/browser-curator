@@ -9,8 +9,10 @@ import org.reactome.web.elv.client.common.analysis.model.PathwayIdentifier;
  */
 public class IdentifierColumn extends AbstractColumn<String> {
 
+    private static final String explanation = "The submitted identifier";
+
     public IdentifierColumn(String group, String title) {
-        super(new TextCell(), Style.TextAlign.LEFT, group, title);
+        super(new TextCell(), Style.TextAlign.LEFT, group, title, explanation);
         setHorizontalAlignment(ALIGN_LEFT);
     }
 

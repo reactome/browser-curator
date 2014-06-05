@@ -1,6 +1,6 @@
 package org.reactome.web.elv.client.details.tabs.analysis.view.widgets.results.columns;
 
-import com.google.gwt.canvas.dom.client.CssColor;
+import com.google.gwt.dom.client.Style;
 import org.reactome.web.elv.client.common.analysis.model.PathwaySummary;
 import org.reactome.web.elv.client.details.tabs.analysis.view.widgets.common.cells.CustomNumberCell;
 
@@ -9,8 +9,10 @@ import org.reactome.web.elv.client.details.tabs.analysis.view.widgets.common.cel
  */
 public class ReactionsTotalColumn extends AbstractColumn<Number> {
 
+    private static final String explanation = "The total number of reactions in the pathway for the selected molecular type";
+
     public ReactionsTotalColumn() {
-        super(new CustomNumberCell(CssColor.make("blue")), "Reactions", "total");
+        super(new CustomNumberCell(Style.FontStyle.ITALIC), "Reactions", "total", explanation);
         setWidth(85);
     }
 

@@ -8,8 +8,10 @@ import org.reactome.web.elv.client.common.analysis.model.PathwaySummary;
  */
 public class EntitiesTotalColumn extends AbstractColumn<Number> {
 
+    private static final String explanation = "The total number of identifiers in the pathway for the selected molecular type";
+
     public EntitiesTotalColumn() {
-        super(new NumberCell(), "Entities", "Total");
+        super(new NumberCell(), "Entities", "Total", explanation);
         setWidth(65);
     }
 

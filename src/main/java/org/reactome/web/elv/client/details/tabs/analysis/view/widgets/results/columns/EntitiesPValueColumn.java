@@ -9,8 +9,10 @@ import org.reactome.web.elv.client.common.analysis.model.PathwaySummary;
  */
 public class EntitiesPValueColumn extends AbstractColumn<Number> {
 
+    private static final String explanation = "Probability that the overlap between the query and the pathway has occurred by chance";
+
     public EntitiesPValueColumn() {
-        super(new NumberCell(NumberFormat.getFormat("#.##E0")), "Entities", "pValue");
+        super(new NumberCell(NumberFormat.getFormat("#.##E0")), "Entities", "pValue", explanation);
     }
 
     @Override

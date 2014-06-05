@@ -12,8 +12,10 @@ import java.util.List;
  */
 public class PathwayNameColumn extends AbstractColumn<String> {
 
+    private static final String explanation = "The name of the pathway";
+
     public PathwayNameColumn() {
-        super(new TextCell(), Style.TextAlign.LEFT, "", "Pathway name");
+        super(new TextCell(), Style.TextAlign.LEFT, "", "Pathway name", explanation);
         setDataStoreName(COLUMN_NAME_TITLE);
         setWidth(400);
         setHorizontalAlignment(ALIGN_LEFT);

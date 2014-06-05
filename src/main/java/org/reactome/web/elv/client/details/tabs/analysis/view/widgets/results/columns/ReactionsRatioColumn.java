@@ -1,6 +1,6 @@
 package org.reactome.web.elv.client.details.tabs.analysis.view.widgets.results.columns;
 
-import com.google.gwt.canvas.dom.client.CssColor;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.i18n.client.NumberFormat;
 import org.reactome.web.elv.client.common.analysis.model.PathwaySummary;
 import org.reactome.web.elv.client.details.tabs.analysis.view.widgets.common.cells.CustomNumberCell;
@@ -10,8 +10,10 @@ import org.reactome.web.elv.client.details.tabs.analysis.view.widgets.common.cel
  */
 public class ReactionsRatioColumn extends AbstractColumn<Number> {
 
+    private static final String explanation = "The total reactions in the pathway divided by the total number of reactions for the entire species for the selected molecular type";
+
     public ReactionsRatioColumn() {
-        super(new CustomNumberCell(CssColor.make("blue"), NumberFormat.getDecimalFormat()), "Reactions", "ratio");
+        super(new CustomNumberCell(Style.FontStyle.ITALIC, NumberFormat.getDecimalFormat()), "Reactions", "ratio", explanation);
         setWidth(85);
     }
 

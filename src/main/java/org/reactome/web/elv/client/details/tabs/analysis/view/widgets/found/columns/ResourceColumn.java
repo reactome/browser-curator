@@ -9,10 +9,12 @@ import org.reactome.web.elv.client.common.analysis.model.PathwayIdentifier;
  * @author Antonio Fabregat <fabregat@ebi.ac.uk>
  */
 public class ResourceColumn extends AbstractColumn<String> {
+
+    private static final String explanation = "Mapped identifier in Reactome for ";
     private String resource;
 
     public ResourceColumn(String resource, String group, String title) {
-        super(new TextCell(), Style.TextAlign.LEFT, group, title);
+        super(new TextCell(), Style.TextAlign.LEFT, group, title, explanation + title);
         this.resource = resource;
         setHorizontalAlignment(ALIGN_LEFT);
     }

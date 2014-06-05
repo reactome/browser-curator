@@ -3,6 +3,7 @@ package org.reactome.web.elv.client.details.tabs.analysis.view.widgets.common.ce
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.cell.client.NumberCell;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.safecss.shared.SafeStyles;
 import com.google.gwt.safecss.shared.SafeStylesUtils;
@@ -30,7 +31,7 @@ public class CustomNumberCell extends NumberCell {
          * @return a {@link SafeHtml} instance
          */
         @SafeHtmlTemplates.Template("<div style=\"{0}\">{1}</div>")
-        SafeHtml cell(SafeStyles styles, SafeHtml value);
+        SafeHtml cell(SafeStyles safeStyles, SafeHtml value);
     }
 
     /**
@@ -38,26 +39,26 @@ public class CustomNumberCell extends NumberCell {
      */
     private static Templates templates = GWT.create(Templates.class);
 
-    private CssColor numberColor;
+    private Style.FontStyle fontStyle;
     private NumberFormat format;
 
     public CustomNumberCell() {
-        this(CssColor.make("black"));
+        this(Style.FontStyle.NORMAL);
     }
 
-    public CustomNumberCell(CssColor numberColor) {
-        this(numberColor, NumberFormat.getDecimalFormat());
+    public CustomNumberCell(Style.FontStyle fontStyle) {
+        this(fontStyle, NumberFormat.getDecimalFormat());
     }
 
     public CustomNumberCell(NumberFormat format) {
-        this(CssColor.make("black"), format);
+        this(Style.FontStyle.NORMAL, format);
     }
 
 
-    public CustomNumberCell(CssColor numberColor, NumberFormat format) {
+    public CustomNumberCell(Style.FontStyle fontStyle, NumberFormat format) {
         super(format);
         this.format = format;
-        this.numberColor = numberColor;
+        this.fontStyle = fontStyle;
     }
 
     @Override
@@ -75,10 +76,10 @@ public class CustomNumberCell extends NumberCell {
         SafeHtml safeValue = SafeHtmlUtils.fromString(format.format(value));
 
         // Use the template to create the Cell's html.
-        SafeStyles color = SafeStylesUtils.forTrustedColor(numberColor.value());
+        SafeStyles font = SafeStylesUtils.forFontStyle(fontStyle);
 
 //        SafeStyles background = SafeStylesUtils.forTrustedBackgroundColor("rgba(255, 0, 0, 0.4)");
-        SafeHtml rendered = templates.cell(color, safeValue);
+        SafeHtml rendered = templates.cell(font, safeValue);
         sb.append(rendered);
     }
 }

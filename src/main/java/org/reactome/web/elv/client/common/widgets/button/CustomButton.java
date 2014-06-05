@@ -5,7 +5,10 @@ import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.InlineLabel;
+import org.reactome.web.elv.client.common.ReactomeImages;
 
 /**
  * @author Antonio Fabregat <fabregat@ebi.ac.uk>
@@ -15,6 +18,21 @@ public class CustomButton extends Button {
 
     public CustomButton(){
         super();
+    }
+
+    public CustomButton(ImageResource imageResource, String text){
+        super();
+        Image csv = new Image(imageResource);
+        FlowPanel fp = new FlowPanel();
+        InlineLabel label = new InlineLabel(text);
+        label.getElement().getStyle().setFontSize(11, Style.Unit.PX);
+        label.getElement().getStyle().setMarginLeft(5, Style.Unit.PX);
+        fp.add(csv); fp.add(label);
+        getElement().getStyle().setPadding(0, Style.Unit.PX);
+        getElement().getStyle().setPaddingBottom(0, Style.Unit.PX);
+        getElement().getStyle().setMarginTop(2, Style.Unit.PX);
+        getElement().getStyle().setMarginLeft(3, Style.Unit.PX);
+        setHTML(fp.toString());
     }
 
     public void setResource(ImageResource imageResource){

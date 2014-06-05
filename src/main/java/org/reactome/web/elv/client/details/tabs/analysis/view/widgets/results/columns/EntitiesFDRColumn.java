@@ -9,8 +9,10 @@ import org.reactome.web.elv.client.common.analysis.model.PathwaySummary;
  */
 public class EntitiesFDRColumn extends AbstractColumn<Number> {
 
+    private static final String explanation = "Probability corrected for multiple comparisons";
+
     public EntitiesFDRColumn() {
-        super(new NumberCell(NumberFormat.getFormat("#.##E0")), "Entities", "FDR");
+        super(new NumberCell(NumberFormat.getFormat("#.##E0")), "Entities", "FDR", explanation);
     }
 
     @Override
