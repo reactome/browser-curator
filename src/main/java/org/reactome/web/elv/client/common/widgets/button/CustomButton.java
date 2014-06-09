@@ -1,14 +1,13 @@
 package org.reactome.web.elv.client.common.widgets.button;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineLabel;
-import org.reactome.web.elv.client.common.ReactomeImages;
 
 /**
  * @author Antonio Fabregat <fabregat@ebi.ac.uk>

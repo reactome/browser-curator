@@ -1,7 +1,5 @@
 package com.google.gwt.user.client.ui;
 
-import com.google.gwt.user.client.DOM;
-
 /**
  * The selection is never updated when opening or closing
  *
@@ -20,7 +18,7 @@ public class CustomTree extends Tree {
             parent.setState(true);
             parent = parent.getParentItem();
         }
-        DOM.scrollIntoView(item.getElement());
+        item.getElement().scrollIntoView();
     }
 
     /**
