@@ -26,8 +26,10 @@ public class CustomButton extends Button {
         FlowPanel fp = new FlowPanel();
         InlineLabel label = new InlineLabel(text);
         label.getElement().getStyle().setFontSize(11, Style.Unit.PX);
-        label.getElement().getStyle().setMarginLeft(5, Style.Unit.PX);
+        label.getElement().getStyle().setMarginLeft(3, Style.Unit.PX);
         fp.add(csv); fp.add(label);
+        fp.getElement().getStyle().setPaddingLeft(3, Style.Unit.PX);
+        fp.getElement().getStyle().setPaddingRight(3, Style.Unit.PX);
         getElement().getStyle().setPadding(0, Style.Unit.PX);
         getElement().getStyle().setPaddingBottom(0, Style.Unit.PX);
         getElement().getStyle().setMarginTop(2, Style.Unit.PX);

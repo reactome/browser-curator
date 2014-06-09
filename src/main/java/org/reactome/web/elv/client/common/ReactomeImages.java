@@ -58,14 +58,8 @@ public interface ReactomeImages extends ClientBundle {
     @Source("images/download.png")
     ImageResource download();
 
-    @Source("images/download_cloud.png")
-    ImageResource downloadCloud();
-
     @Source("images/download_file.png")
     ImageResource downloadFile();
-
-    @Source("images/download_mapping.png")
-    ImageResource downloadMapping();
 
     @Source("images/Entity.png")
     ImageResource entity();

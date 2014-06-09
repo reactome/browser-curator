@@ -1,10 +1,14 @@
 package org.reactome.web.elv.client.details.tabs.analysis.view.widgets.notfound;
 
-import com.google.gwt.cell.client.TextCell;
-import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.DataGrid;
 import com.google.gwt.view.client.ProvidesKey;
 import org.reactome.web.elv.client.common.analysis.model.IdentifierSummary;
+import org.reactome.web.elv.client.details.tabs.analysis.view.widgets.notfound.columns.AbstractColumn;
+import org.reactome.web.elv.client.details.tabs.analysis.view.widgets.notfound.columns.ExpressionColumn;
+import org.reactome.web.elv.client.details.tabs.analysis.view.widgets.notfound.columns.NotFoundColumn;
+
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author Antonio Fabregat <fabregat@ebi.ac.uk>
@@ -12,7 +16,7 @@ import org.reactome.web.elv.client.common.analysis.model.IdentifierSummary;
 public class NotFoundTable extends DataGrid<IdentifierSummary> {
     public final static Integer PAGE_SIZE = 40;
 
-    public NotFoundTable() {
+    public NotFoundTable(List<String> columnNames) {
         super(PAGE_SIZE, new ProvidesKey<IdentifierSummary>() {
             @Override
             public Object getKey(IdentifierSummary item) {
@@ -20,12 +24,19 @@ public class NotFoundTable extends DataGrid<IdentifierSummary> {
             }
         });
 
-        this.addColumn(new Column<IdentifierSummary, String>(new TextCell()) {
-            @Override
-            public String getValue(IdentifierSummary object) {
-                return object.getId();
-            }
-        }, "Not found identifiers");
+        List<AbstractColumn<?>> columns = new LinkedList<AbstractColumn<?>>();
+
+        columns.add(new NotFoundColumn());
+
+        int i = 0;
+        for (String columnName : columnNames) {
+            columns.add(new ExpressionColumn(i++, columnName));
+        }
+
+        for (AbstractColumn<?> column : columns) {
+            this.addColumn(column, column.buildHeader());
+            this.setColumnWidth(column, column.getWidth(), com.google.gwt.dom.client.Style.Unit.PX);
+        }
 
         this.setAutoHeaderRefreshDisabled(true);
         this.setWidth("100%");

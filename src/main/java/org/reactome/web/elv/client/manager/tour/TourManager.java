@@ -129,7 +129,8 @@ public class TourManager extends Controller implements TourQuestionEventHandler,
                     case 0: tourToTopBarStep1();                break;
                     case 1: tourToTopBarStep2();                break;
                     case 2: tourToTopBarStep3();                break;
-                    case 3: tourToEventsHierarchy(true);        break;
+                    case 3: tourToTopBarStep4();                break;
+                    case 4: tourToEventsHierarchy(true);        break;
                 }                                               break;
             case TEST_HIERARCHY:
                 switch (step){
@@ -152,7 +153,8 @@ public class TourManager extends Controller implements TourQuestionEventHandler,
                     case 4: tourToDetailsPanelStep5();          break;
                     case 5: tourToDetailsPanelStep6();          break;
                     case 6: tourToDetailsPanelStep7();          break;
-                    case 7: tourToTestHistory();                break;
+                    case 7: tourToDetailsPanelStep8();          break;
+                    case 8: tourToTestHistory();                break;
                 }                                               break;
             case TEST_HISTORY:
                 switch (step){
@@ -259,13 +261,19 @@ public class TourManager extends Controller implements TourQuestionEventHandler,
 
     public void tourToTopBarStep3(){
         tourStateChanged(TourStage.TEST_TOP_BAR, 3);
+        message.setContent("Click on the diagram key icon ( __image__ ) to open the analysis tool data submission interface ",
+                true, ReactomeImages.INSTANCE.analysisTool());
+    }
+
+    public void tourToTopBarStep4(){
+        tourStateChanged(TourStage.TEST_TOP_BAR, 4);
         message.setContent("Click on the diagram key icon ( __image__ ) to see a detailed diagram " +
                 "description. Close it to continue", false, ReactomeImages.INSTANCE.downArrow());
     }
 
     @Override
     public void onTopBarDiagramKeyButtonToggled(ToggleButton btn) {
-        if(this.state.isStage(TourStage.TEST_TOP_BAR) && this.state.getStep()==3){
+        if(this.state.isStage(TourStage.TEST_TOP_BAR) && this.state.getStep()==4){
             if(!btn.getValue()){
                 this.moveForward();
             }
@@ -427,11 +435,19 @@ public class TourManager extends Controller implements TourQuestionEventHandler,
         message.setContent("The current tab displays Expression data from the Gene Expression Atlas\n" +
                 "Gene expression information is shown for different body parts corresponding to the genes associated " +
                 "with the selected instance\n" +
-                "Please select the Processes tab or click on Next to continue");
+                "Please select the Analysis tab or click on Next to continue");
     }
 
     private void tourToDetailsPanelStep6(){
         tourStateChanged(TourStage.TEST_DETAILS, 6);
+        message.setContent("The current tab displays the result of the analysis tool\n" +
+                "It is shown in a table and is interactive with the rest of the pathway browser\n" +
+                "Please open the data submission tool clicking the icon ( __image__ ) placed on the top bar of the pathway browser " +
+                "Please select the Processes tab or click on Next to continue", ReactomeImages.INSTANCE.analysisTool());
+    }
+
+    private void tourToDetailsPanelStep7(){
+        tourStateChanged(TourStage.TEST_DETAILS, 7);
         message.setContent("The current tab shows the Processes information\n" +
                 "If an event is clicked, pathways that include this event will be listed\n" +
                 "If a molecule is clicked, events and objects that include the molecule will be displayed\n" +
@@ -441,8 +457,8 @@ public class TourManager extends Controller implements TourQuestionEventHandler,
                 "Please select the Downloads tab or Click on Next to continue");
     }
 
-    private void tourToDetailsPanelStep7(){
-        tourStateChanged(TourStage.TEST_DETAILS, 7);
+    private void tourToDetailsPanelStep8(){
+        tourStateChanged(TourStage.TEST_DETAILS, 8);
         message.setContent("The current tab shows the Download options\n" +
                 "This tab allows you to download the selected pathway in several formats ranging from " +
                 "xml-type formats to simple Word and PDF documents\n" +
@@ -466,10 +482,14 @@ public class TourManager extends Controller implements TourQuestionEventHandler,
                     else message.setContent("Please select " + DetailsTabType.EXPRESSION.getTitle() + " tab or click on Next to continue");
                     break;
                 case 5:
+                    if(tabType.equals(DetailsTabType.ANALYSIS)) moveForward();
+                    else message.setContent("Please select " + DetailsTabType.ANALYSIS.getTitle() + " tab or click on Next to continue");
+                    break;
+                case 6:
                     if(tabType.equals(DetailsTabType.PARTICIPATING_PROCESSES)) moveForward();
                     else message.setContent("Please select " + DetailsTabType.PARTICIPATING_PROCESSES.getTitle() + " tab or click on Next to continue");
                     break;
-                case 6:
+                case 7:
                     if(tabType.equals(DetailsTabType.DOWNLOADS)) moveForward();
                     else message.setContent("Please select " + DetailsTabType.DOWNLOADS.getTitle() + " tab or click on Next to continue");
                     break;

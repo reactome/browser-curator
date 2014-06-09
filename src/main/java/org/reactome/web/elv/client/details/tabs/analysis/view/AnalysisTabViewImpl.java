@@ -3,10 +3,8 @@ package org.reactome.web.elv.client.details.tabs.analysis.view;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.DockLayoutPanel;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.StackLayoutPanel;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.*;
+import org.reactome.web.elv.client.common.ReactomeImages;
 import org.reactome.web.elv.client.common.analysis.model.AnalysisResult;
 import org.reactome.web.elv.client.common.analysis.model.ResourceSummary;
 import org.reactome.web.elv.client.common.data.model.DatabaseObject;
@@ -143,7 +141,12 @@ public class AnalysisTabViewImpl implements AnalysisTabView, ResourceChangedHand
         this.summaryPanel = null; //TODO: Testing
         this.title.getElement().setInnerHTML(TYPE.getTitle());
         this.container.clear();
-        this.container.add(new HTMLPanel("Analysis..."));
+
+        FlowPanel fp = new FlowPanel();
+        fp.add(new InlineLabel("Your analysis result will display here after you submit your data using the Analysis tool. Please open the Analysis tools by clicking the icon ("));
+        fp.add(new Image(ReactomeImages.INSTANCE.analysisTool()));
+        fp.add(new InlineLabel(") in the top bar above pathway browser window"));
+        this.container.add(fp);
     }
 
     @Override
@@ -213,7 +216,7 @@ public class AnalysisTabViewImpl implements AnalysisTabView, ResourceChangedHand
                 break;
             case NOT_FOUND:
                 this.stackPanel.showWidget(this.notFoundPanel);
-                this.notFoundPanel.showNotFound();
+                this.notFoundPanel.showNotFound(token, columnNames);
                 break;
         }
     }

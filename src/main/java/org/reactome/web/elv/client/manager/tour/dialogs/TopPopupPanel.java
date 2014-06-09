@@ -91,7 +91,7 @@ public class TopPopupPanel extends DialogBox implements HasHandlers {
         super.show();
         Style style = this.getElement().getStyle();
         style.setTop(0, Style.Unit.PX);
-        style.setLeft(620, Style.Unit.PX);
+        style.setLeft(650, Style.Unit.PX);
     }
 
     private Widget getNextButton(){

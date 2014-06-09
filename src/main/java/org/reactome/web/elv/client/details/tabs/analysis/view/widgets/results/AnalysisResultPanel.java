@@ -99,8 +99,8 @@ public class AnalysisResultPanel extends DockLayoutPanel implements SelectionCha
         this.dataProvider = new AnalysisAsyncDataProvider(table, pager, analysisResult, resource);
         this.dataProvider.addPageLoadedHanlder(this);
 
-        CustomButton downloadCVS = new CustomButton(ReactomeImages.INSTANCE.downloadFile(), "CSV");
-        downloadCVS.setTitle("Click to download the analysis result in Comma Separated Values format for " + resource);
+        CustomButton downloadCVS = new CustomButton(ReactomeImages.INSTANCE.downloadFile(), "Result");
+        downloadCVS.setTitle("Click to download the pathway analysis results in Comma Separated Values format for " + resource);
         downloadCVS.getElement().getStyle().setFloat(Style.Float.LEFT);
         downloadCVS.addClickHandler(new ClickHandler() {
             @Override
@@ -110,7 +110,7 @@ public class AnalysisResultPanel extends DockLayoutPanel implements SelectionCha
         });
 
         CustomButton downloadMapping = new CustomButton(ReactomeImages.INSTANCE.downloadFile(), "Mapping");
-        downloadMapping.setTitle("Click to download the mapping between the submitted data and the selected resource (" + resource + ")");
+        downloadMapping.setTitle("Click to download the identifier mapping between the submitted data and the selected resource (" + resource + ")");
         downloadMapping.getElement().getStyle().setFloat(Style.Float.LEFT);
         downloadMapping.addClickHandler(new ClickHandler() {
             @Override

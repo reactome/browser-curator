@@ -9,7 +9,6 @@ import org.reactome.web.elv.client.common.EventBus;
 import org.reactome.web.elv.client.common.analysis.factory.AnalysisModelException;
 import org.reactome.web.elv.client.common.analysis.factory.AnalysisModelFactory;
 import org.reactome.web.elv.client.common.analysis.helper.AnalysisHelper;
-import org.reactome.web.elv.client.common.analysis.model.AnalysisResult;
 import org.reactome.web.elv.client.common.analysis.model.PathwaySummary;
 import org.reactome.web.elv.client.common.data.factory.ModelFactory;
 import org.reactome.web.elv.client.common.data.model.DatabaseObject;

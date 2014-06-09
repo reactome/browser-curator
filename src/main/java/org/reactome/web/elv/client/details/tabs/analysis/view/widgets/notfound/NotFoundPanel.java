@@ -1,11 +1,17 @@
 package org.reactome.web.elv.client.details.tabs.analysis.view.widgets.notfound;
 
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
+import org.reactome.web.elv.client.common.ReactomeImages;
+import org.reactome.web.elv.client.common.widgets.button.CustomButton;
 import org.reactome.web.elv.client.details.tabs.analysis.presenter.providers.NotFoundAsyncDataProvider;
 import org.reactome.web.elv.client.details.tabs.analysis.view.widgets.common.CustomPager;
-import org.reactome.web.elv.client.details.tabs.analysis.view.widgets.notfound.NotFoundTable;
+
+import java.util.List;
 
 /**
  * @author Antonio Fabregat <fabregat@ebi.ac.uk>
@@ -27,21 +33,32 @@ public class NotFoundPanel extends DockLayoutPanel {
         this.pager.setPageSize(NotFoundTable.PAGE_SIZE);
     }
 
-    public void showNotFound(){
+    public void showNotFound(final String token, List<String> columnNames){
         if(!forceLoad) return; //Will only force to reload the data when the analysis details has been changed
         this.forceLoad = false;
 
-        this.table = new NotFoundTable();
+        this.table = new NotFoundTable(columnNames);
         this.table.setRowCount(this.notFound);
 
         this.pager.setDisplay(this.table);
 
         this.dataProvider = new NotFoundAsyncDataProvider(this.table, this.pager, this.token);
 
+        CustomButton downloadNotFound = new CustomButton(ReactomeImages.INSTANCE.downloadFile(), "Not found");
+        downloadNotFound.setTitle("Click to download the not found identifiers");
+        downloadNotFound.getElement().getStyle().setFloat(Style.Float.LEFT);
+        downloadNotFound.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                Window.open("/AnalysisService/download/" + token + "/entities/notfound/not_found.csv", "_self", "");
+            }
+        });
+
         this.clear();
         FlowPanel pagerPanel = new FlowPanel();
         pagerPanel.setWidth("100%");
         pagerPanel.getElement().getStyle().setTextAlign(Style.TextAlign.CENTER);
+        pagerPanel.add(downloadNotFound);
         pagerPanel.add(pager);
         this.addSouth(pagerPanel, 2);
 

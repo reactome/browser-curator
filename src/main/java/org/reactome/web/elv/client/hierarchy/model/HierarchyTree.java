@@ -1,9 +1,11 @@
 package org.reactome.web.elv.client.hierarchy.model;
 
 import com.google.gwt.user.client.ui.CustomTree;
+import com.google.gwt.user.client.ui.Widget;
 import org.reactome.web.elv.client.common.analysis.model.PathwaySummary;
 import org.reactome.web.elv.client.common.data.model.DatabaseObject;
 import org.reactome.web.elv.client.common.data.model.Event;
+import org.reactome.web.elv.client.common.data.model.ReactionLikeEvent;
 import org.reactome.web.elv.client.common.data.model.Species;
 import org.reactome.web.elv.client.common.utils.Console;
 import org.reactome.web.elv.client.common.utils.MapSet;
@@ -65,6 +67,18 @@ public class HierarchyTree extends CustomTree {
 
     public Set<Long> getHierarchyEventIds(){
         return this.treeItems.keySet();
+    }
+
+    public Set<Long> getHierarchyPathwaysWithReactions(){
+        Set<Long> rtn = new HashSet<Long>();
+        for (Long id : this.treeItems.keySet()) {
+            for (HierarchyItem item : this.treeItems.getElements(id)) {
+                if(item.getEvent() instanceof ReactionLikeEvent){
+                    rtn.add(((HierarchyItem) item.getParentItem()).getEvent().getDbId());
+                }
+            }
+        }
+        return rtn;
     }
 
     public Set<HierarchyItem> getHierarchyItems(){

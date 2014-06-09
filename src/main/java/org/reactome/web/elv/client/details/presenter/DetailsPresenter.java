@@ -108,8 +108,9 @@ public class DetailsPresenter extends Controller implements DetailsView.Presente
                 case 3: this.view.selectTab(DetailsTabType.getIndex(DetailsTabType.PARTICIPATING_MOLECULES));   break;
                 case 4: this.view.selectTab(DetailsTabType.getIndex(DetailsTabType.STRUCTURES));                break;
                 case 5: this.view.selectTab(DetailsTabType.getIndex(DetailsTabType.EXPRESSION));                break;
-                case 6: this.view.selectTab(DetailsTabType.getIndex(DetailsTabType.PARTICIPATING_PROCESSES));   break;
-                case 7: this.view.selectTab(DetailsTabType.getIndex(DetailsTabType.DOWNLOADS));                 break;
+                case 6: this.view.selectTab(DetailsTabType.getIndex(DetailsTabType.ANALYSIS));                  break;
+                case 7: this.view.selectTab(DetailsTabType.getIndex(DetailsTabType.PARTICIPATING_PROCESSES));   break;
+                case 8: this.view.selectTab(DetailsTabType.getIndex(DetailsTabType.DOWNLOADS));                 break;
             }
             this.view.tourFadeOut();
         }else{
