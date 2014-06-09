@@ -7,7 +7,7 @@
     <groupId>org.reactome.web</groupId>
     <artifactId>PathwayBrowser</artifactId>
     <packaging>war</packaging>
-    <version>0.1-SNAPSHOT</version>
+    <version>1.2-SNAPSHOT</version>
     <name>Reactome Pathway Browser application</name>
 
     <properties>
