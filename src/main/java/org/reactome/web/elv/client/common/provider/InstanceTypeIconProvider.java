@@ -28,6 +28,12 @@ public abstract class InstanceTypeIconProvider {
             case DEPOLYMERISATION:
                 img = ReactomeImages.INSTANCE.depolymerization();
                 break;
+            case CANDIDATE_SET:
+                img = ReactomeImages.INSTANCE.candidateSet();
+                break;
+            case DEFINED_SET:
+                img = ReactomeImages.INSTANCE.definedSet();
+                break;
             case ENTITY_SET:
             case ENTITY_WITH_ACCESSIONED_SEQUENCE:
                 img = ReactomeImages.INSTANCE.entity();
