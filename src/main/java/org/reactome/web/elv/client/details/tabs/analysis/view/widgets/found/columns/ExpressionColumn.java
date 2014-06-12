@@ -20,7 +20,9 @@ public class ExpressionColumn extends AbstractColumn<Number> {
 
     @Override
     public Number getValue(PathwayIdentifier object) {
-        if(object==null) return null;
-        return object.getExp().get(index);
+        if(object==null) return Double.NaN;
+        Number number = object.getExp().get(index);
+        if(number==null) return Double.NaN;
+        return number;
     }
 }
