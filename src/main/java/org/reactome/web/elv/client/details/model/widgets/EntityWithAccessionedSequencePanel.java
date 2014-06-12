@@ -5,9 +5,12 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
+import org.reactome.web.elv.client.common.data.model.AbstractModifiedResidue;
 import org.reactome.web.elv.client.common.data.model.DatabaseObject;
 import org.reactome.web.elv.client.common.data.model.EntityWithAccessionedSequence;
 import org.reactome.web.elv.client.common.data.model.ReferenceSequence;
+
+import java.util.List;
 
 /**
  * @author Antonio Fabregat <fabregat@ebi.ac.uk>
@@ -35,12 +38,31 @@ public class EntityWithAccessionedSequencePanel extends DetailsPanel implements 
             vp.add(getCoordinatesPanel(this.ewas.getStartCoordinate(), this.ewas.getEndCoordinate()));
         }
         vp.add(getReferenceSequencePanel(this.ewas.getReferenceEntity()));
+        if(this.ewas.getHasModifiedResidue()!=null){
+            vp.add(getModifiedResiduePanel(this.ewas.getHasModifiedResidue()));
+        }
         initWidget(vp);
     }
 
     @Override
     public DatabaseObject getDatabaseObject() {
         return this.ewas;
+    }
+
+    private Widget getModifiedResiduePanel(List<AbstractModifiedResidue> modifiedResidueList){
+        VerticalPanel vp = new VerticalPanel();
+        vp.addStyleName("elv-Details-OverviewDisclosure-content");
+        vp.getElement().getStyle().setMarginBottom(10, Style.Unit.PX);
+        vp.setWidth("99%");
+
+        vp.add(new Label("Post-translational modification:"));
+        for (AbstractModifiedResidue modifiedResidue : modifiedResidueList) {
+            Widget mPanel = new AbstractModifiedResiduePanel(this, modifiedResidue);
+            mPanel.getElement().getStyle().setMarginLeft(15, Style.Unit.PX);
+            vp.add(mPanel);
+        }
+
+        return vp;
     }
 
     private Widget getReferenceSequencePanel(ReferenceSequence referenceSequence){
