@@ -1,4 +1,4 @@
-#Gene_names_from_liver
+#Gene names from liver
 A2M
 ABCB4
 ABCB8
