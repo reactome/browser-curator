@@ -81,6 +81,7 @@ public class HierarchyViewImpl implements IsWidget, HierarchyView, OpenHandler<T
 
     @Override
     public void expandPathway(Path path, Pathway pathway) {
+        if(this.hierarchyTree==null) return;
         HierarchyItem treeItem = this.hierarchyTree.getHierarchyItemByDatabaseObject(path.getPathDbIds(), pathway);
         if(treeItem!=null){
             treeItem.setState(true, false);
@@ -94,6 +95,12 @@ public class HierarchyViewImpl implements IsWidget, HierarchyView, OpenHandler<T
     public Set<Long> getContainedEventIds() {
         if(hierarchyTree==null) return new HashSet<Long>();
         return hierarchyTree.getHierarchyEventIds();
+    }
+
+    @Override
+    public Set<Long> getHierarchyPathwaysWithReactionsLoaded() {
+        if(hierarchyTree==null) return new HashSet<Long>();
+        return hierarchyTree.getHierarchyPathwaysWithReactionsLoaded();
     }
 
 
@@ -128,6 +135,13 @@ public class HierarchyViewImpl implements IsWidget, HierarchyView, OpenHandler<T
             this.selectedItem.highlightPath();
         }else{
             Console.error(getClass() + " highlightPath -> selected item: UNEXPECTED NULL");
+        }
+    }
+
+    @Override
+    public void highlightHitReactions(Set<Long> reactionsHit) {
+        if(hierarchyTree!=null){
+            hierarchyTree.highlightHitReactions(reactionsHit);
         }
     }
 

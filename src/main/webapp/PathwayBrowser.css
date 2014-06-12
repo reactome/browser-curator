@@ -114,6 +114,13 @@
     font-weight: bolder;
     padding: 0 3px 0 2px;
 }
+
+.elv-Hierarchy-Item-Hit{
+    border: 1px solid #FFD600;
+    border-radius: 5px;
+    /*font-weight: bolder;*/
+    padding: 0 3px 0 2px;
+}
 /*####################### EVENT HIERARCHY [END] ######################################################################*/
 
 /*####################### DETAILS TAB [BEGIN] ########################################################################*/

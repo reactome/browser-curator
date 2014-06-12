@@ -98,6 +98,7 @@ public class HierarchyItem extends TreeItem {
 
     public void clearAnalysisData(){
         analysisData.setText("");
+        text.removeStyleName("elv-Hierarchy-Item-Hit");
         for (int i = 0; i < getChildCount(); i++) {
             TreeItem child = getChild(i);
             if(child instanceof HierarchyItem){
@@ -107,7 +108,8 @@ public class HierarchyItem extends TreeItem {
     }
 
     public void clearHighlightPath(){
-        text.setStyleName("elv-Hierarchy-Item");
+        text.removeStyleName("elv-Hierarchy-Item-Selected");
+        text.removeStyleName("elv-Hierarchy-Item-Highlighted");
         if(getParentItem()!=null){
             ((HierarchyItem) getParentItem()).clearHighlightPath();
         }
@@ -141,9 +143,9 @@ public class HierarchyItem extends TreeItem {
 
     public void highlightPath(){
         if(isSelected()){
-            text.setStyleName("elv-Hierarchy-Item-Selected");
+            text.addStyleName("elv-Hierarchy-Item-Selected");
         }else{
-            text.setStyleName("elv-Hierarchy-Item-Highlighted");
+            text.addStyleName("elv-Hierarchy-Item-Highlighted");
         }
         if(getParentItem()!=null){
             ((HierarchyItem) getParentItem()).highlightPath();
@@ -164,6 +166,10 @@ public class HierarchyItem extends TreeItem {
             }
             return path;
         }
+    }
+
+    public void highlightHitEvent(){
+        text.addStyleName("elv-Hierarchy-Item-Hit");
     }
 
     public void showAnalysisData(PathwaySummary pathwaySummary){

@@ -79,6 +79,7 @@ public class DiagramKey extends PopupPanel implements CloseHandler<PopupPanel>, 
 
     private Widget getPopupContent() {
         VerticalPanel vp = new VerticalPanel();
+        vp.setWidth("250px");
         vp.add(new Image(ReactomeImages.INSTANCE.diagramKey()));
 
         HTMLPanel moreDetail = getMoreDetailsLink();

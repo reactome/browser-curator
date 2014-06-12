@@ -52,9 +52,9 @@ public class AnalysisResultTable extends DataGrid<PathwaySummary> {
             columns.add(new ReactionsRatioColumn());
 //        }
 
-        for (int i = 1; i < expColumnNames.size(); i++) {
-            String title = expColumnNames.get(i);
-            columns.add(new ExpressionColumn(i - 1, title));
+        int i = 0;
+        for (String columnName : expColumnNames) {
+            columns.add(new ExpressionColumn(i++, columnName));
         }
 
         columns.add(new SpeciesColumn());

@@ -1,7 +1,6 @@
 package org.reactome.web.elv.client.hierarchy.model;
 
 import com.google.gwt.user.client.ui.CustomTree;
-import com.google.gwt.user.client.ui.Widget;
 import org.reactome.web.elv.client.common.analysis.model.PathwaySummary;
 import org.reactome.web.elv.client.common.data.model.DatabaseObject;
 import org.reactome.web.elv.client.common.data.model.Event;
@@ -36,10 +35,24 @@ public class HierarchyTree extends CustomTree {
         }
     }
 
+    public void highlightHitReactions(Set<Long> reactionsHit){
+        for (Long reaction : reactionsHit) {
+            Set<HierarchyItem> items = treeItems.getElements(reaction);
+            if(items!=null){
+                for (HierarchyItem item : items) {
+                    item.highlightHitEvent();
+                }
+            }
+        }
+    }
+
     public void showAnalysisData(List<PathwaySummary> pathwaySummaries){
         for (PathwaySummary pathwaySummary :pathwaySummaries) {
-            for (HierarchyItem hierarchyItem : treeItems.getElements(pathwaySummary.getDbId())) {
-                hierarchyItem.showAnalysisData(pathwaySummary);
+            Set<HierarchyItem> items = treeItems.getElements(pathwaySummary.getDbId());
+            if(items!=null){
+                for (HierarchyItem item : items) {
+                    item.showAnalysisData(pathwaySummary);
+                }
             }
         }
     }
@@ -69,10 +82,10 @@ public class HierarchyTree extends CustomTree {
         return this.treeItems.keySet();
     }
 
-    public Set<Long> getHierarchyPathwaysWithReactions(){
+    public Set<Long> getHierarchyPathwaysWithReactionsLoaded(){
         Set<Long> rtn = new HashSet<Long>();
-        for (Long id : this.treeItems.keySet()) {
-            for (HierarchyItem item : this.treeItems.getElements(id)) {
+        for (Long eventId : this.treeItems.keySet()) {
+            for (HierarchyItem item : this.treeItems.getElements(eventId)) {
                 if(item.getEvent() instanceof ReactionLikeEvent){
                     rtn.add(((HierarchyItem) item.getParentItem()).getEvent().getDbId());
                 }

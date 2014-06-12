@@ -11,10 +11,7 @@ import org.reactome.web.elv.client.common.analysis.factory.AnalysisModelFactory;
 import org.reactome.web.elv.client.common.analysis.helper.AnalysisHelper;
 import org.reactome.web.elv.client.common.analysis.model.PathwaySummary;
 import org.reactome.web.elv.client.common.data.factory.ModelFactory;
-import org.reactome.web.elv.client.common.data.model.DatabaseObject;
-import org.reactome.web.elv.client.common.data.model.Event;
-import org.reactome.web.elv.client.common.data.model.Pathway;
-import org.reactome.web.elv.client.common.data.model.Species;
+import org.reactome.web.elv.client.common.data.model.*;
 import org.reactome.web.elv.client.common.events.ELVEventType;
 import org.reactome.web.elv.client.common.model.Ancestors;
 import org.reactome.web.elv.client.common.model.Path;
@@ -64,7 +61,7 @@ public class HierarchyPresenter extends Controller implements HierarchyView.Pres
     }
 
     @Override
-    public void eventChildrenRequired(final Path path, Event event) {
+    public void eventChildrenRequired(final Path path, final Event event) {
         String url = "/ReactomeRESTfulAPI/RESTfulWS/queryById/Pathway/" + event.getDbId();
         RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, url);
         requestBuilder.setHeader("Accept", "application/json");
@@ -78,10 +75,15 @@ public class HierarchyPresenter extends Controller implements HierarchyView.Pres
                     view.loadItemChildren(currentSpecies, path, pathway, children);
                     //Next bit is to load analysis details in the hierarchy items by demand
                     Set<Long> dbIds = new HashSet<Long>();
+                    Set<Long> aux = new HashSet<Long>();
                     for (Event child : children) {
-                        dbIds.add(child.getDbId());
+                        if(child instanceof ReactionLikeEvent){
+                            aux.add(event.getDbId());
+                        }else{
+                            dbIds.add(child.getDbId());
+                        }
                     }
-                    getAnalysisData(dbIds);
+                    getAnalysisData(dbIds, aux);
                 }
 
                 @Override
@@ -149,9 +151,17 @@ public class HierarchyPresenter extends Controller implements HierarchyView.Pres
     }
 
     @Override
-    public void getAnalysisData(Set<Long> eventIds) {
-        if(this.analysisToken==null || eventIds.isEmpty()) return;
+    public void getAnalysisData(Set<Long> eventIds, Set<Long> pathwaysWithReactions) {
+        if(this.analysisToken==null) return;
+        if(!eventIds.isEmpty()){
+            getAnalysisDataForPathways(eventIds);
+        }
+        if(!pathwaysWithReactions.isEmpty()){
+            getAnalysisDataForPathwaysWithReactions(pathwaysWithReactions);
+        }
+    }
 
+    private void getAnalysisDataForPathways(Set<Long> eventIds){
         StringBuilder post = new StringBuilder();
         for (Long id : eventIds) {
             post.append(id).append(",");
@@ -178,6 +188,40 @@ public class HierarchyPresenter extends Controller implements HierarchyView.Pres
                     Console.error(exception.getMessage());
                 }
             });
+
+        }catch (RequestException ex) {
+            Console.error(ex.getMessage());
+        }
+    }
+
+    private void getAnalysisDataForPathwaysWithReactions(Set<Long> pathwaysWithReactions){
+        StringBuilder post = new StringBuilder();
+        for (Long id : pathwaysWithReactions) {
+            post.append(id).append(",");
+        }
+        post.delete(post.length()-1, post.length());
+
+        String url = AnalysisHelper.URL_PREFIX + "/token/" + this.analysisToken + "/reactions/pathways?resource=" + this.resource;
+        RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.POST, url);
+        requestBuilder.setHeader("Accept", "application/json");
+        try {
+            requestBuilder.sendRequest(post.toString(), new RequestCallback() {
+                @Override
+                public void onResponseReceived(Request request, Response response) {
+                    JSONArray res = JSONParser.parseStrict(response.getText()).isArray();
+                    Set<Long> hitReactions = new HashSet<Long>();
+                    for (int i = 0; i < res.size(); i++) {
+                        hitReactions.add(Long.valueOf(res.get(i).toString()));
+                    }
+                    view.highlightHitReactions(hitReactions);
+                }
+
+                @Override
+                public void onError(Request request, Throwable exception) {
+                    Console.error(exception.getMessage());
+                }
+            });
+
         }catch (RequestException ex) {
             Console.error(ex.getMessage());
         }
@@ -219,7 +263,7 @@ public class HierarchyPresenter extends Controller implements HierarchyView.Pres
     public void onAnalysisTabResourceSelected(String resource) {
         this.resource = resource;
         this.view.clearAnalysisResult();
-        this.getAnalysisData(this.view.getContainedEventIds());
+        this.getAnalysisData(this.view.getContainedEventIds(), this.view.getHierarchyPathwaysWithReactionsLoaded());
     }
 
     @Override
@@ -322,6 +366,6 @@ public class HierarchyPresenter extends Controller implements HierarchyView.Pres
     @Override
     public void onResourceChosen(String resource) {
         this.resource = resource;
-        this.getAnalysisData(view.getContainedEventIds());
+        this.getAnalysisData(view.getContainedEventIds(), view.getHierarchyPathwaysWithReactionsLoaded());
     }
 }
