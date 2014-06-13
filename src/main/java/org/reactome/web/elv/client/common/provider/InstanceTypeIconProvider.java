@@ -19,20 +19,20 @@ public abstract class InstanceTypeIconProvider {
             case BLACK_BOX_EVENT:
                 img = ReactomeImages.INSTANCE.blackBoxEvent();
                 break;
+            case CANDIDATE_SET:
+                img = ReactomeImages.INSTANCE.candidateSet();
+                break;
             case COMPLEX:
                 img = ReactomeImages.INSTANCE.complex();
                 break;
             /*case CONCEPTUAL_EVENT:
                 img = ReactomeImages.INSTANCE.conceptualEvent();
                 break;*/
-            case DEPOLYMERISATION:
-                img = ReactomeImages.INSTANCE.depolymerization();
-                break;
-            case CANDIDATE_SET:
-                img = ReactomeImages.INSTANCE.candidateSet();
-                break;
             case DEFINED_SET:
                 img = ReactomeImages.INSTANCE.definedSet();
+                break;
+            case DEPOLYMERISATION:
+                img = ReactomeImages.INSTANCE.depolymerization();
                 break;
             case ENTITY_SET:
             case ENTITY_WITH_ACCESSIONED_SEQUENCE:
@@ -41,9 +41,12 @@ public abstract class InstanceTypeIconProvider {
             /*case EQUIVALENT_EVENT_SET:
                 img = ReactomeImages.INSTANCE.equivalentEventSet();
                 break;*/
-            /*case GENOME_ENCODED_ENTITY:
-                img = ReactomeImages.INSTANCE.
-                break;*/
+            case FAILED_REACTION:
+                img = ReactomeImages.INSTANCE.failedReaction();
+                break;
+            case GENOME_ENCODED_ENTITY:
+                img = ReactomeImages.INSTANCE.genomeEncodeEntity();
+                break;
             case PATHWAY:
                 img = ReactomeImages.INSTANCE.pathway();
                 break;
@@ -53,8 +56,8 @@ public abstract class InstanceTypeIconProvider {
             case REACTION:
                 img = ReactomeImages.INSTANCE.reaction();
                 break;
-            case FAILED_REACTION:
-                img = ReactomeImages.INSTANCE.failedReaction();
+            case SIMPLE_ENTITY:
+                img = ReactomeImages.INSTANCE.simpleEntity();
                 break;
             default:
                 if(!GWT.isScript())

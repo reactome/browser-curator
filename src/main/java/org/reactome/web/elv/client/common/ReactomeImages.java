@@ -73,6 +73,12 @@ public interface ReactomeImages extends ClientBundle {
     @Source("images/EquivalentEventSet.png")
     ImageResource equivalentEventSet();
 
+    @Source("images/GenomeEncodeEntity.png")
+    ImageResource genomeEncodeEntity();
+
+    @Source("images/SimpleEntity.png")
+    ImageResource simpleEntity();
+
     @Source("images/eye.png")
     ImageResource eye();
 
