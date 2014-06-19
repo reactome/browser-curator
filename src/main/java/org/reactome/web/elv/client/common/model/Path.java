@@ -4,7 +4,6 @@ import org.reactome.web.elv.client.common.data.model.DatabaseObject;
 import org.reactome.web.elv.client.common.data.model.Event;
 import org.reactome.web.elv.client.common.data.model.Pathway;
 
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
