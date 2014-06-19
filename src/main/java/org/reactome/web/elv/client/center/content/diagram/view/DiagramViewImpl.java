@@ -262,9 +262,11 @@ public class DiagramViewImpl implements DiagramView, SelectionEventHandler, Path
                 aux.add(dbId);
             }
         }
-        if(!aux.isEmpty() && selectionHasChange(aux)){
-            selectedDBIds = aux;
-            this.diagram.setSelectionIds(aux);
+        if(!aux.isEmpty()){
+            if(selectionHasChange(aux)){
+                selectedDBIds = aux;
+                this.diagram.setSelectionIds(aux);
+            }
         }else{
             //In this case we want to clear the selection but do nothing after it :)
             clearSelection();

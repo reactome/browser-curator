@@ -118,16 +118,6 @@ public class DiagramPresenter extends Controller implements DiagramView.Presente
         this.view.setInitialState();
     }
 
-    @Override
-    public void onStateManagerSpeciesSelected(Species species) {
-        if(species!=null && !species.getDbId().equals(AdvancedState.DEFAULT_SPECIES_ID)){
-            this.view.clearOverlays(); //Not sure why this has to be added here. The diagram
-                                       //should figure out when to clear depending on the
-                                       //loaded diagram
-            this.eventBus.fireELVEvent(ELVEventType.DIAGRAM_OVERLAY_CLEARED);
-        }
-    }
-
 //    @Override
 //    public void onTourManagerTourCancelled() {
 //        this.view.tourFadeOut();
