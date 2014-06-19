@@ -4,6 +4,7 @@ import org.reactome.web.elv.client.common.data.model.DatabaseObject;
 import org.reactome.web.elv.client.common.data.model.Event;
 import org.reactome.web.elv.client.common.data.model.Pathway;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -70,6 +71,17 @@ public class Path {
     public Pathway getLastPathway(){
         int pos = this.path.size() - 2;
         return (Pathway) (pos > -1 ? this.path.get(pos) : this.path.get(0));
+    }
+
+    public Pathway getLastPathwayWithDiagram(){
+        for (int i = this.path.size() - 1 ; i >= 0; i--) {
+            Event event = this.path.get(i);
+            if(event instanceof Pathway){
+                Pathway pathway = (Pathway) event;
+                if(pathway.getHasDiagram()) return pathway;
+            }
+        }
+        return null;
     }
 
     public boolean isEmpty(){
