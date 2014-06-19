@@ -9,11 +9,12 @@ import org.reactome.web.elv.client.center.content.diagram.view.DiagramView;
 import org.reactome.web.elv.client.common.Controller;
 import org.reactome.web.elv.client.common.EventBus;
 import org.reactome.web.elv.client.common.data.factory.ModelFactory;
-import org.reactome.web.elv.client.common.data.model.*;
+import org.reactome.web.elv.client.common.data.model.DatabaseObject;
+import org.reactome.web.elv.client.common.data.model.Event;
+import org.reactome.web.elv.client.common.data.model.Figure;
+import org.reactome.web.elv.client.common.data.model.Pathway;
 import org.reactome.web.elv.client.common.events.ELVEventType;
 import org.reactome.web.elv.client.common.model.Pair;
-import org.reactome.web.elv.client.common.utils.Console;
-import org.reactome.web.elv.client.manager.state.AdvancedState;
 
 import java.util.LinkedList;
 import java.util.List;
