@@ -35,6 +35,8 @@ public abstract class InstanceTypeIconProvider {
                 img = ReactomeImages.INSTANCE.depolymerization();
                 break;
             case ENTITY_SET:
+//                img = ReactomeImages.INSTANCE.set();
+//                break;
             case ENTITY_WITH_ACCESSIONED_SEQUENCE:
                 img = ReactomeImages.INSTANCE.entity();
                 break;
@@ -47,8 +49,14 @@ public abstract class InstanceTypeIconProvider {
             case GENOME_ENCODED_ENTITY:
                 img = ReactomeImages.INSTANCE.genomeEncodeEntity();
                 break;
+            case OTHER_ENTITY:
+                img = ReactomeImages.INSTANCE.otherEntity();
+                break;
             case PATHWAY:
                 img = ReactomeImages.INSTANCE.pathway();
+                break;
+            case POLYMER:
+                img = ReactomeImages.INSTANCE.polymer();
                 break;
             case POLYMERISATION:
                 img = ReactomeImages.INSTANCE.polymerization();

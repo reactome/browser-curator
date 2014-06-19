@@ -97,8 +97,14 @@ public interface ReactomeImages extends ClientBundle {
     @Source("images/ORCID.png")
     ImageResource orcid();
 
+    @Source("images/OtherEntity.png")
+    ImageResource otherEntity();
+
     @Source("images/Pathway.png")
     ImageResource pathway();
+
+    @Source("images/Polymer.png")
+    ImageResource polymer();
 
     @Source("images/Polymerization.png")
     ImageResource polymerization();
