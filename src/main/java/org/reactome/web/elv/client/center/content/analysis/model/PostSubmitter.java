@@ -3,6 +3,8 @@ package org.reactome.web.elv.client.center.content.analysis.model;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.InitializeEvent;
+import com.google.gwt.event.logical.shared.InitializeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.http.client.*;
 import com.google.gwt.user.client.ui.*;
@@ -74,7 +76,8 @@ public class PostSubmitter extends DockLayoutPanel implements ClickHandler {
         addNorth(north, 30);
 
         this.textArea = new TextArea();
-        add(textArea);
+        this.textArea.getElement().setAttribute("style", "font-family: Consolas;");
+        add(this.textArea);
     }
 
     public HandlerRegistration addAnalysisCompletedEventHandler(AnalysisCompletedEventHandler handler){
