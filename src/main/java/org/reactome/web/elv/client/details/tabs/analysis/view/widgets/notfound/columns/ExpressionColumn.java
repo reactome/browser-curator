@@ -9,11 +9,11 @@ import org.reactome.web.elv.client.common.analysis.model.IdentifierSummary;
  */
 public class ExpressionColumn extends AbstractColumn<Number> {
 
-    private static final String explanation = "The expression value submitted for the not found identifier for the column named ";
+    private static final String explanation = "The sample value submitted for the not found identifier for the column named ";
     private Integer index;
 
     public ExpressionColumn(Integer index, String title) {
-        super(new NumberCell(NumberFormat.getDecimalFormat()), "Expression", title, explanation + title);
+        super(new NumberCell(NumberFormat.getDecimalFormat()), "", title, explanation + title);
         this.index = index;
         setWidth(100);
     }
