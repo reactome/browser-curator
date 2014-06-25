@@ -49,6 +49,9 @@ public abstract class InstanceTypeIconProvider {
             case GENOME_ENCODED_ENTITY:
                 img = ReactomeImages.INSTANCE.genomeEncodeEntity();
                 break;
+            case OPEN_SET:
+                img = ReactomeImages.INSTANCE.openSet();
+                break;
             case OTHER_ENTITY:
                 img = ReactomeImages.INSTANCE.otherEntity();
                 break;
