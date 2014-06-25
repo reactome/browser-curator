@@ -5,11 +5,26 @@ import com.google.gwt.user.client.ui.*;
 
 /**
  * @author Antonio Fabregat <fabregat@ebi.ac.uk>
+ * @author Kerstin Hausmann <khaus@ebi.ac.uk>
  */
 public abstract class DisclosurePanelFactory {
 
     public static DisclosurePanel getAdvancedDisclosurePanel(String text){
         return getAdvancedDisclosurePanel(text, null);
+    }
+
+    public static DisclosurePanel getAdvancedDisclosurePanel(FlowPanel panel, ClickHandler instanceSelector){
+        DisclosurePanel dp = new DisclosurePanel();
+        dp.addStyleName("elv-Details-OverviewDisclosure-Advanced");
+        dp.setWidth("100%"); //DO NOT CHANGE THIS VALUE
+
+        DisclosureHeader header = new DisclosureHeader(panel, instanceSelector);
+        dp.setHeader(header);
+        dp.setContent(getLoadingMessage());
+        dp.setAnimationEnabled(true);
+        dp.addCloseHandler(header);
+        dp.addOpenHandler(header);
+        return dp;
     }
 
     public static DisclosurePanel getAdvancedDisclosurePanel(String text, ClickHandler instanceSelector){

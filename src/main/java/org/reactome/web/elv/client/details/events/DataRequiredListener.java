@@ -5,6 +5,7 @@ import org.reactome.web.elv.client.common.data.model.Event;
 import org.reactome.web.elv.client.common.data.model.LiteratureReference;
 import org.reactome.web.elv.client.common.model.Ancestors;
 import org.reactome.web.elv.client.details.model.widgets.DetailsPanel;
+import org.reactome.web.elv.client.details.tabs.molecules.model.data.Molecule;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -13,6 +14,7 @@ import java.util.Map;
 
 /**
  * @author Antonio Fabregat <fabregat@ebi.ac.uk>
+ * @author Kerstin Hausmann <khaus@ebi.ac.uk>
  */
 public class DataRequiredListener {
 
@@ -25,6 +27,7 @@ public class DataRequiredListener {
     private Map<Long, List<DetailsPanel>> dataPanelMap = new HashMap<Long, List<DetailsPanel>>();
     private Map<Long, List<DetailsPanel>> refPanelMap = new HashMap<Long, List<DetailsPanel>>();
     private Map<Long, List<DetailsPanel>> pathPanelMap = new HashMap<Long, List<DetailsPanel>>();
+    private Map<Long, List<DetailsPanel>> moleculePanelMap = new HashMap<Long, List<DetailsPanel>> ();
 
     protected DataRequiredListener() {}
 
@@ -63,6 +66,11 @@ public class DataRequiredListener {
         handler.onDataRequired(databaseObject);
     }
 
+    public void onMoleculeDataRequired(DetailsPanel panel, Molecule molecule) {
+        this.addDetailsPanel(this.moleculePanelMap, molecule, panel);
+        handler.onMoleculeDataRequired(molecule);
+    }
+
     public void onPathRequired(DetailsPanel panel, Event event){
         this.addDetailsPanel(this.pathPanelMap, event, panel);
         handler.onPathRequired(event);
@@ -95,6 +103,13 @@ public class DataRequiredListener {
         DetailsPanel panel = this.getDetailsPanel(this.refPanelMap, dbId);
         if(panel!=null){
             panel.setReceivedReferences(literatureReferences);
+        }
+    }
+
+    public void setRequiredMoleculeData(Molecule molecule) {
+        DetailsPanel panel = this.getDetailsPanel(this.moleculePanelMap, molecule.getDbId());
+        if(panel!=null){
+            panel.setReceivedMoleculeData(molecule);
         }
     }
 }

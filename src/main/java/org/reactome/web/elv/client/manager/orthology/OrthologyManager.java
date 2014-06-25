@@ -1,14 +1,11 @@
 package org.reactome.web.elv.client.manager.orthology;
 
-import com.google.gwt.user.client.History;
-import org.reactome.web.elv.client.center.model.CenterToolType;
 import org.reactome.web.elv.client.common.Controller;
 import org.reactome.web.elv.client.common.EventBus;
 import org.reactome.web.elv.client.common.data.model.*;
 import org.reactome.web.elv.client.common.events.ELVEventType;
 import org.reactome.web.elv.client.common.model.Path;
 import org.reactome.web.elv.client.common.utils.Console;
-import org.reactome.web.elv.client.details.tabs.analysis.events.AnalysisTabPathwaySelected;
 import org.reactome.web.elv.client.manager.state.AdvancedState;
 
 import java.util.*;
@@ -405,6 +402,11 @@ public class OrthologyManager extends Controller {
 
         databaseObject = this.detailedViewMap.get(databaseObject.getDbId());
         this.moveToDatabaseObject(databaseObject);
+    }
+
+    @Override
+    public void onMoleculesItemSelected(DatabaseObject databaseObject) {
+        goToDatabaseObject(databaseObject);
     }
 
     @Override

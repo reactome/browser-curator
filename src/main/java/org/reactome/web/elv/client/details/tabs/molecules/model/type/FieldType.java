@@ -1,17 +1,14 @@
-package org.reactome.web.elv.client.details.tabs.molecules.model;
+package org.reactome.web.elv.client.details.tabs.molecules.model.type;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Antonio Fabregat <fabregat@ebi.ac.uk>
+ * @author Kerstin Hausmann <khaus@ebi.ac.uk>
  */
 public enum FieldType implements Comparable<FieldType>{
     MOLECULE_TYPE("Type"),
-    NAME("Name"),
-    UNIPROT_ID("Uniprot ID"),
-    GENE_NAME("Gene Name"),
-    CHEBI_ID("ChEBI ID");
+    NAME("Name");
 
     private String fieldName;
 

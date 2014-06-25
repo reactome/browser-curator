@@ -1,24 +1,19 @@
 package org.reactome.web.elv.client.details.tabs.molecules.view;
 
-import com.google.gwt.json.client.JSONObject;
-import org.reactome.web.elv.client.common.data.model.DatabaseObject;
 import org.reactome.web.elv.client.details.tabs.DetailsTabView;
-
-import java.util.List;
+import org.reactome.web.elv.client.details.tabs.molecules.model.data.Result;
 
 /**
- * @author Antonio Fabregat <fabregat@ebi.ac.uk>
+ * @author Kerstin Hausmann <khaus@ebi.ac.uk>
  */
-public interface MoleculesView extends DetailsTabView<MoleculesView.Presenter>{
+public interface MoleculesView extends DetailsTabView<MoleculesView.Presenter> {
 
     public interface Presenter extends DetailsTabView.Presenter {
-        void downloadFormatedData(List<String> types, List<String> fields, String format);
-        void getParticipatingMolecules();
-        void getFormatedData(List<String> types, List<String> fields, String format);
-
+        void getMoleculesData();
+        void updateMoleculesData();
     }
 
-    void setParticipatingMolecules(DatabaseObject databaseObject, JSONObject json);
-    void showExportResults(String results);
-    void submitForm(String url, JSONObject params);
+    void setMoleculesData(Result result);
+    void updateMoleculesData(Result result);
+    void refreshTitle(Integer loadedMolecules);
 }

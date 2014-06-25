@@ -9,8 +9,8 @@ import org.reactome.web.elv.client.details.tabs.downloads.presenter.DownloadsPre
 import org.reactome.web.elv.client.details.tabs.downloads.view.DownloadsViewImpl;
 import org.reactome.web.elv.client.details.tabs.expression.presenter.ExpressionPresenter;
 import org.reactome.web.elv.client.details.tabs.expression.view.ExpressionViewImpl;
-import org.reactome.web.elv.client.details.tabs.molecules.presenter.MoleculePresenter;
-import org.reactome.web.elv.client.details.tabs.molecules.view.MoleculeViewImpl;
+import org.reactome.web.elv.client.details.tabs.molecules.presenter.MoleculesPresenter;
+import org.reactome.web.elv.client.details.tabs.molecules.view.MoleculesViewImpl;
 import org.reactome.web.elv.client.details.tabs.overview.presenter.OverviewPresenter;
 import org.reactome.web.elv.client.details.tabs.overview.view.OverviewViewImpl;
 import org.reactome.web.elv.client.details.tabs.processes.presenter.ProcessesPresenter;
@@ -39,7 +39,7 @@ abstract class TabsFactory {
                     list.add(new ProcessesPresenter(eventBus, new ProcessesViewImpl()));
                     break;
                 case PARTICIPATING_MOLECULES:
-                    list.add(new MoleculePresenter(eventBus, new MoleculeViewImpl()));
+                    list.add(new MoleculesPresenter(eventBus, new MoleculesViewImpl()));
                     break;
                 case STRUCTURES:
                     list.add(new StructuresPresenter(eventBus, new StructuresViewImpl()));

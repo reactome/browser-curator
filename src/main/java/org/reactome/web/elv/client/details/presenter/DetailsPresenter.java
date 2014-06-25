@@ -17,6 +17,7 @@ import org.reactome.web.elv.client.common.model.Path;
 import org.reactome.web.elv.client.details.events.*;
 import org.reactome.web.elv.client.details.model.DetailsTabType;
 import org.reactome.web.elv.client.details.tabs.DetailsTabView;
+import org.reactome.web.elv.client.details.tabs.molecules.model.data.Molecule;
 import org.reactome.web.elv.client.details.view.DetailsView;
 import org.reactome.web.elv.client.manager.tour.TourStage;
 
@@ -188,6 +189,35 @@ public class DetailsPresenter extends Controller implements DetailsView.Presente
                 }
             });
         } catch (RequestException e) {
+            //TODO
+        }
+    }
+
+    @Override
+    public void onMoleculeDataRequired(Molecule molecule){
+        String url = "/ReactomeRESTfulAPI/RESTfulWS/queryById/ReferenceEntity/" + molecule.getDbId();
+        RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, url);
+        requestBuilder.setHeader("Accept", "application/json");
+        try {
+
+            requestBuilder.sendRequest(null, new RequestCallback() {
+                @Override
+                public void onResponseReceived(Request request, Response response) {
+                    JSONObject json  = JSONParser.parseStrict(response.getText()).isObject();
+                    Molecule molecule = new Molecule(ModelFactory.getDatabaseObject(json).getSchemaClass(), json);
+
+                    DataRequiredListener.getDataRequiredListener().setRequiredMoleculeData(molecule);
+
+                    //eventBus.fireELVEvent(ELVEventType.MOLECULES_VIEW_LOADED, databaseObject);
+                    //view.setMoleculesDetails(fullMolecules);
+                }
+
+                @Override
+                public void onError(Request request, Throwable exception) {
+                    //TODO
+                }
+            });
+        }catch (RequestException ex) {
             //TODO
         }
     }

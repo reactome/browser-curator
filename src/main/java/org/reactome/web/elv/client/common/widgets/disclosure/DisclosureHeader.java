@@ -17,6 +17,7 @@ import org.reactome.web.elv.client.details.model.widgets.DetailsPanel;
 
 /**
  * @author Antonio Fabregat <fabregat@ebi.ac.uk>
+ * @author Kerstin Hausmann <khaus@ebi.ac.uk>
  */
 @SuppressWarnings("UnusedDeclaration")
 public class DisclosureHeader extends Composite implements OpenHandler<DisclosurePanel>, CloseHandler<DisclosurePanel> {
@@ -92,6 +93,34 @@ public class DisclosureHeader extends Composite implements OpenHandler<Disclosur
 
     public DisclosureHeader(Resources resources, String text, ClickHandler instanceSelector){
         this(resources, text, instanceSelector, new Image(DisclosureImages.INSTANCE.getCollapseImage()), new Image(DisclosureImages.INSTANCE.getExpandImage()));
+    }
+
+    public DisclosureHeader(FlowPanel panel, ClickHandler instanceSelector) {
+        this.openedIcon =  new Image(DisclosureImages.INSTANCE.getCollapseImage());
+        this.closedIcon = new Image(DisclosureImages.INSTANCE.getExpandImage());
+
+        // Inject the styles used by this widget.
+        Style style = getDefaultResources().customHeaderStyle();
+        style.ensureInjected();
+
+        panel.setWidth("100%");
+        panel.setStyleName(style.customHeaderContainer());
+        //noinspection GWTStyleCheck
+        panel.addStyleName("clearfix");
+
+        Button go = getIcon(instanceSelector);
+        if(go!=null){
+            go.addStyleName(style.customHeaderIcon());
+            panel.insert(go, 0);
+        }
+
+        this.buttonContainer = new SimplePanel();
+        this.buttonContainer.add(this.closedIcon);
+        this.buttonContainer.setStyleName(style.customHeaderButton());
+        panel.add(this.buttonContainer);
+
+        this.initWidget(panel);
+        this.setWidth("100%");
     }
 
     public DisclosureHeader(Resources resources, String text, ClickHandler instanceSelector, Widget openIcon, Widget closeIcon) {

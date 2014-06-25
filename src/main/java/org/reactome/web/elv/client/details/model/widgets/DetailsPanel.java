@@ -8,11 +8,13 @@ import org.reactome.web.elv.client.common.data.model.Event;
 import org.reactome.web.elv.client.common.data.model.LiteratureReference;
 import org.reactome.web.elv.client.common.model.Ancestors;
 import org.reactome.web.elv.client.details.events.DataRequiredListener;
+import org.reactome.web.elv.client.details.tabs.molecules.model.data.Molecule;
 
 import java.util.List;
 
 /**
  * @author Antonio Fabregat <fabregat@ebi.ac.uk>
+ * @author Kerstin Hausmann <khaus@ebi.ac.uk>
  */
 public abstract class DetailsPanel extends Composite {
     private boolean isLoaded = false;
@@ -26,6 +28,10 @@ public abstract class DetailsPanel extends Composite {
 
     public void dataRequired(DatabaseObject databaseObject){
         DataRequiredListener.getDataRequiredListener().onDataRequired(this, databaseObject);
+    }
+
+    public void moleculeDataRequired(Molecule molecule){
+        DataRequiredListener.getDataRequiredListener().onMoleculeDataRequired(this, molecule);
     }
 
     public void ancestorsRequired(Event event){
@@ -73,6 +79,8 @@ public abstract class DetailsPanel extends Composite {
     }
 
     public void setReceivedData(DatabaseObject data){} //Not always will be override
+
+    public void setReceivedMoleculeData(Molecule data){} //Not always will be override
 
     public void setReceivedAncestors(Ancestors ancestors){} //Not always will be override
 

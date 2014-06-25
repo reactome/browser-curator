@@ -1,6 +1,5 @@
 package org.reactome.web.elv.client.common;
 
-import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.ToggleButton;
 import org.reactome.web.elv.client.center.content.analysis.event.AnalysisCompletedEvent;
 import org.reactome.web.elv.client.center.content.analysis.event.AnalysisErrorEvent;
@@ -14,6 +13,7 @@ import org.reactome.web.elv.client.common.model.Path;
 import org.reactome.web.elv.client.details.events.DetailsSelection;
 import org.reactome.web.elv.client.details.model.DetailsTabType;
 import org.reactome.web.elv.client.details.tabs.analysis.events.AnalysisTabPathwaySelected;
+import org.reactome.web.elv.client.details.tabs.molecules.event.MoleculeItemSelected;
 import org.reactome.web.elv.client.hierarchy.model.HierarchySelection;
 import org.reactome.web.elv.client.manager.state.AdvancedState;
 import org.reactome.web.elv.client.manager.state.StateSelection;
@@ -143,23 +143,9 @@ public abstract class Controller implements ELVEventHandler {
                 onDiagramKeyOpened();
                 break;
 
-                    /* PARTICIPATING MOLECULES TAB*/
-            case MOLECULES_INSTANCE_LOADED:
-                Pair<DatabaseObject, JSONObject> mil = (Pair<DatabaseObject, JSONObject>) obj;
-                onMoleculesInstanceLoaded(mil.getA(), mil.getB());
-                break;
-            case MOLECULES_INSTANCE_LOAD_ERROR:
-                onMoleculesInstanceRetrieveError((String) obj);
-                break;
-            case MOLECULES_DATA_QUERIED:
-                Pair<DatabaseObject, JSONObject> mdq = (Pair<DatabaseObject, JSONObject>) obj;
-                onMoleculesDataQuery(mdq.getA(), mdq.getB());
-                break;
-            case MOLECULES_DATA_QUERY_ERROR:
-                onMoleculesDataQueryError((String) obj);
-                break;
-            case MOLECULES_DATA_DOWNLOADED:
-                onMoleculesDataDownloaded();
+                   /* PARTICIPATING MOLECULES TAB */
+            case MOLECULES_ITEM_SELECTED:
+                onMoleculesItemSelected((DatabaseObject) obj);
                 break;
 
                     /* DETAILS VIEW */
@@ -298,12 +284,8 @@ public abstract class Controller implements ELVEventHandler {
     public void onDiagramKeyClosed(){}
     public void onDiagramKeyOpened(){}
 
-    /* PARTICIPATING MOLECULES TAB*/
-    public void onMoleculesInstanceLoaded(DatabaseObject databaseObject, JSONObject params){}
-    public void onMoleculesInstanceRetrieveError(String message){}
-    public void onMoleculesDataQuery(DatabaseObject databaseObject, JSONObject params){}
-    public void onMoleculesDataQueryError(String message){}
-    public void onMoleculesDataDownloaded(){}
+    /* PARTICIPATING MOLECULES TAB */
+    public void onMoleculesItemSelected(DatabaseObject molecule){}
 
     /* DETAILS PANEL */
     public void onDetailedViewLoaded(DatabaseObject obj){}

@@ -51,6 +51,7 @@ public class DataManager extends Controller {
                     String text = response.getText();
                     JSONObject json = JSONParser.parseStrict(text).isObject();
                     DatabaseObject databaseObject = ModelFactory.getDatabaseObject(json);
+                    cacheDatabaseObjects(databaseObject); //Todo: check whether this is better option
                     eventBus.fireELVEvent(ELVEventType.DATA_MANAGER_OBJECT_DETAILED_VIEW_RETRIEVED, databaseObject);
                 }
 
