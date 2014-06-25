@@ -1,13 +1,13 @@
 package org.reactome.web.elv.client.topbar.model;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
+import org.reactome.web.elv.client.common.LocationHelper;
 import org.reactome.web.elv.client.common.ReactomeImages;
 
 /**
@@ -99,18 +99,20 @@ public class ToolBarPanel extends HTMLPanel implements ClickHandler {
         banner.getElement().getStyle().setCursor(com.google.gwt.dom.client.Style.Cursor.POINTER);
         add(banner);
 
-        Image phase = new Image(ReactomeImages.INSTANCE.beta());
-        banner.getElement().getStyle().setMarginLeft(15, com.google.gwt.dom.client.Style.Unit.PX);
-        phase.setTitle("Back to homepage");
-        phase.setStyleName(style.toolBarBanner());
-        phase.addClickHandler(this);
-        phase.getElement().getStyle().setCursor(com.google.gwt.dom.client.Style.Cursor.POINTER);
-        phase.getElement().getStyle().setPosition(com.google.gwt.dom.client.Style.Position.ABSOLUTE);
-        phase.getElement().getStyle().setLeft(0, com.google.gwt.dom.client.Style.Unit.PX);
-        phase.getElement().getStyle().setTop(0, com.google.gwt.dom.client.Style.Unit.PX);
-        phase.getElement().getStyle().setWidth(50, com.google.gwt.dom.client.Style.Unit.PX);
-        phase.getElement().getStyle().setHeight(50, com.google.gwt.dom.client.Style.Unit.PX);
-        add(phase);
+        if(!LocationHelper.getLocation().equals(LocationHelper.Location.PRODUCTION)){
+            Image phase = new Image(ReactomeImages.INSTANCE.beta());
+            banner.getElement().getStyle().setMarginLeft(15, com.google.gwt.dom.client.Style.Unit.PX);
+            phase.setTitle("Back to homepage");
+            phase.setStyleName(style.toolBarBanner());
+            phase.addClickHandler(this);
+            phase.getElement().getStyle().setCursor(com.google.gwt.dom.client.Style.Cursor.POINTER);
+            phase.getElement().getStyle().setPosition(com.google.gwt.dom.client.Style.Position.ABSOLUTE);
+            phase.getElement().getStyle().setLeft(0, com.google.gwt.dom.client.Style.Unit.PX);
+            phase.getElement().getStyle().setTop(0, com.google.gwt.dom.client.Style.Unit.PX);
+            phase.getElement().getStyle().setWidth(50, com.google.gwt.dom.client.Style.Unit.PX);
+            phase.getElement().getStyle().setHeight(50, com.google.gwt.dom.client.Style.Unit.PX);
+            add(phase);
+        }
 
         speciesSelector.setStyleName(style.toolBarSpeciesSelector());
         add(speciesSelector);

@@ -1,11 +1,10 @@
 package org.reactome.web.elv.client.manager.ga;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.ToggleButton;
 import org.reactome.web.elv.client.center.content.analysis.event.AnalysisCompletedEvent;
 import org.reactome.web.elv.client.common.Controller;
 import org.reactome.web.elv.client.common.EventBus;
+import org.reactome.web.elv.client.common.LocationHelper;
 import org.reactome.web.elv.client.common.data.factory.SchemaClass;
 import org.reactome.web.elv.client.common.data.model.*;
 import org.reactome.web.elv.client.common.model.Path;
@@ -44,30 +43,31 @@ public class GAManager extends Controller {
     public GAManager(EventBus eventBus) {
         super(eventBus);
 
-        if(GWT.isScript()){
-            String hostName = Window.Location.getHostName();
-            boolean inHost = false;
-            if(hostName.equals("www.reactome.org") || hostName.equals("reactome.org")){
+        LocationHelper.Location location = LocationHelper.getLocation();
+        boolean inHost;
+        switch (location){
+            case PRODUCTION:
                 GATracker.setAccount("UA-42985898-1");
                 GATracker.setDomainName("reactome.org");
                 inHost = true;
-            }
-            if(hostName.equals("reactomedev.oicr.on.ca")){
+                break;
+            case DEV:
                 GATracker.setAccount("UA-42985898-2");
                 GATracker.setDomainName("oicr.on.ca");
                 inHost = true;
-            }
-            if(hostName.equals("reactomecurator.oicr.on.ca")){
+                break;
+            case CURATOR:
                 GATracker.setAccount("UA-42985898-3");
                 GATracker.setDomainName("oicr.on.ca");
                 inHost = true;
-            }
-            if(inHost){
-                GATracker.trackPageview();
-                this.gaTrackerActive = true;
-            }
+                break;
+            default:
+                inHost = false;
         }
-
+        if(inHost){
+            GATracker.trackPageview();
+            this.gaTrackerActive = true;
+        }
         if(!this.gaTrackerActive && TRACK_GA_MANAGER && Console.VERBOSE){
             Console.info("[GAManager] set for DEV purposes");
         }
@@ -147,7 +147,7 @@ public class GAManager extends Controller {
         Pathway pathway = selected.getPathway();
 
         Pathway sel = diagram.equals(pathway)?diagram:pathway;
-        if(!sel.equals(state.getLastDatabaseObjectSelected())){
+        if(sel!=null && !sel.equals(state.getLastDatabaseObjectSelected())){
             state.setLastDatabaseObjectSelected(sel);
             this.trackEvent(sel, GAAction.SELECTED, GAModule.ANALYSIS_TAB);
         }
