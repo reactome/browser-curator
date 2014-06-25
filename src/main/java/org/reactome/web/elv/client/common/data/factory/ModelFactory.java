@@ -67,6 +67,8 @@ public abstract class ModelFactory {
                 return new FragmentDeletionModification(jsonObject);
             case FRAGMENT_INSERTION_MODIFICATION:
                 return new FragmentInsertionModification(jsonObject);
+            case FRAGMENT_REPLACED_MODIFICATION:
+                return new FragmentReplacedModification(jsonObject);
             //case FRAGMENT_MODIFICATION:  //NOT USED HERE
             case FRONT_PAGE:
                 return new FrontPage(jsonObject);

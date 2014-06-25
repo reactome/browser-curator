@@ -30,6 +30,7 @@ public enum SchemaClass {
     FIGURE("Figure"),
     FRAGMENT_DELETION_MODIFICATION("FragmentDeletionModification"),
     FRAGMENT_INSERTION_MODIFICATION("FragmentInsertionModification"),
+    FRAGMENT_REPLACED_MODIFICATION("FragmentReplacedModification"),
     FRAGMENT_MODIFICATION("FragmentModification"),
     FRONT_PAGE("FrontPage"),
     FUNCTIONAL_STATUS("FunctionalStatus"),
