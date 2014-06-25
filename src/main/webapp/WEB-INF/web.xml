@@ -24,7 +24,7 @@
             <param-name>proxyPort</param-name>
             <!--<param-value>9090</param-value>-->
             <param-value>80</param-value>
-            <!--<param-value>8000</param-value>-->
+            <!--<param-value>8080</param-value>-->
         </init-param>
         <init-param>
             <param-name>proxyPath</param-name>
