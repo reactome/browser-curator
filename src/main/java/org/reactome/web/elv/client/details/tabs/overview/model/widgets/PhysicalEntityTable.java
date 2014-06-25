@@ -1,10 +1,7 @@
 package org.reactome.web.elv.client.details.tabs.overview.model.widgets;
 
 import com.google.gwt.user.client.ui.Widget;
-import org.reactome.web.elv.client.common.data.model.DatabaseIdentifier;
-import org.reactome.web.elv.client.common.data.model.EntityWithAccessionedSequence;
-import org.reactome.web.elv.client.common.data.model.OpenSet;
-import org.reactome.web.elv.client.common.data.model.PhysicalEntity;
+import org.reactome.web.elv.client.common.data.model.*;
 import org.reactome.web.elv.client.details.tabs.overview.model.widgets.factory.PropertyType;
 import org.reactome.web.elv.client.details.tabs.overview.model.widgets.factory.TableRowFactory;
 
@@ -39,7 +36,10 @@ public class PhysicalEntityTable extends OverviewTable {
                 if(this.physicalEntity instanceof EntityWithAccessionedSequence){
                     xrefs.addAll(((EntityWithAccessionedSequence) this.physicalEntity).getReferenceEntity().getCrossReference());
                 }else if(this.physicalEntity instanceof OpenSet){
-                    xrefs.addAll(((OpenSet) this.physicalEntity).getReferenceEntity().getCrossReference());
+                    ReferenceEntity referenceEntity = ((OpenSet) this.physicalEntity).getReferenceEntity();
+                    if(referenceEntity!=null){
+                        xrefs.addAll(referenceEntity.getCrossReference());
+                    }
                 }
                 return TableRowFactory.getDatabaseIdentifierRow(title, xrefs);
             default:

@@ -41,12 +41,13 @@ public class ExternalIdentifierPanel extends DetailsPanel {
         for (DatabaseIdentifier databaseIdentifier : databaseIdentifiers) {
             String[] aux = databaseIdentifier.getDisplayName().split(":");
             InlineLabel label = new InlineLabel(aux[0]);
-            Anchor link = new Anchor(aux[1], databaseIdentifier.getUrl(), "_blank");
-            link.getElement().getStyle().setMarginLeft(10, Style.Unit.PX);
-
             FlowPanel fp = new FlowPanel();
             fp.add(label);
-            fp.add(link);
+            if(aux.length>=2){
+                Anchor link = new Anchor(aux[1], databaseIdentifier.getUrl(), "_blank");
+                link.getElement().getStyle().setMarginLeft(10, Style.Unit.PX);
+                fp.add(link);
+            }
             vp.add(fp);
         }
         initWidget(vp);
