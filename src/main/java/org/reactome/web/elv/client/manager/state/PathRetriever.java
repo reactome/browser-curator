@@ -8,21 +8,16 @@ import org.reactome.web.elv.client.common.data.model.Event;
 import org.reactome.web.elv.client.common.model.Ancestors;
 import org.reactome.web.elv.client.common.model.Path;
 
+import java.util.LinkedList;
 import java.util.List;
 
 /**
  * @author Antonio Fabregat <fabregat@ebi.ac.uk>
  */
-@Deprecated
-public class PathRetriever {
+
+public abstract class PathRetriever {
     public interface PathHandler extends EventHandler {
-        void onPathRetrieved(Path path);
-    }
-
-    private PathHandler handler;
-
-    public PathRetriever(PathHandler handler) {
-        this.handler = handler;
+        void onPathsRetrieved(List<Path> paths);
     }
 
     /**
@@ -30,16 +25,17 @@ public class PathRetriever {
      * @param list ancestors containing multiple paths through a given pathway
      * @return the first path without orphan pathways
      */
-    private Path getPathWithoutOrphanPathways(List<Path> list){
+    private static List<Path> getPathsWithoutOrphanPathways(List<Path> list){
+        List<Path> rtn = new LinkedList<Path>();
         for (Path path : list) {
             if(path.rootHasDiagram()){
-                return path;
+                rtn.add(path);
             }
         }
-        return new Path();
+        return rtn;
     }
 
-    public void retrieveAncestors(final Event event){
+    public static void retrieveAncestors(final Event event, final PathHandler handler){
         String url = "/ReactomeRESTfulAPI/RESTfulWS/queryEventAncestors/" + event.getDbId();
         RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, url);
         requestBuilder.setHeader("Accept", "application/json");
@@ -49,8 +45,8 @@ public class PathRetriever {
                 public void onResponseReceived(Request request, Response response) {
                     JSONArray list = JSONParser.parseStrict(response.getText()).isArray();
                     Ancestors ancestors = new Ancestors(list);
-                    Path path = getPathWithoutOrphanPathways(ancestors.getPathsContaining(event));
-                    handler.onPathRetrieved(path);
+                    List<Path> paths = getPathsWithoutOrphanPathways(ancestors.getPathsContaining(event));
+                    handler.onPathsRetrieved(paths);
                 }
 
                 @Override

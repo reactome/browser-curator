@@ -14,7 +14,7 @@ import java.util.*;
 /**
  * @author Antonio Fabregat <fabregat@ebi.ac.uk>
  */
-public class AdvancedState {
+public class AdvancedState implements StableIdentifierLoader.StableIdentifierLoadedHandler {
 
     public interface AdvancedStateLoadedHandler {
         void onAdvancedStateLoaded(AdvancedState state);
@@ -69,19 +69,25 @@ public class AdvancedState {
         toLoad.put(AdvancedStateKey.SPECIES, String.valueOf(DEFAULT_SPECIES_ID));
 
         if(!token.isEmpty()){
-            try{
-                @SuppressWarnings("NonJREEmulationClassesInClientCode")
-                String[] tokens = token.split(DELIMITER);
-                for (String t : tokens) {
+            if(token.matches("^REACT_\\d+(\\.\\d+)?$")){
+                token = token.contains(".")?token.split("\\.")[0]:token;
+                new StableIdentifierLoader(token, this);
+                return;
+            }else {
+                try{
                     @SuppressWarnings("NonJREEmulationClassesInClientCode")
-                    String[] ts = t.split("=");
-                    AdvancedStateKey key = AdvancedStateKey.getAdvancedStateKey(ts[0]);
-                    if(key!=null){
-                        toLoad.put(key, ts[1]);
+                    String[] tokens = token.split(DELIMITER);
+                    for (String t : tokens) {
+                        @SuppressWarnings("NonJREEmulationClassesInClientCode")
+                        String[] ts = t.split("=");
+                        AdvancedStateKey key = AdvancedStateKey.getAdvancedStateKey(ts[0]);
+                        if(key!=null){
+                            toLoad.put(key, ts[1]);
+                        }
                     }
+                }catch (Exception e){
+                    stateCorrect = false;
                 }
-            }catch (Exception e){
-                stateCorrect = false;
             }
         }
 
@@ -126,6 +132,15 @@ public class AdvancedState {
 
     public boolean isToolInitialState(){
         return isInstancesInitialState() && (tool==CenterToolType.getDefault() || tool==null);
+    }
+
+    @Override
+    public void onStableIdentifierLoaded(final AdvancedState advancedState) {
+        Scheduler.get().scheduleDeferred(new Command() {
+            public void execute() {
+                handler.onAdvancedStateLoaded(advancedState);
+            }
+        });
     }
 
     public void resetInstancesState(){
