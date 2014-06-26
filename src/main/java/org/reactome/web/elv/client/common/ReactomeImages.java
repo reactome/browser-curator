@@ -34,6 +34,9 @@ public interface ReactomeImages extends ClientBundle {
     @Source("images/BlackBoxEvent.png")
     ImageResource blackBoxEvent();
 
+    @Source("images/CandidateSet.png")
+    ImageResource candidateSet();
+
     @Source("images/close.png")
     ImageResource close();
 
@@ -46,11 +49,20 @@ public interface ReactomeImages extends ClientBundle {
     @Source("images/ConceptualEvent.png")
     ImageResource conceptualEvent();
 
+    @Source("images/DefinedSet.png")
+    ImageResource definedSet();
+
     @Source("images/Depolymerization.png")
     ImageResource depolymerization();
 
+    @Source("images/diagram.png")
+    ImageResource diagram();
+
     @Source("images/diagram_key_new.png")
     ImageResource diagramKey();
+
+    @Source("images/show_diagram_key.png")
+    ImageResource diagramKeyIcon();
 
     @Source("images/downArrow.png")
     ImageResource downArrow();
@@ -61,41 +73,50 @@ public interface ReactomeImages extends ClientBundle {
     @Source("images/download_file.png")
     ImageResource downloadFile();
 
-    @Source("images/CandidateSet.png")
-    ImageResource candidateSet();
-
-    @Source("images/DefinedSet.png")
-    ImageResource definedSet();
-
     @Source("images/Entity.png")
     ImageResource entity();
 
     @Source("images/EquivalentEventSet.png")
     ImageResource equivalentEventSet();
 
-    @Source("images/GenomeEncodeEntity.png")
-    ImageResource genomeEncodeEntity();
+    @Source("images/exclamation.png")
+    ImageResource exclamation();
 
-    @Source("images/OpenSet.png")
-    ImageResource openSet();
-
-    @Source("images/SimpleEntity.png")
-    ImageResource simpleEntity();
+    @Source("images/details.png")
+    ImageResource details();
 
     @Source("images/eye.png")
     ImageResource eye();
 
-    @Source("images/exclamation.png")
-    ImageResource exclamation();
+    @Source("images/FailedReaction.gif")
+    ImageResource failedReaction();
 
-    @Source("images/show_diagram_key.png")
-    ImageResource diagramKeyIcon();
+    @Source("images/GenomeEncodeEntity.png")
+    ImageResource genomeEncodeEntity();
+
+    @Source("images/hierarchy.png")
+    ImageResource hierarchy();
 
     @Source("images/isDisease.png")
     ImageResource isDisease();
 
     @Source("images/isInferred.png")
     ImageResource isInferred();
+
+    @Source("images/loader.gif")
+    ImageResource loader();
+
+    @Source("images/next.png")
+    ImageResource next();
+
+    @Source("images/NewTag.png")
+    ImageResource newTag();
+
+    @Source("images/no.png")
+    ImageResource no();
+
+    @Source("images/OpenSet.png")
+    ImageResource openSet();
 
     @Source("images/ORCID.png")
     ImageResource orcid();
@@ -118,11 +139,20 @@ public interface ReactomeImages extends ClientBundle {
     @Source("images/Reaction.png")
     ImageResource reaction();
 
-    @Source("images/FailedReaction.gif")
-    ImageResource failedReaction();
+    @Source("images/ReferenceDNASequence.png")
+    ImageResource referenceDNASequence();
 
-    @Source("images/NewTag.png")
-    ImageResource newTag();
+    @Source("images/ReferenceRNASequence.png")
+    ImageResource referenceRNASequence();
+
+    @Source("images/SimpleEntity.png")
+    ImageResource simpleEntity();
+
+    @Source("images/small_molecule_key.png")
+    ImageResource smallMoleculeKey();
+
+    @Source("images/summary_panel_example.png")
+    ImageResource summaryPanelExample();
 
     @Source("images/UpdateTag.png")
     ImageResource updatedTag();
@@ -130,30 +160,7 @@ public interface ReactomeImages extends ClientBundle {
     @Source("images/upArrow.png")
     ImageResource upArrow();
 
-    @Source("images/small_molecule_key.png")
-    ImageResource smallMoleculeKey();
-
-    @Source("images/loader.gif")
-    ImageResource loader();
-
-    @Source("images/details.png")
-    ImageResource details();
-
-    @Source("images/hierarchy.png")
-    ImageResource hierarchy();
-
-    @Source("images/diagram.png")
-    ImageResource diagram();
-
     @Source("images/yes.png")
     ImageResource yes();
 
-    @Source("images/next.png")
-    ImageResource next();
-
-    @Source("images/no.png")
-    ImageResource no();
-
-    @Source("images/summary_panel_example.png")
-    ImageResource summaryPanelExample();
 }
