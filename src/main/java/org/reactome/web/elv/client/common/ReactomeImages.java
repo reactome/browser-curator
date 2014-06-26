@@ -73,6 +73,9 @@ public interface ReactomeImages extends ClientBundle {
     @Source("images/download_file.png")
     ImageResource downloadFile();
 
+    @Source("images/EntitySet.png")
+    ImageResource entitySet();
+
     @Source("images/EntityWithAccessionedSequence.png")
     ImageResource entityWithAccessionedSequence();
 
@@ -144,6 +147,9 @@ public interface ReactomeImages extends ClientBundle {
 
     @Source("images/ReferenceDNASequence.png")
     ImageResource referenceDNASequence();
+
+    @Source("images/ReferenceGroup.png")
+    ImageResource referenceGroup();
 
     @Source("images/ReferenceRNASequence.png")
     ImageResource referenceRNASequence();

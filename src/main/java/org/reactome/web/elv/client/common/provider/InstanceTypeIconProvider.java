@@ -34,9 +34,9 @@ public abstract class InstanceTypeIconProvider {
             case DEPOLYMERISATION:
                 img = ReactomeImages.INSTANCE.depolymerization();
                 break;
-//            case ENTITY_SET:
-//                img = ReactomeImages.INSTANCE.set();
-//                break;
+            case ENTITY_SET:
+                img = ReactomeImages.INSTANCE.entitySet();
+                break;
             case REFERENCE_GENE_PRODUCT: //This is a hack to get the "proper icons" in the PM (need to be revisited)
             case REFERENCE_ISOFORM:
             case ENTITY_WITH_ACCESSIONED_SEQUENCE:
@@ -71,6 +71,9 @@ public abstract class InstanceTypeIconProvider {
                 break;
             case REFERENCE_DNA_SEQUENCE:
                 img = ReactomeImages.INSTANCE.referenceDNASequence();
+                break;
+            case REFERENCE_GROUP:
+                img = ReactomeImages.INSTANCE.referenceGroup();
                 break;
             case REFERENCE_RNA_SEQUENCE:
                 img = ReactomeImages.INSTANCE.referenceRNASequence();
