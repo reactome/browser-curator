@@ -40,7 +40,7 @@ public abstract class InstanceTypeIconProvider {
             case REFERENCE_GENE_PRODUCT: //This is a hack to get the "proper icons" in the PM (need to be revisited)
             case REFERENCE_ISOFORM:
             case ENTITY_WITH_ACCESSIONED_SEQUENCE:
-                img = ReactomeImages.INSTANCE.entity();
+                img = ReactomeImages.INSTANCE.entityWithAccessionedSequence();
                 break;
             /*case EQUIVALENT_EVENT_SET:
                 img = ReactomeImages.INSTANCE.equivalentEventSet();
