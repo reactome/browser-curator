@@ -73,8 +73,8 @@ public interface ReactomeImages extends ClientBundle {
     @Source("images/download_file.png")
     ImageResource downloadFile();
 
-    @Source("images/Entity.png")
-    ImageResource entity();
+    @Source("images/EntityWithAccessionedSequence.png")
+    ImageResource entityWithAccessionedSequence();
 
     @Source("images/EquivalentEventSet.png")
     ImageResource equivalentEventSet();
@@ -96,6 +96,9 @@ public interface ReactomeImages extends ClientBundle {
 
     @Source("images/hierarchy.png")
     ImageResource hierarchy();
+
+    @Source("images/information.png")
+    ImageResource information();
 
     @Source("images/isDisease.png")
     ImageResource isDisease();
