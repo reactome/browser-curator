@@ -14,7 +14,7 @@ import org.reactome.web.elv.client.details.tabs.molecules.presenter.LRUCache;
  * @author Kerstin Hausmann <khaus@ebi.ac.uk>
  */
 public class MoleculesViewImpl implements MoleculesView/*, MoleculesLoadedHandler */{
-    private static final String PREFIX = "\t\t[MoleculesView] -> ";
+    //private static final String PREFIX = "\t\t[MoleculesView] -> ";
     private final DetailsTabType TYPE = DetailsTabType.PARTICIPATING_MOLECULES;
     MoleculesView.Presenter presenter;
 
@@ -61,7 +61,9 @@ public class MoleculesViewImpl implements MoleculesView/*, MoleculesLoadedHandle
     @Override
     public void refreshTitle(Integer loadedMolecules){
         String aux;
-        if(loadedMolecules==0){
+        if(loadedMolecules == null){
+            aux = "";
+        }else if(loadedMolecules==0){
             aux = " (0)";
         }else{
             aux = " (" + loadedMolecules + ")";
@@ -101,6 +103,10 @@ public class MoleculesViewImpl implements MoleculesView/*, MoleculesLoadedHandle
             this.presenter.getMoleculesData();
 //            this.showMoleculesPanel(this.currentPanel);
         }
+
+        if(currentPanel != null){
+            this.refreshTitle(this.currentPanel.getNumberOfLoadedMolecules());
+        }
         //Needed for Subpathways:
         this.panelsLoaded.put(toShow.getDbId(), this.currentPanel);
         this.panelsLoadedForPathways.put(pathway.getDbId(), this.currentPanel);
@@ -121,6 +127,7 @@ public class MoleculesViewImpl implements MoleculesView/*, MoleculesLoadedHandle
             this.refreshTitle(this.currentPanel.getNumberOfLoadedMolecules());
             return true;
         } else {
+            this.refreshTitle(null);
             return false;
         }
     }
@@ -135,7 +142,7 @@ public class MoleculesViewImpl implements MoleculesView/*, MoleculesLoadedHandle
 
     @Override
     public void setMoleculesData(Result result) {
-        this.currentPanel = new MoleculesPanel(result);
+        this.currentPanel = new MoleculesPanel(result, this.toShow);
         //this.panelsLoaded.put(result, this.currentPanel);
         showMoleculesPanel(this.currentPanel);
     }

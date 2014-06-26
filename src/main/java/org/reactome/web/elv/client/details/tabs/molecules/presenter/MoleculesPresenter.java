@@ -8,6 +8,7 @@ import com.google.gwt.json.client.JSONParser;
 import org.reactome.web.elv.client.common.Controller;
 import org.reactome.web.elv.client.common.EventBus;
 import org.reactome.web.elv.client.common.data.factory.ModelFactory;
+import org.reactome.web.elv.client.common.data.factory.SchemaClass;
 import org.reactome.web.elv.client.common.data.model.DatabaseObject;
 import org.reactome.web.elv.client.common.data.model.Pathway;
 import org.reactome.web.elv.client.common.events.ELVEventType;
@@ -65,11 +66,17 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
         if(databaseObject != null){
             currentDatabaseObject = databaseObject;
             currentPathway = pathway;
+            if(currentDatabaseObject.getSchemaClass().equals(SchemaClass.PATHWAY)){
+                currentPathway = (Pathway) databaseObject;
+                if(!currentPathway.getHasDiagram()){
+                    currentPathway = pathway;
+                }
+            }
         }else{
             currentDatabaseObject = pathway;
             currentPathway = pathway;
         }
-        view.showInstanceDetails(pathway, databaseObject);
+        view.showInstanceDetails(currentPathway, currentDatabaseObject);
     }
 
     @Override

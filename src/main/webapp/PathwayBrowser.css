@@ -411,7 +411,7 @@
 }
 
 .elv-Details-Reference-MoleculesRow{
-    margin: 5px 0px 0px 15px;
+    margin: 5px 0 0 15px;
     float: left;
     color: #0000ff;
 }
@@ -428,6 +428,17 @@
     margin-top: 5px;
 }
 
+.elv-Molecules-InfoPanel{
+    background-color: azure;
+    border-radius: 5px;
+    border: 1px solid grey;
+    color: #063da0;
+    font-weight: bolder;
+    height: 30px;
+    margin: 5px 0 5px 5px;
+    padding: 4px 10px 4px 10px;
+}
+
 .elv-Molecules-Button{
     background-color: #f0ffff;
     border-radius: 5px;
@@ -437,6 +448,7 @@
     height: 20px;
     margin: 5px 0 5px 5px;
     padding: 4px 10px 4px 10px;
+    float: right;
 }
 
 .elv-InformationPanel-Download{
@@ -481,7 +493,7 @@
     float: left;
 
     border-radius: 5px;
-    border: 0px none;
+    border: 0 none;
     background-color: rgb(205, 205, 245);
 }
 
