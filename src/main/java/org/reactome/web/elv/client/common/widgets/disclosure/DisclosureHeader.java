@@ -20,7 +20,7 @@ import org.reactome.web.elv.client.details.model.widgets.DetailsPanel;
  * @author Kerstin Hausmann <khaus@ebi.ac.uk>
  */
 @SuppressWarnings("UnusedDeclaration")
-public class DisclosureHeader extends Composite implements OpenHandler<DisclosurePanel>, CloseHandler<DisclosurePanel> {
+public class DisclosureHeader extends Composite implements OpenHandler<DisclosurePanel>, CloseHandler<DisclosurePanel>, HasText {
 
     /**
      * A ClientBundle of resources used by this widget.
@@ -199,6 +199,17 @@ public class DisclosureHeader extends Composite implements OpenHandler<Disclosur
     public void onOpen(OpenEvent<DisclosurePanel> event) {
         this.buttonContainer.clear();
         this.buttonContainer.add(this.openedIcon);
+    }
+
+
+    @Override
+    public String getText() {
+        return this.title.getText();
+    }
+
+    @Override
+    public void setText(String s) {
+        setDisplayName(s);
     }
 
     public void setDisplayName(String text){
