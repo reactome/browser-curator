@@ -79,7 +79,7 @@ public class AdvancedState implements StableIdentifierLoader.StableIdentifierLoa
                     String[] tokens = token.split(DELIMITER);
                     for (String t : tokens) {
                         @SuppressWarnings("NonJREEmulationClassesInClientCode")
-                        String[] ts = t.split("=");
+                        String[] ts = t.split("=",2);
                         AdvancedStateKey key = AdvancedStateKey.getAdvancedStateKey(ts[0]);
                         if(key!=null){
                             toLoad.put(key, ts[1]);

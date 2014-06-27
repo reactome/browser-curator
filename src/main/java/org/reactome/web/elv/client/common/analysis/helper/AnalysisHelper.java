@@ -6,6 +6,7 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import org.reactome.web.elv.client.common.analysis.factory.AnalysisModelException;
 import org.reactome.web.elv.client.common.analysis.factory.AnalysisModelFactory;
+import org.reactome.web.elv.client.common.analysis.model.AnalysisResult;
 import org.reactome.web.elv.client.common.analysis.model.ResourceSummary;
 import org.reactome.web.elv.client.common.utils.Console;
 
@@ -27,6 +28,48 @@ public abstract class AnalysisHelper {
         void onResourceChosen(String resource);
     }
 
+    public interface TokenAvailabilityHandler {
+        void onTokenAvailabilityChecked(boolean available, String message);
+    }
+
+    public static void checkTokenAvailability(final String token, final TokenAvailabilityHandler handler){
+        String url = URL_PREFIX + "/token/" + token + "?pageSize=0&page=1";
+        RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, url);
+        requestBuilder.setHeader("Accept", "application/json");
+        try {
+            requestBuilder.sendRequest(null, new RequestCallback() {
+                @Override
+                public void onResponseReceived(Request request, Response response) {
+                    System.out.println(response.getStatusCode());
+                    switch (response.getStatusCode()){
+                        case Response.SC_OK:
+                            try {
+                                AnalysisResult result = AnalysisModelFactory.getModelObject(AnalysisResult.class, response.getText());
+                                resourceSummaryMap.put(token, result.getResourceSummary());
+                                handler.onTokenAvailabilityChecked(true, null);
+                            } catch (AnalysisModelException e) {
+                                Console.error(e.getMessage());
+                            }
+                            break;
+                        case Response.SC_GONE:
+                            handler.onTokenAvailabilityChecked(false, "Your result may have been deleted due to a new content release.\n" +
+                                                                      "Please submit your data again to obtain results for the latest version of our database");
+                            break;
+                        default:
+                            handler.onTokenAvailabilityChecked(false, "There is not result associated with the provided token");
+                    }
+                }
+
+                @Override
+                public void onError(Request request, Throwable exception) {
+                    Console.error(exception.getMessage());
+                }
+            });
+        }catch (RequestException ex) {
+            Console.error(ex.getMessage());
+        }
+    }
+
     public static void chooseResource(final String token, final ResourceChosenHandler handler){
         if(resourceSummaryMap.containsKey(token)){
             chooseResource(resourceSummaryMap.get(token), handler);
@@ -40,17 +83,27 @@ public abstract class AnalysisHelper {
             requestBuilder.sendRequest(null, new RequestCallback() {
                 @Override
                 public void onResponseReceived(Request request, Response response) {
-                    try {
-                        List<ResourceSummary> list = new LinkedList<ResourceSummary>();
-                        JSONArray aux = JSONParser.parseStrict(response.getText()).isArray();
-                        for (int i = 0; i < aux.size(); i++) {
-                            JSONObject resource = aux.get(i).isObject();
-                            list.add(AnalysisModelFactory.getModelObject(ResourceSummary.class, resource.toString()));
-                        }
-                        resourceSummaryMap.put(token, list);
-                        chooseResource(list, handler);
-                    } catch (AnalysisModelException e) {
-                        Console.error(e.getMessage());
+                    switch (response.getStatusCode()){
+                        case Response.SC_OK:
+                            try {
+                                List<ResourceSummary> list = new LinkedList<ResourceSummary>();
+                                JSONArray aux = JSONParser.parseStrict(response.getText()).isArray();
+                                for (int i = 0; i < aux.size(); i++) {
+                                    JSONObject resource = aux.get(i).isObject();
+                                    list.add(AnalysisModelFactory.getModelObject(ResourceSummary.class, resource.toString()));
+                                }
+                                resourceSummaryMap.put(token, list);
+                                chooseResource(list, handler);
+                            } catch (AnalysisModelException e) {
+                                Console.error(e.getMessage());
+                            }
+                            break;
+                        case Response.SC_GONE:
+                            Console.error("Your result may have been deleted due to a new content release. " +
+                                          "Please submit your data again to obtain results for the latest version of our database");
+                            break;
+                        default:
+                            Console.error(response.getStatusText());
                     }
                 }
 

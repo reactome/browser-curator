@@ -7,12 +7,14 @@ import org.reactome.web.elv.client.center.content.analysis.event.AnalysisComplet
 import org.reactome.web.elv.client.center.model.CenterToolType;
 import org.reactome.web.elv.client.common.Controller;
 import org.reactome.web.elv.client.common.EventBus;
+import org.reactome.web.elv.client.common.analysis.helper.AnalysisHelper;
 import org.reactome.web.elv.client.common.data.model.DatabaseObject;
 import org.reactome.web.elv.client.common.data.model.Event;
 import org.reactome.web.elv.client.common.data.model.Pathway;
 import org.reactome.web.elv.client.common.data.model.Species;
 import org.reactome.web.elv.client.common.events.ELVEventType;
 import org.reactome.web.elv.client.common.model.Path;
+import org.reactome.web.elv.client.common.widgets.CustomDialogBox;
 import org.reactome.web.elv.client.details.model.DetailsTabType;
 import org.reactome.web.elv.client.details.tabs.analysis.events.AnalysisTabPathwaySelected;
 
@@ -115,12 +117,22 @@ public class StateManager extends Controller implements ValueChangeHandler<Strin
 
         //SIXTH STEP -> check the analysis token
         if(!currentState.hasReachedAnalysisState(desiredState)){
-            String analysisId = desiredState.getAnalysisToken();
-            currentState.setAnalysisToken(analysisId);
-            if(analysisId==null){
+            final String token = desiredState.getAnalysisToken();
+            currentState.setAnalysisToken(token);
+            if(token==null){
                 this.eventBus.fireELVEvent(ELVEventType.STATE_MANAGER_ANALYSIS_TOKEN_RESET);
             }else{
-                this.eventBus.fireELVEvent(ELVEventType.STATE_MANAGER_ANALYSIS_TOKEN_SELECTED, analysisId);
+                AnalysisHelper.checkTokenAvailability(token, new AnalysisHelper.TokenAvailabilityHandler() {
+                    @Override
+                    public void onTokenAvailabilityChecked(boolean available, String message) {
+                        if(available){
+                            eventBus.fireELVEvent(ELVEventType.STATE_MANAGER_ANALYSIS_TOKEN_SELECTED, token);
+                        }else{
+                            CustomDialogBox.alertBox("Analysis", message).center();
+                            resetAnalysisToken();
+                        }
+                    }
+                });
             }
         }
 
@@ -167,9 +179,8 @@ public class StateManager extends Controller implements ValueChangeHandler<Strin
 
     @Override
     public void onDiagramAnalysisIdReset() {
-        currentState.setAnalysisToken(null);
+        resetAnalysisToken(); //reset analysis token DOES NOT modify the url (that is done in purpose)
         History.newItem(currentState.toString(), false);
-        this.eventBus.fireELVEvent(ELVEventType.STATE_MANAGER_ANALYSIS_TOKEN_RESET);
     }
 
     @Override
@@ -251,5 +262,10 @@ public class StateManager extends Controller implements ValueChangeHandler<Strin
         } else {
             this.currentState.setInstance(databaseObject);
         }
+    }
+
+    private void resetAnalysisToken(){
+        currentState.setAnalysisToken(null);
+        this.eventBus.fireELVEvent(ELVEventType.STATE_MANAGER_ANALYSIS_TOKEN_RESET);
     }
 }
