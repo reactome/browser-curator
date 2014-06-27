@@ -125,11 +125,13 @@ public class StateManager extends Controller implements ValueChangeHandler<Strin
                 AnalysisHelper.checkTokenAvailability(token, new AnalysisHelper.TokenAvailabilityHandler() {
                     @Override
                     public void onTokenAvailabilityChecked(boolean available, String message) {
+                        //We don NOT want to remove the token in this iteration if is not available, but we want to flag
+                        //it as "delete" when a new action happens. The analysis state remains reached so no more checks
+                        currentState.setAnalysisTokenAvailable(available);
                         if(available){
                             eventBus.fireELVEvent(ELVEventType.STATE_MANAGER_ANALYSIS_TOKEN_SELECTED, token);
                         }else{
                             CustomDialogBox.alertBox("Analysis", message).center();
-                            resetAnalysisToken();
                         }
                     }
                 });
@@ -179,8 +181,9 @@ public class StateManager extends Controller implements ValueChangeHandler<Strin
 
     @Override
     public void onDiagramAnalysisIdReset() {
-        resetAnalysisToken(); //reset analysis token DOES NOT modify the url (that is done in purpose)
+        currentState.setAnalysisToken(null);
         History.newItem(currentState.toString(), false);
+        this.eventBus.fireELVEvent(ELVEventType.STATE_MANAGER_ANALYSIS_TOKEN_RESET);
     }
 
     @Override
@@ -262,10 +265,5 @@ public class StateManager extends Controller implements ValueChangeHandler<Strin
         } else {
             this.currentState.setInstance(databaseObject);
         }
-    }
-
-    private void resetAnalysisToken(){
-        currentState.setAnalysisToken(null);
-        this.eventBus.fireELVEvent(ELVEventType.STATE_MANAGER_ANALYSIS_TOKEN_RESET);
     }
 }

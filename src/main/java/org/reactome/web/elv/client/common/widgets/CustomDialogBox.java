@@ -31,6 +31,7 @@ public abstract class CustomDialogBox {
         panel.add(buttonClose);
         panel.setCellHorizontalAlignment(buttonClose, HasAlignment.ALIGN_RIGHT);
         box.add(panel);
+        box.getElement().getStyle().setZIndex(1000);
         return box;
     }
 }
