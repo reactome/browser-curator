@@ -13,6 +13,7 @@ import org.reactome.web.elv.client.common.data.model.Species;
 import org.reactome.web.elv.client.common.provider.InstanceTypeExplanation;
 import org.reactome.web.elv.client.common.provider.InstanceTypeIconProvider;
 import org.reactome.web.elv.client.details.tabs.molecules.model.data.Result;
+import org.reactome.web.elv.client.details.tabs.molecules.model.type.PropertyType;
 import org.reactome.web.elv.client.details.tabs.molecules.model.widget.MoleculesDownloadPanel;
 import org.reactome.web.elv.client.details.tabs.molecules.model.widget.MoleculesViewPanel;
 import org.reactome.web.elv.client.popups.help.HelpPopupImage;
@@ -144,6 +145,16 @@ public class MoleculesPanel extends DockLayoutPanel {
             return 0;
         }
         return result.getNumberOfMolecules();
+    }
+
+    public Integer getNumberOfHighlightedMolecules() {
+        int numOfHighlightedMolecules = 0;
+        numOfHighlightedMolecules += this.result.getNumHighlight(PropertyType.OTHERS);
+        numOfHighlightedMolecules += this.result.getNumHighlight(PropertyType.SEQUENCES);
+        numOfHighlightedMolecules += this.result.getNumHighlight(PropertyType.PROTEINS);
+        numOfHighlightedMolecules += this.result.getNumHighlight(PropertyType.CHEMICAL_COMPOUNDS);
+
+        return numOfHighlightedMolecules;
     }
 
     //Avoids loading if Pathway-with-Diagram stays the same.

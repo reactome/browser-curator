@@ -75,6 +75,7 @@ public class MoleculesViewImpl implements MoleculesView/*, MoleculesLoadedHandle
         }else if(loadedMolecules==0){
             aux = " (0)";
         }else{
+//            aux = " (" + this.currentPanel.getNumberOfHighlightedMolecules() + "/" + loadedMolecules + ")";
             aux = " (" + loadedMolecules + ")";
         }
         this.title.getElement().setInnerHTML(TYPE.getTitle() + aux);
