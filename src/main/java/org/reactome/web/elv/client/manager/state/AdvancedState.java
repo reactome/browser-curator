@@ -35,6 +35,7 @@ public class AdvancedState implements StableIdentifierLoader.StableIdentifierLoa
     private DetailsTabType detailsTab;
     private CenterToolType tool;
     private String analysisToken = null;
+    private boolean analysisTokenAvailable = false;
 
     public static void create(String token, AdvancedStateLoadedHandler handler){
         new AdvancedState(token, handler);
@@ -197,6 +198,10 @@ public class AdvancedState implements StableIdentifierLoader.StableIdentifierLoa
         return analysisToken;
     }
 
+    public boolean isAnalysisTokenAvailable() {
+        return analysisTokenAvailable;
+    }
+
     public boolean hasReachToolState(AdvancedState state){
         if(this.tool==null){
             return state.getCenterTool() == null;
@@ -281,6 +286,10 @@ public class AdvancedState implements StableIdentifierLoader.StableIdentifierLoa
         this.checkComplete(AdvancedStateKey.ANALYSIS);
     }
 
+    public void setAnalysisTokenAvailable(boolean analysisTokenAvailable) {
+        this.analysisTokenAvailable = analysisTokenAvailable;
+    }
+
     /**
      * Returns the path until the loaded diagram (without including it)
      *
@@ -347,7 +356,7 @@ public class AdvancedState implements StableIdentifierLoader.StableIdentifierLoa
             addDelimiter = true;
         }
 
-        if (analysisToken != null && !analysisToken.isEmpty()) {
+        if (analysisTokenAvailable && analysisToken != null && !analysisToken.isEmpty()) {
             if (addDelimiter) token.append(DELIMITER);
             token.append(AdvancedStateKey.ANALYSIS.getDefaultKey());
             token.append("=");

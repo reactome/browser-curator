@@ -75,7 +75,7 @@ public class ReferenceEntityPanel extends DetailsPanel implements OpenHandler<Di
         }
 
         if(vp.getWidgetCount()==0){
-            vp.add(getErrorMessage("There is not more info available"));
+            vp.add(getErrorMessage("No more information available"));
         }
 
         this.disclosurePanel.setContent(vp);
