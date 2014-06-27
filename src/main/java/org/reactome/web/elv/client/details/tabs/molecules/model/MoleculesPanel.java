@@ -68,7 +68,7 @@ public class MoleculesPanel extends DockLayoutPanel {
         button.setStyleName("elv-Molecules-Button");
         topBar.add(button);
         this.addNorth(topBar, 35);
-        topBar.getElement().getStyle().setWidth(99, Style.Unit.PC);
+        topBar.getElement().getStyle().setWidth(99, Style.Unit.PCT);
         this.swapPanel = this.view;
         this.add(swapPanel);
     }
@@ -117,7 +117,7 @@ public class MoleculesPanel extends DockLayoutPanel {
         HorizontalPanel infoPanel = new HorizontalPanel();
         infoPanel.setStyleName("elv-Molecules-InfoPanel");
         try{
-            ImageResource img = ReactomeImages.INSTANCE.eye();
+            ImageResource img = ReactomeImages.INSTANCE.information();
             String helpTitle = "Info";
             HTMLPanel helpContent = new HTMLPanel(
                     "You are now in the Molecules tab which shows you all the molecules of a pathway that has a diagram.\n" +

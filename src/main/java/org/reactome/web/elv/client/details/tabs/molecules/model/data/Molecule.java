@@ -12,6 +12,7 @@ import java.util.List;
  */
 
 public class Molecule extends ReferenceEntity implements Comparable<Molecule>{
+    private SchemaClass schemaClass;
     private String url;
     private boolean toHighlight;
     private int occurrenceInPathway = 0;
@@ -22,6 +23,18 @@ public class Molecule extends ReferenceEntity implements Comparable<Molecule>{
         if(jsonObject.isObject().containsKey("url")){
             url = jsonObject.isObject().get("url").toString();
             url = url.substring(1, url.length()-1);
+        }
+
+        switch (schemaClass){
+            case REFERENCE_GENE_PRODUCT:
+            case REFERENCE_ISOFORM:
+                this.schemaClass = SchemaClass.getSchemaClass(SchemaClass.ENTITY_WITH_ACCESSIONED_SEQUENCE.schemaClass);
+                break;
+            case REFERENCE_MOLECULE:
+                this.schemaClass = SchemaClass.getSchemaClass(SchemaClass.SIMPLE_ENTITY.schemaClass);
+                break;
+            default:
+                this.schemaClass = schemaClass;
         }
     }
 
@@ -47,6 +60,10 @@ public class Molecule extends ReferenceEntity implements Comparable<Molecule>{
 
     public void setOccurrenceInPathway(int occurrence) {
         this.occurrenceInPathway = occurrence;
+    }
+
+    public SchemaClass getSchemaClass() {
+        return schemaClass;
     }
 
 

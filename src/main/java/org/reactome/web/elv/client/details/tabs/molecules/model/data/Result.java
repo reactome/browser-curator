@@ -1,6 +1,5 @@
 package org.reactome.web.elv.client.details.tabs.molecules.model.data;
 
-import org.reactome.web.elv.client.common.data.factory.SchemaClass;
 import org.reactome.web.elv.client.common.utils.MapSet;
 
 import java.util.ArrayList;
@@ -23,15 +22,20 @@ public class Result {
     public Result(ArrayList<Molecule> molecules){
         for(Molecule molecule : molecules){
             //SchemaClass doesn't seem to be aware of hierarchy therefore each class must be checked
-            if(molecule.getSchemaClass() == SchemaClass.REFERENCE_GENE_PRODUCT || molecule.getSchemaClass() == SchemaClass.REFERENCE_ISOFORM){
-                proteins.add(molecule);
-            }else if(molecule.getSchemaClass() == SchemaClass.REFERENCE_MOLECULE || molecule.getSchemaClass() == SchemaClass.SIMPLE_ENTITY){
-                chemicals.add(molecule);
-            }else if(molecule.getSchemaClass() == SchemaClass.REFERENCE_SEQUENCE || molecule.getSchemaClass() == SchemaClass.REFERENCE_DNA_SEQUENCE ||
-                     molecule.getSchemaClass() == SchemaClass.REFERENCE_RNA_SEQUENCE){
-                sequences.add(molecule);
-            }else{
-                others.add(molecule);
+            switch (molecule.getSchemaClass()){
+                case ENTITY_WITH_ACCESSIONED_SEQUENCE:
+                    proteins.add(molecule);
+                    break;
+                case REFERENCE_RNA_SEQUENCE:
+                case REFERENCE_DNA_SEQUENCE:
+                case REFERENCE_SEQUENCE:
+                    sequences.add(molecule);
+                    break;
+                case SIMPLE_ENTITY:
+                    chemicals.add(molecule);
+                    break;
+                default:
+                    others.add(molecule);
             }
         }
     }

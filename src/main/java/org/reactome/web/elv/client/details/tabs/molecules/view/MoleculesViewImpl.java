@@ -24,7 +24,16 @@ public class MoleculesViewImpl implements MoleculesView/*, MoleculesLoadedHandle
     //private Map<Long, MoleculesPanel> panelsLoaded = new HashMap<Long, MoleculesPanel>();
     //private Map<Long, MoleculesPanel> panelsLoadedForPathways = new HashMap<Long, MoleculesPanel>();
     //Aren't Caches better? As they store only the least recently used data?
-    private LRUCache<Long, MoleculesPanel> panelsLoaded = new LRUCache<Long, MoleculesPanel>();
+    private class IdPair{
+        private Long pathwayId;
+        private Long toShowId;
+
+        private IdPair(Long pathwayId, Long toShowId) {
+            this.pathwayId = pathwayId;
+            this.toShowId = toShowId;
+        }
+    }
+    private LRUCache<IdPair, MoleculesPanel> panelsLoaded = new LRUCache<IdPair, MoleculesPanel>();
     private LRUCache<Long, MoleculesPanel> panelsLoadedForPathways = new LRUCache<Long, MoleculesPanel>();
 
     private MoleculesPanel currentPanel;
@@ -108,7 +117,7 @@ public class MoleculesViewImpl implements MoleculesView/*, MoleculesLoadedHandle
             this.refreshTitle(this.currentPanel.getNumberOfLoadedMolecules());
         }
         //Needed for Subpathways:
-        this.panelsLoaded.put(toShow.getDbId(), this.currentPanel);
+        this.panelsLoaded.put(new IdPair(toShow.getDbId(), pathwayDiagram.getDbId()), this.currentPanel);
         this.panelsLoadedForPathways.put(pathway.getDbId(), this.currentPanel);
     }
 
@@ -119,13 +128,19 @@ public class MoleculesViewImpl implements MoleculesView/*, MoleculesLoadedHandle
 //        }
         this.pathwayDiagram = pathway;
         toShow = databaseObject != null ? databaseObject : pathway;
-        if (this.panelsLoaded.containsKey(toShow.getDbId())) {
-            this.currentPanel = this.panelsLoaded.get(toShow.getDbId());
+        IdPair dbIds = new IdPair(pathwayDiagram.getDbId(), toShow.getDbId());
+
+        if (this.panelsLoaded.containsKey(dbIds)) {
+            this.currentPanel = this.panelsLoaded.get(dbIds);
             showMoleculesPanel(this.currentPanel);
             this.tab.clear();
             this.tab.add(currentPanel);
             this.refreshTitle(this.currentPanel.getNumberOfLoadedMolecules());
             return true;
+        } else if(panelsLoadedForPathways.containsKey(pathwayDiagram.getDbId())) {
+            this.currentPanel = this.panelsLoadedForPathways.get(pathwayDiagram.getDbId());
+            this.refreshTitle(this.currentPanel.getNumberOfLoadedMolecules());
+            return false;
         } else {
             this.refreshTitle(null);
             return false;
@@ -153,7 +168,7 @@ public class MoleculesViewImpl implements MoleculesView/*, MoleculesLoadedHandle
         this.tab.clear(); //in case a different result is currently shown
         this.tab.add(currentPanel);
 
-        this.panelsLoaded.put(toShow.getDbId(), this.currentPanel);
+        this.panelsLoaded.put(new IdPair(pathwayDiagram.getDbId(), toShow.getDbId()), this.currentPanel);
         this.panelsLoadedForPathways.put(this.pathwayDiagram.getDbId(), this.currentPanel);
     }
 
@@ -191,7 +206,7 @@ public class MoleculesViewImpl implements MoleculesView/*, MoleculesLoadedHandle
         this.tab.add(panel);
         this.refreshTitle(panel.getNumberOfLoadedMolecules());
 
-        this.panelsLoaded.put(toShow.getDbId(), this.currentPanel);
+        this.panelsLoaded.put(new IdPair(pathwayDiagram.getDbId(), toShow.getDbId()), this.currentPanel);
         this.panelsLoadedForPathways.put(this.pathwayDiagram.getDbId(), this.currentPanel);
     }
 
