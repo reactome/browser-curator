@@ -24,7 +24,12 @@ public class TablePanel extends Composite implements OpenHandler<DisclosurePanel
         this.size = size;
         this.result = result;
 
-        displayText = propertyType.getTitle() + " (" + result.numHighlight(propertyType) + "/" + this.size + ")";
+        int toHighlight = result.getNumHighlight(propertyType);
+        if(toHighlight == this.size){
+            displayText = propertyType.getTitle() + " (" + this.size + ")";
+        }else{
+            displayText = propertyType.getTitle() + " (" + result.getNumHighlight(propertyType) + "/" + this.size + ")";
+        }
 
         this.disclosurePanel = DisclosurePanelFactory.getAdvancedDisclosurePanel(displayText, null);
 
@@ -56,7 +61,12 @@ public class TablePanel extends Composite implements OpenHandler<DisclosurePanel
         this.result = result;
         this.size = size;
 
-        displayText = propertyType.getTitle() + " (" + result.numHighlight(propertyType) + "/" + this.size + ")";
+        int toHighlight = result.getNumHighlight(propertyType);
+        if(toHighlight == this.size){
+            displayText = propertyType.getTitle() + " (" + this.size + ")";
+        }else{
+            displayText = propertyType.getTitle() + " (" + result.getNumHighlight(propertyType) + "/" + this.size + ")";
+        }
         this.disclosurePanel.getHeaderTextAccessor().setText(displayText);
 
         if(this.disclosurePanel.isOpen()){

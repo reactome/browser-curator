@@ -228,7 +228,7 @@ public class Result {
         }
     }
 
-    public int numHighlight(PropertyType category) {
+    public int getNumHighlight(PropertyType category) {
         int numHighlight = -1;
         switch (category){
             case CHEMICAL_COMPOUNDS:
@@ -245,7 +245,7 @@ public class Result {
                 break;
             default:
                 numHighlight = -1;
-                Console.error("There was an additional molecules category in class Result -> numHighlight.");
+                Console.error("There was an additional molecules category in class Result -> getNumHighlight.");
         }
         return numHighlight;
     }
