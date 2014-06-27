@@ -21,22 +21,17 @@ public class TablePanel extends Composite implements OpenHandler<DisclosurePanel
 
     private PropertyType propertyType;
     private Result result;
-    private String category;
     private int size;
     private MoleculesTable moleculesTable;
 
-    public TablePanel(String name, int size, Result result) {
-        this.category = name;
+    public TablePanel(PropertyType category, int size, Result result) {
+        this.propertyType = category;
         this.size = size;
         this.result = result;
 
         overview = new FlowPanel();
-        namePanel = new TextPanel(category+ " (" + this.size + ")");
-        namePanel.setTitle("Show list of participating " + category);
-
-        String title = name.toUpperCase();
-        title = title.replace(" ", "_");
-        this.propertyType = PropertyType.valueOf(title);
+        namePanel = new TextPanel(propertyType.getTitle() + " (" + result.numHighlight(propertyType) + "/" + this.size + ")");
+        namePanel.setTitle("Show list of participating " + propertyType.getTitle());
 
         overview.insert(namePanel, 0);
         namePanel.asWidget().getElement().getStyle().setFloat(Style.Float.LEFT);
@@ -79,8 +74,16 @@ public class TablePanel extends Composite implements OpenHandler<DisclosurePanel
 
     public void update(int size, Result result){
         this.result = result;
-        this.size = 0;
+        this.size = size;
         //this.disclosurePanel.setHeader(overview.asWidget());
+
+        overview.clear();
+        namePanel = new TextPanel(propertyType.getTitle() + " (" + result.numHighlight(propertyType) + "/" + this.size + ")");
+        namePanel.setTitle("Show list of participating " + propertyType.getTitle());
+        overview.insert(namePanel, 0);
+        namePanel.asWidget().getElement().getStyle().setFloat(Style.Float.LEFT);
+        namePanel.asWidget().getElement().getStyle().setMarginTop(5, Style.Unit.PX);
+        namePanel.asWidget().getElement().getStyle().setMarginLeft(5, Style.Unit.PX);
 
         if(this.disclosurePanel.isOpen()){
             switch (propertyType){

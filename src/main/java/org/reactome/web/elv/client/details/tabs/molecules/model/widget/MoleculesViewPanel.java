@@ -5,6 +5,7 @@ import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import org.reactome.web.elv.client.details.tabs.molecules.model.data.Result;
+import org.reactome.web.elv.client.details.tabs.molecules.model.type.PropertyType;
 
 /**
  * @author Kerstin Hausmann <khaus@ebi.ac.uk>
@@ -34,7 +35,7 @@ public class MoleculesViewPanel extends DockLayoutPanel {
         if(result != null){
             size = result.getChemicals().size();
             if(size > 0){
-                chemicalsPanel = new TablePanel("Chemical Compounds", size, result);
+                chemicalsPanel = new TablePanel(PropertyType.CHEMICAL_COMPOUNDS, size, result);
                 chemicalsPanel.addStyleName("elv-Details-OverviewRow");
                 chemicalsPanel.asWidget().setWidth("99%");
 
@@ -43,7 +44,7 @@ public class MoleculesViewPanel extends DockLayoutPanel {
 
             size = result.getProteins().size();
             if(size > 0){
-                proteinsPanel = new TablePanel("Proteins", size, result);
+                proteinsPanel = new TablePanel(PropertyType.PROTEINS, size, result);
                 proteinsPanel.addStyleName("elv-Details-OverviewRow");
                 proteinsPanel.asWidget().setWidth("99%");
 
@@ -52,7 +53,7 @@ public class MoleculesViewPanel extends DockLayoutPanel {
 
             size = result.getSequences().size();
             if(size > 0){
-                sequencesPanel = new TablePanel("Sequences", size, result);
+                sequencesPanel = new TablePanel(PropertyType.SEQUENCES, size, result);
                 sequencesPanel.addStyleName("elv-Details-OverviewRow");
                 sequencesPanel.asWidget().setWidth("99%");
 
@@ -61,7 +62,7 @@ public class MoleculesViewPanel extends DockLayoutPanel {
 
             size = result.getOthers().size();
             if(size > 0){
-                othersPanel = new TablePanel("Others", size, result);
+                othersPanel = new TablePanel(PropertyType.OTHERS, size, result);
                 othersPanel.addStyleName("elv-Details-OverviewRow");
                 othersPanel.asWidget().setWidth("99%");
 

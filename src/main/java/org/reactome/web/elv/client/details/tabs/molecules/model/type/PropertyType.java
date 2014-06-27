@@ -20,4 +20,14 @@ public enum PropertyType {
     public String getTitle() {
         return title;
     }
+
+    public static PropertyType getPropertyType(String type){
+        for (PropertyType pt : values()) {
+            if(pt.title.equals(type)){
+                return pt;
+            }
+        }
+        return null;
+    }
+
 }

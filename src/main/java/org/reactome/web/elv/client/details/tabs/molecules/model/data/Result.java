@@ -1,6 +1,8 @@
 package org.reactome.web.elv.client.details.tabs.molecules.model.data;
 
+import org.reactome.web.elv.client.common.utils.Console;
 import org.reactome.web.elv.client.common.utils.MapSet;
+import org.reactome.web.elv.client.details.tabs.molecules.model.type.PropertyType;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -226,4 +228,35 @@ public class Result {
         }
     }
 
+    public int numHighlight(PropertyType category) {
+        int numHighlight = -1;
+        switch (category){
+            case CHEMICAL_COMPOUNDS:
+                numHighlight = numHighlight(this.chemicals);
+                break;
+            case PROTEINS:
+                numHighlight = numHighlight(proteins);
+                break;
+            case SEQUENCES:
+                numHighlight = numHighlight(sequences);
+                break;
+            case OTHERS:
+                numHighlight = numHighlight(others);
+                break;
+            default:
+                numHighlight = -1;
+                Console.error("There was an additional molecules category in class Result -> numHighlight.");
+        }
+        return numHighlight;
+    }
+
+    private int numHighlight(HashSet<Molecule> toHighlight){
+        int numHighlight = 0;
+        for(Molecule molecule : toHighlight){
+            if(molecule.isToHighlight()){
+                ++ numHighlight;
+            }
+        }
+        return numHighlight;
+    }
 }
