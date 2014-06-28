@@ -56,6 +56,7 @@ public class TopBarViewImpl implements TopBarView {
 
     @Override
     public void selectSpecies(Species species) {
+        this.topBar.setSpeciesSelectorStyle(this.speciesSelectorPanel, species);
         this.speciesSelectorPanel.selectSpecies(species);
     }
 
