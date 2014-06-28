@@ -15,8 +15,7 @@ public interface AnalysisTabView extends DetailsTabView<AnalysisTabView.Presente
     }
 
     void clearSelection();
-    void refreshTitle(Integer foundPathways);
-    void scrollToSelected();
     void selectPathway(Pathway pathway);
     void showResult(AnalysisResult analysisResult, String resource);
+    void showWaitingMessage();
 }
