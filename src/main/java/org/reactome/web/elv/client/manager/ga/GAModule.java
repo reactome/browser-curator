@@ -10,6 +10,8 @@ public enum GAModule {
     TOP_BAR,
     EVENT_HIERARCHY,
     DIAGRAM,
+    /** CENTER TOOLS **/
+    ANALYSIS_TOOL,
     /** DETAILS PANEL **/
     DETAILS,
     OVERVIEW_TAB,

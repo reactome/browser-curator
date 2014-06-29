@@ -160,7 +160,7 @@ public class GAManager extends Controller {
 
     @Override
     public void onAnalysisCompleted(AnalysisCompletedEvent event) {
-        this.trackEvent(GACategory.ANALYSIS_TOOL, GAAction.PERFORMED, GAModule.ANALYSIS_TAB);
+        this.trackEvent(GACategory.ANALYSIS_TOOL, GAAction.PERFORMED, GAModule.ANALYSIS_TOOL);
     }
 
     @Override
