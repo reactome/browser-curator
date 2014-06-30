@@ -121,13 +121,14 @@ public class MoleculesPanel extends DockLayoutPanel {
             ImageResource img = ReactomeImages.INSTANCE.information();
             String helpTitle = "Info";
             HTMLPanel helpContent = new HTMLPanel(
-                    "You are now in the Molecules tab which shows you all the molecules of a pathway that has a diagram.\n" +
-                    "The molecules will be grouped in Chemical Compounds, Proteins, Sequences and Others.\n" +
-                    "If you select an element that is part of a pathway those molecules will be highlighted.\n" +
+                    "The molecules tab shows you all the molecules of a complete pathway diagram.\n" +
+                    "Molecules are grouped in Chemical Compounds, Proteins, Sequences and Others.\n" +
+                    "The molecules of a selected object appear highlighted in the molecules lists;\n" +
+                    "a molecule selected in the list will be highlighted in the diagram.\n" +
                     "For each molecule you can see a symbol, a link to the main reference DB, a name and the number of\n" +
                     "occurrences in the pathway.\n" +
                     "Expanding by clicking on the '+' will provide you with further external links.\n" +
-                    "In addition to these lists there is a Download available. Just click on the button in the top right\n" +
+                    "Lists can be downloaded. Just click on the button in the top right\n" +
                     "corner, select the fields and types you are interested in and click 'Start Download'.");
             infoPanel.add(new HelpPopupImage(img, helpTitle, helpContent));
         }catch (Exception e){
