@@ -52,10 +52,10 @@ public abstract class AnalysisHelper {
                             break;
                         case Response.SC_GONE:
                             handler.onTokenAvailabilityChecked(false, "Your result may have been deleted due to a new content release.\n" +
-                                                                      "Please submit your data again to obtain results for the latest version of our database");
+                                                                      "Please submit your data again to obtain results from the latest version of our database");
                             break;
                         default:
-                            handler.onTokenAvailabilityChecked(false, "There is not result associated with the provided token");
+                            handler.onTokenAvailabilityChecked(false, "There is no result associated with the provided token (in the url) from a previous analysis");
                     }
                 }
 
