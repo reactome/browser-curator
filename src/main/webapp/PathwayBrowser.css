@@ -450,6 +450,11 @@
     padding: 4px 10px 4px 10px;
     float: right;
 }
+.elv-Molecules-Button:hover{
+    cursor: pointer;
+    background-color:ghostwhite;
+    border-radius: 5px;
+}
 
 .elv-InformationPanel-Download{
     margin: 2px 0 5px 5px;
