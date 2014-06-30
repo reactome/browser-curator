@@ -7,6 +7,7 @@ import org.reactome.web.elv.client.center.content.analysis.event.AnalysisComplet
 import org.reactome.web.elv.client.center.model.CenterToolType;
 import org.reactome.web.elv.client.common.Controller;
 import org.reactome.web.elv.client.common.EventBus;
+import org.reactome.web.elv.client.common.LocationHelper;
 import org.reactome.web.elv.client.common.analysis.helper.AnalysisHelper;
 import org.reactome.web.elv.client.common.data.model.DatabaseObject;
 import org.reactome.web.elv.client.common.data.model.Event;
@@ -32,6 +33,8 @@ import java.util.LinkedList;
  */
 public class StateManager extends Controller implements ValueChangeHandler<String>, AdvancedState.AdvancedStateLoadedHandler {
     private Pathway selectedDiagram;
+
+    private boolean analysisAvailable =  LocationHelper.isAnalysisAvailable();
 
     private AdvancedState currentState = new AdvancedState();
     private AdvancedState desiredState = new AdvancedState();
@@ -115,8 +118,8 @@ public class StateManager extends Controller implements ValueChangeHandler<Strin
             }
         }
 
-        //SIXTH STEP -> check the analysis token
-        if(!currentState.hasReachedAnalysisState(desiredState)){
+        //SIXTH STEP -> check the analysis token (only if analysis is Available for the current server)
+        if(this.analysisAvailable && !currentState.hasReachedAnalysisState(desiredState)){
             final String token = desiredState.getAnalysisToken();
             currentState.setAnalysisToken(token);
             if(token==null){

@@ -11,6 +11,7 @@ public abstract class LocationHelper {
         PRODUCTION,
         DEV,
         CURATOR,
+        LOCALHOST,
         OTHER
     }
 
@@ -26,7 +27,21 @@ public abstract class LocationHelper {
             if(hostName.equals("reactomecurator.oicr.on.ca")){
                 return Location.CURATOR;
             }
+            if(hostName.equals("localhost") || hostName.equals("127.0.0.1")){
+                return Location.LOCALHOST;
+            }
         }
         return Location.OTHER;
+    }
+
+    public static boolean isAnalysisAvailable(){
+        switch (getLocation()){
+            case PRODUCTION:
+            case DEV:
+            case LOCALHOST:
+                return true;
+            default:
+                return false;
+        }
     }
 }

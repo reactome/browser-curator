@@ -6,6 +6,7 @@ import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.ToggleButton;
 import org.reactome.web.elv.client.common.Controller;
 import org.reactome.web.elv.client.common.EventBus;
+import org.reactome.web.elv.client.common.LocationHelper;
 import org.reactome.web.elv.client.common.ReactomeImages;
 import org.reactome.web.elv.client.common.data.model.*;
 import org.reactome.web.elv.client.common.events.ELVEventType;
@@ -381,13 +382,13 @@ public class TourManager extends Controller implements TourQuestionEventHandler,
     private void tourToDetailsPanel(){
         tourStateChanged(TourStage.TEST_DETAILS, 0);
         StringBuilder sb = new StringBuilder();
-        for (DetailsTabType detailsTabType : DetailsTabType.values()) {
+        for (DetailsTabType detailsTabType : DetailsTabType.values(true)) {
             sb.append(detailsTabType.getTitle());
             sb.append(", ");
         }
         sb.delete(sb.length()-2, sb.length());
         message.setContent("...and finally the details panel\n" +
-                "It contains " + DetailsTabType.values().length +"  different tabs: " + sb.toString() + "\n" +
+                "It contains " + DetailsTabType.values(true).size() +"  different tabs: " + sb.toString() + "\n" +
                 "Please click on Next to continue");
     }
 
@@ -438,11 +439,15 @@ public class TourManager extends Controller implements TourQuestionEventHandler,
     }
 
     private void tourToDetailsPanelStep6(){
-        tourStateChanged(TourStage.TEST_DETAILS, 6);
-        message.setContent("The current tab displays the result of the analysis tool\n" +
-                "It is shown in a table and is interactive with the rest of the pathway browser\n" +
-                "Please open the data submission tool clicking the icon ( __image__ ) placed on the top bar of the pathway browser " +
-                "Please select the Processes tab or click on Next to continue", ReactomeImages.INSTANCE.analysisTool());
+        if(!LocationHelper.isAnalysisAvailable()){
+            tourToDetailsPanelStep7();  //In some installations the analysis tools are not available so we do not show the tab
+        }else {
+            tourStateChanged(TourStage.TEST_DETAILS, 6);
+            message.setContent("The current tab displays the result of the analysis tool\n" +
+                    "It is shown in a table and is interactive with the rest of the pathway browser\n" +
+                    "Please open the data submission tool clicking the icon ( __image__ ) placed on the top bar of the pathway browser " +
+                    "Please select the Processes tab or click on Next to continue", ReactomeImages.INSTANCE.analysisTool());
+        }
     }
 
     private void tourToDetailsPanelStep7(){
@@ -508,7 +513,7 @@ public class TourManager extends Controller implements TourQuestionEventHandler,
     /************** PLAYING WITH THE BROWSER HISTORY BUTTONS [END] *******************+*/
 
     private void tourHidden(){
-        Cookies.setCookie(TOUR_TIMES, "" + (getTourHiddenTimes()+1));
+        Cookies.setCookie(TOUR_TIMES, "" + (getTourHiddenTimes() + 1));
     }
 
     private void tourCancelled(){
