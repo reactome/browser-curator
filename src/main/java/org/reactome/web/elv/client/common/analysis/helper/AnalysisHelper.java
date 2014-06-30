@@ -40,7 +40,6 @@ public abstract class AnalysisHelper {
             requestBuilder.sendRequest(null, new RequestCallback() {
                 @Override
                 public void onResponseReceived(Request request, Response response) {
-                    System.out.println(response.getStatusCode());
                     switch (response.getStatusCode()){
                         case Response.SC_OK:
                             try {

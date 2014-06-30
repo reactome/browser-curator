@@ -6,13 +6,13 @@ import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.user.client.ui.*;
-import org.reactome.diagram.client.AlertPopup;
 import org.reactome.web.elv.client.common.analysis.model.PathwaySummary;
 import org.reactome.web.elv.client.common.data.model.Event;
 import org.reactome.web.elv.client.common.data.model.Pathway;
 import org.reactome.web.elv.client.common.data.model.Species;
 import org.reactome.web.elv.client.common.model.Path;
 import org.reactome.web.elv.client.common.utils.Console;
+import org.reactome.web.elv.client.common.widgets.DialogBoxFactory;
 import org.reactome.web.elv.client.common.widgets.glass.GlassPanel;
 import org.reactome.web.elv.client.hierarchy.events.HierarchyTreeSpeciesNotFoundException;
 import org.reactome.web.elv.client.hierarchy.model.HierarchyContainerPanel;
@@ -193,7 +193,7 @@ public class HierarchyViewImpl implements IsWidget, HierarchyView, OpenHandler<T
             Event event = item.getEvent();
             this.presenter.eventSelected(path, pathway, event);
         }else{
-            AlertPopup.alert("Not pathway with diagram found in the path");
+            DialogBoxFactory.alert("Events hierarchy", "Not pathway with diagram found in the path");
         }
     }
 

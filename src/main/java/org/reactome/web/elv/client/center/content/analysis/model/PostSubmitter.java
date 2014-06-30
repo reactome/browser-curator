@@ -3,12 +3,9 @@ package org.reactome.web.elv.client.center.content.analysis.model;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.logical.shared.InitializeEvent;
-import com.google.gwt.event.logical.shared.InitializeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.http.client.*;
 import com.google.gwt.user.client.ui.*;
-import org.reactome.diagram.client.AlertPopup;
 import org.reactome.web.elv.client.center.content.analysis.event.AnalysisCompletedEvent;
 import org.reactome.web.elv.client.center.content.analysis.event.AnalysisErrorEvent;
 import org.reactome.web.elv.client.center.content.analysis.event.AnalysisErrorType;
@@ -20,6 +17,7 @@ import org.reactome.web.elv.client.common.ReactomeImages;
 import org.reactome.web.elv.client.common.analysis.factory.AnalysisModelException;
 import org.reactome.web.elv.client.common.analysis.factory.AnalysisModelFactory;
 import org.reactome.web.elv.client.common.analysis.model.AnalysisResult;
+import org.reactome.web.elv.client.common.widgets.DialogBoxFactory;
 
 /**
  * @author Antonio Fabregat <fabregat@ebi.ac.uk>
@@ -95,7 +93,7 @@ public class PostSubmitter extends DockLayoutPanel implements ClickHandler {
     @Override
     public void onClick(ClickEvent event) {
         if(this.textArea.getText().isEmpty()) {
-            AlertPopup.alert("Please add the identifiers to analyse");
+            DialogBoxFactory.alert("Analysis tool", "Please add the identifiers to analyse");
             return;
         }
 

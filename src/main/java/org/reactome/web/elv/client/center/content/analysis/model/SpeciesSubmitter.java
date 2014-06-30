@@ -5,7 +5,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.http.client.*;
 import com.google.gwt.user.client.ui.*;
-import org.reactome.diagram.client.AlertPopup;
 import org.reactome.web.elv.client.center.content.analysis.event.AnalysisCompletedEvent;
 import org.reactome.web.elv.client.center.content.analysis.event.AnalysisErrorEvent;
 import org.reactome.web.elv.client.center.content.analysis.event.AnalysisErrorType;
@@ -19,6 +18,7 @@ import org.reactome.web.elv.client.common.analysis.factory.AnalysisModelFactory;
 import org.reactome.web.elv.client.common.analysis.helper.AnalysisHelper;
 import org.reactome.web.elv.client.common.analysis.model.AnalysisResult;
 import org.reactome.web.elv.client.common.data.model.Species;
+import org.reactome.web.elv.client.common.widgets.DialogBoxFactory;
 import org.reactome.web.elv.client.manager.state.AdvancedState;
 
 import java.util.List;
@@ -70,7 +70,7 @@ public class SpeciesSubmitter extends FlowPanel implements ClickHandler {
     public void onClick(ClickEvent event) {
         Long dbId = Long.valueOf(species.getValue(species.getSelectedIndex()));
         if(dbId==-1) {
-            AlertPopup.alert("Please select a species to compare with");
+            DialogBoxFactory.alert("Species comparison", "Please select a species to compare with");
             return;
         }
 

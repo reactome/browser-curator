@@ -65,7 +65,7 @@ public class ImageButtonCell extends AbstractCell<ImageResource> {
         button.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                System.out.println("hi");
+                //on click
             }
         });
         button.setTitle(this.title);

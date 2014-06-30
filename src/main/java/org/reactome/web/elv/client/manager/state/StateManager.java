@@ -14,7 +14,7 @@ import org.reactome.web.elv.client.common.data.model.Pathway;
 import org.reactome.web.elv.client.common.data.model.Species;
 import org.reactome.web.elv.client.common.events.ELVEventType;
 import org.reactome.web.elv.client.common.model.Path;
-import org.reactome.web.elv.client.common.widgets.CustomDialogBox;
+import org.reactome.web.elv.client.common.widgets.DialogBoxFactory;
 import org.reactome.web.elv.client.details.model.DetailsTabType;
 import org.reactome.web.elv.client.details.tabs.analysis.events.AnalysisTabPathwaySelected;
 
@@ -131,7 +131,8 @@ public class StateManager extends Controller implements ValueChangeHandler<Strin
                         if(available){
                             eventBus.fireELVEvent(ELVEventType.STATE_MANAGER_ANALYSIS_TOKEN_SELECTED, token);
                         }else{
-                            CustomDialogBox.alertBox("Analysis", message).center();
+                            eventBus.fireELVEvent(ELVEventType.STATE_MANAGER_ANALYSIS_TOKEN_RESET);
+                            DialogBoxFactory.alert("Analysis", message);
                         }
                     }
                 });
