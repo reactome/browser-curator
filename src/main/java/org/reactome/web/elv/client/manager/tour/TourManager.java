@@ -11,7 +11,6 @@ import org.reactome.web.elv.client.common.data.model.*;
 import org.reactome.web.elv.client.common.events.ELVEventType;
 import org.reactome.web.elv.client.common.model.Pair;
 import org.reactome.web.elv.client.common.model.Path;
-import org.reactome.web.elv.client.common.utils.Console;
 import org.reactome.web.elv.client.common.widgets.disclosure.DisclosureImages;
 import org.reactome.web.elv.client.details.model.DetailsTabType;
 import org.reactome.web.elv.client.manager.state.AdvancedState;
@@ -510,7 +509,6 @@ public class TourManager extends Controller implements TourQuestionEventHandler,
 
     private void tourHidden(){
         Cookies.setCookie(TOUR_TIMES, "" + (getTourHiddenTimes()+1));
-        Console.info("TOUR HIDDEN...");
     }
 
     private void tourCancelled(){
