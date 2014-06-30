@@ -19,6 +19,9 @@
     border: #0000AA 1px solid;
     border-radius: 5px;
 }
+.toolBarSpeciesSelectorNoHuman {
+    background-color: #ffca84 !important;
+}
 .toolBarSpeciesSelector div {
     margin-top: 3px;
     font-size: 12px;

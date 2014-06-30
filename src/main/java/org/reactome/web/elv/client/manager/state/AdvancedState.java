@@ -35,7 +35,7 @@ public class AdvancedState implements StableIdentifierLoader.StableIdentifierLoa
     private DetailsTabType detailsTab;
     private CenterToolType tool;
     private String analysisToken = null;
-    private boolean analysisTokenAvailable = false;
+    private boolean analysisTokenAvailable;
 
     public static void create(String token, AdvancedStateLoadedHandler handler){
         new AdvancedState(token, handler);
@@ -48,6 +48,7 @@ public class AdvancedState implements StableIdentifierLoader.StableIdentifierLoa
         this.path = new LinkedList<Event>();
         this.detailsTab = DetailsTabType.getDefault();
         this.tool = null; //Initially there is no tool selected. The help view is shown
+        this.analysisTokenAvailable = false;
     }
 
     public AdvancedState(AdvancedState state){
@@ -58,6 +59,7 @@ public class AdvancedState implements StableIdentifierLoader.StableIdentifierLoa
         this.path = state.path;
         this.detailsTab = state.detailsTab;
         this.tool = state.tool;
+        this.analysisTokenAvailable = state.analysisTokenAvailable;
         this.analysisToken = state.analysisToken;
     }
 
@@ -198,10 +200,6 @@ public class AdvancedState implements StableIdentifierLoader.StableIdentifierLoa
         return analysisToken;
     }
 
-    public boolean isAnalysisTokenAvailable() {
-        return analysisTokenAvailable;
-    }
-
     public boolean hasReachToolState(AdvancedState state){
         if(this.tool==null){
             return state.getCenterTool() == null;
@@ -282,6 +280,7 @@ public class AdvancedState implements StableIdentifierLoader.StableIdentifierLoa
     }
 
     public void setAnalysisToken(String analysisToken) {
+        this.analysisTokenAvailable = ( analysisToken != null );
         this.analysisToken = analysisToken;
         this.checkComplete(AdvancedStateKey.ANALYSIS);
     }

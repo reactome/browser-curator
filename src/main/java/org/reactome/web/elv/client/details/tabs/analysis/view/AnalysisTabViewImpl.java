@@ -115,13 +115,13 @@ public class AnalysisTabViewImpl implements AnalysisTabView, ResourceChangedHand
         }
     }
 
-    @Override
+//    @Override
     public void refreshTitle(Integer foundPathways){
         String found = NumberFormat.getDecimalFormat().format(foundPathways);
         this.title.getElement().setInnerHTML(TYPE.getTitle() + " (" + found + ")");
     }
 
-    @Override
+//    @Override
     public void scrollToSelected() {
         if(this.analysisResultPanel!=null){
             this.analysisResultPanel.scrollToSelected();
@@ -241,5 +241,20 @@ public class AnalysisTabViewImpl implements AnalysisTabView, ResourceChangedHand
     @Override
     public void onPathwaySelected(PathwaySelectedEvent event) {
         this.presenter.onPathwaySelected(event.getSpecies(), event.getDiagram(), event.getPathway());
+    }
+
+    @Override
+    public void showWaitingMessage(){
+        HorizontalPanel message = new HorizontalPanel();
+        Image loader = new Image(ReactomeImages.INSTANCE.loader());
+        message.add(loader);
+
+        Label label = new Label("Loading the analysis result, please wait...");
+        label.getElement().getStyle().setMarginLeft(5, Style.Unit.PX);
+        message.add(label);
+
+        this.container.clear();
+        this.container.add(message);
+        this.title.getElement().setInnerHTML(TYPE.getTitle());
     }
 }

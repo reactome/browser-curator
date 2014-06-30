@@ -9,6 +9,8 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
 import org.reactome.web.elv.client.common.LocationHelper;
 import org.reactome.web.elv.client.common.ReactomeImages;
+import org.reactome.web.elv.client.common.data.model.Species;
+import org.reactome.web.elv.client.manager.state.AdvancedState;
 
 /**
  * @author Antonio Fabregat <fabregat@ebi.ac.uk>
@@ -52,6 +54,11 @@ public class ToolBarPanel extends HTMLPanel implements ClickHandler {
          * Applied to the
          */
         String toolBarSpeciesSelector();
+
+        /**
+         * Applied to the
+         */
+        String toolBarSpeciesSelectorNoHuman();
 
         /**
          * Applied to the
@@ -136,6 +143,18 @@ public class ToolBarPanel extends HTMLPanel implements ClickHandler {
             popup.setWidget(new Label("Now you would be returned to the homepage"));
             popup.setPopupPosition(5,5);
             popup.show();
+        }
+    }
+
+    public void setSpeciesSelectorStyle(SpeciesSelectorPanel speciesSelectorPanel, Species species){
+        // Inject the styles used by this widget.
+        Style style = getDefaultResources().toolBarStyle();
+        style.ensureInjected();
+
+        if(!AdvancedState.DEFAULT_SPECIES_ID.equals(species.getDbId())){
+            speciesSelectorPanel.addStyleName(style.toolBarSpeciesSelectorNoHuman());
+        }else{
+            speciesSelectorPanel.removeStyleName(style.toolBarSpeciesSelectorNoHuman());
         }
     }
 

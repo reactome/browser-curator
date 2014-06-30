@@ -58,6 +58,7 @@ public class AnalysisTabPresenter extends Controller implements AnalysisTabView.
     @Override
     public void onStateManagerAnalysisTokenSelected(String token) {
         this.token = token;
+        this.view.showWaitingMessage();
         AnalysisHelper.chooseResource(token, this);
     }
 
