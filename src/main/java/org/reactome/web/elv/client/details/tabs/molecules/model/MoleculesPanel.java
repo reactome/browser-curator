@@ -1,8 +1,7 @@
 package org.reactome.web.elv.client.details.tabs.molecules.model;
 
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.*;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.*;
 import org.reactome.web.elv.client.common.ReactomeImages;
@@ -12,10 +11,12 @@ import org.reactome.web.elv.client.common.data.model.PhysicalEntity;
 import org.reactome.web.elv.client.common.data.model.Species;
 import org.reactome.web.elv.client.common.provider.InstanceTypeExplanation;
 import org.reactome.web.elv.client.common.provider.InstanceTypeIconProvider;
+import org.reactome.web.elv.client.common.widgets.button.CustomButton;
 import org.reactome.web.elv.client.details.tabs.molecules.model.data.Result;
 import org.reactome.web.elv.client.details.tabs.molecules.model.type.PropertyType;
 import org.reactome.web.elv.client.details.tabs.molecules.model.widget.MoleculesDownloadPanel;
 import org.reactome.web.elv.client.details.tabs.molecules.model.widget.MoleculesViewPanel;
+import org.reactome.web.elv.client.popups.help.HelpPopup;
 import org.reactome.web.elv.client.popups.help.HelpPopupImage;
 
 import java.util.List;
@@ -23,17 +24,23 @@ import java.util.List;
 /**
  * @author Kerstin Hausmann <khaus@ebi.ac.uk>
  */
-public class MoleculesPanel extends DockLayoutPanel {
+public class MoleculesPanel extends DockLayoutPanel implements MouseOverHandler, MouseOutHandler {
     Result result;
 
-    final ToggleButton button = new ToggleButton("Download", "Molecules View");
+//    final ToggleButton button = new ToggleButton("Download", "Molecules View");
+    final CustomButton downloadBtn = new CustomButton(ReactomeImages.INSTANCE.downloadFile(), "Download");
+    final CustomButton moleculeBtn = new CustomButton(ReactomeImages.INSTANCE.back(), "Molecule View");
 
+    FocusPanel infoPanel;
+    HelpPopup popup;
     DockLayoutPanel swapPanel;
     MoleculesViewPanel view;
     MoleculesDownloadPanel downloads;
 
     public MoleculesPanel(final Result result, DatabaseObject databaseObject) {
         super(Style.Unit.PX);
+        //noinspection GWTStyleCheck
+        setStyleName("clearfix");
         addStyleName("elv-Details-Tab");
 
         this.result = result;
@@ -49,27 +56,47 @@ public class MoleculesPanel extends DockLayoutPanel {
         infoBar.add(getInfo());
         topBar.add(infoBar);
 
-        button.setTitle("Go to Download-View");
-        button.setDown(false);
-        button.addClickHandler(new ClickHandler() {
+        final HorizontalPanel buttonBar = new HorizontalPanel();
+        topBar.add(buttonBar);
+
+        downloadBtn.setTitle("Go to Download-View");
+        moleculeBtn.setTitle("Go back to Molecules-View");
+
+        downloadBtn.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
                 swapPanel.removeFromParent();
-                if (button.isDown()) {
-                    downloads.initialise(result);
-                    swapPanel = downloads;
-                    button.setTitle("Go back to Molecules-View");
-                } else {
-                    view.update(result);
-                    swapPanel = view;
-                    button.setTitle("Go to Download-View");
-                }
+                downloads.initialise(result);
+                swapPanel = downloads;
+
                 add(swapPanel);
+                buttonBar.clear();
+                buttonBar.add(moleculeBtn);
             }
         });
-        button.setStyleName("elv-Molecules-Button");
-        topBar.add(button);
+
+
+        moleculeBtn.addClickHandler(new ClickHandler() {
+            public void onClick(ClickEvent event) {
+                swapPanel.removeFromParent();
+                view.update(result);
+                swapPanel = view;
+
+                add(swapPanel);
+                buttonBar.clear();
+                buttonBar.add(downloadBtn);
+            }
+        });
+        downloadBtn.setStyleName("elv-Molecules-Button");
+        moleculeBtn.setStyleName("elv-Molecules-Button");
+        buttonBar.add(downloadBtn);
+
+        topBar.add(buttonBar);
+        buttonBar.getElement().getStyle().setFloat(Style.Float.RIGHT);
+        buttonBar.getElement().getStyle().setPaddingTop(1, Style.Unit.PX);
+        buttonBar.getElement().getStyle().setMarginTop(1, Style.Unit.PX);
+
         this.addNorth(topBar, 35);
-        topBar.getElement().getStyle().setWidth(99, Style.Unit.PCT);
+        topBar.setStyleName("elv-Molecules-TopBar");
         this.swapPanel = this.view;
         this.add(swapPanel);
     }
@@ -115,27 +142,36 @@ public class MoleculesPanel extends DockLayoutPanel {
     }
 
     private Widget getInfo() {
-        HorizontalPanel infoPanel = new HorizontalPanel();
+        infoPanel = new FocusPanel();
         infoPanel.setStyleName("elv-Molecules-InfoPanel");
+        HorizontalPanel content = new HorizontalPanel();
         try{
-            ImageResource img = ReactomeImages.INSTANCE.information();
+            Image img = new Image(ReactomeImages.INSTANCE.information());
             String helpTitle = "Info";
             HTMLPanel helpContent = new HTMLPanel(
-                    "You are now in the Molecules tab which shows you all the molecules of a pathway that has a diagram.\n" +
-                    "The molecules will be grouped in Chemical Compounds, Proteins, Sequences and Others.\n" +
-                    "If you select an element that is part of a pathway those molecules will be highlighted.\n" +
+                    "The molecules tab shows you all the molecules of a complete pathway diagram.\n" +
+                    "Molecules are grouped in Chemical Compounds, Proteins, Sequences and Others.\n" +
+                    "The molecules of a selected object appear highlighted in the molecules lists;\n" +
+                    "a molecule selected in the list will be highlighted in the diagram.\n" +
                     "For each molecule you can see a symbol, a link to the main reference DB, a name and the number of\n" +
                     "occurrences in the pathway.\n" +
                     "Expanding by clicking on the '+' will provide you with further external links.\n" +
-                    "In addition to these lists there is a Download available. Just click on the button in the top right\n" +
+                    "Lists can be downloaded. Just click on the button in the top right\n" +
                     "corner, select the fields and types you are interested in and click 'Start Download'.");
-            infoPanel.add(new HelpPopupImage(img, helpTitle, helpContent));
+
+            content.add(img);
+            popup = new HelpPopup(helpTitle, helpContent);
+            infoPanel.addMouseOverHandler(this);
+            infoPanel.addMouseOutHandler(this);
+            infoPanel.getElement().getStyle().setProperty("cursor", "help");
         }catch (Exception e){
             e.printStackTrace();
         }
         HTMLPanel title = new HTMLPanel("Info");
         title.getElement().getStyle().setMarginLeft(10, Style.Unit.PX);
-        infoPanel.add(title);
+        content.add(title);
+
+        infoPanel.add(content.asWidget());
 
         return infoPanel;
     }
@@ -168,5 +204,14 @@ public class MoleculesPanel extends DockLayoutPanel {
         return downloads;
     }
 
-    
+
+    @Override
+    public void onMouseOver(MouseOverEvent event) {
+        popup.setPositionAndShow(event);
+    }
+
+    @Override
+    public void onMouseOut(MouseOutEvent event) {
+        popup.hide(true);
+    }
 }

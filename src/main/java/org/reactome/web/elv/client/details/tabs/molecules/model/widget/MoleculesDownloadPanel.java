@@ -129,7 +129,8 @@ public class MoleculesDownloadPanel extends DockLayoutPanel {
         //Chrome, Chrome for Android, Firefox 20+, IE 10+, Opera 15+, Safari 6.1+
         VerticalPanel buttonField = new VerticalPanel();
         buttonField.add(startDownloadBtn);
-        buttonField.setStyleName("elv-SelectionPanels-Download");
+        startDownloadBtn.getElement().getStyle().setFloat(Style.Float.RIGHT);
+        buttonField.setStyleName("elv-ButtonPanel-Download");
         startDownloadBtn.setTitle("Depending on your browser you can either download your file by clicking on this button" +
                                   " or your will be redirected to a new tab in your browser where you can right click and" +
                                   " save the data.");
@@ -151,12 +152,10 @@ public class MoleculesDownloadPanel extends DockLayoutPanel {
         //Bringing together the three panels.
         FlowPanel controlArea = new FlowPanel();
         controlArea.insert(requiredType.asWidget(), 0);
-        requiredType.getElement().getStyle().setFloat(Style.Float.LEFT);
         controlArea.insert(requiredFields.asWidget(), 1);
-        requiredFields.getElement().getStyle().setFloat(Style.Float.LEFT);
-        controlArea.insert(buttonField.asWidget(), 2);
-        buttonField.getElement().getStyle().setFloat(Style.Float.LEFT);
-        this.addNorth(controlArea, 115);
+
+        this.addWest(controlArea, 200);
+        this.addSouth(buttonField, 35);
 
         //Preview
         this.textArea = new TextArea();

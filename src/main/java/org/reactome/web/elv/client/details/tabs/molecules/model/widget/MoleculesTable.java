@@ -8,6 +8,7 @@ import org.reactome.web.elv.client.details.tabs.molecules.model.data.PhysicalToR
 import org.reactome.web.elv.client.details.tabs.molecules.model.data.Result;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Set;
 
 /**
@@ -16,6 +17,7 @@ import java.util.Set;
 public class MoleculesTable implements IsWidget  {
     private VerticalPanel vp;
     private Result result;
+    private HashMap<Long, Widget> display = new HashMap<Long, Widget>();
 
     public MoleculesTable(Result result) {
         this.result = result;
@@ -32,6 +34,24 @@ public class MoleculesTable implements IsWidget  {
             Widget widget = new MoleculePanel(molecule, phyEntities);
             if(!molecule.isToHighlight()){
                 widget.addStyleName("elv-Details-MoleculesRow-undoHighlight");
+            }
+            display.put(molecule.getDbId(), widget);
+            vp.add(widget);
+        }
+        this.vp.clear();
+        this.vp = vp;
+    }
+
+    public void updateMoleculesData(ArrayList<Molecule> molecules){
+        VerticalPanel vp = new VerticalPanel();
+        vp.setWidth("99%");
+        for (Molecule molecule : molecules) {
+            Widget widget = display.get(molecule.getDbId());
+            if(!molecule.isToHighlight()){
+                widget.addStyleName("elv-Details-MoleculesRow-undoHighlight");
+            }else{
+                //remove undoHighlight but keep all the other style information
+                widget.removeStyleName("elv-Details-MoleculesRow-undoHighlight");
             }
             vp.add(widget);
         }
