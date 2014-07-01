@@ -1,13 +1,9 @@
 package org.reactome.web.elv.client.details.tabs.molecules.model;
 
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.*;
 import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.user.client.ui.DockLayoutPanel;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.*;
 import org.reactome.web.elv.client.common.ReactomeImages;
 import org.reactome.web.elv.client.common.data.model.DatabaseObject;
 import org.reactome.web.elv.client.common.data.model.Event;
@@ -20,6 +16,7 @@ import org.reactome.web.elv.client.details.tabs.molecules.model.data.Result;
 import org.reactome.web.elv.client.details.tabs.molecules.model.type.PropertyType;
 import org.reactome.web.elv.client.details.tabs.molecules.model.widget.MoleculesDownloadPanel;
 import org.reactome.web.elv.client.details.tabs.molecules.model.widget.MoleculesViewPanel;
+import org.reactome.web.elv.client.popups.help.HelpPopup;
 import org.reactome.web.elv.client.popups.help.HelpPopupImage;
 
 import java.util.List;
@@ -27,13 +24,15 @@ import java.util.List;
 /**
  * @author Kerstin Hausmann <khaus@ebi.ac.uk>
  */
-public class MoleculesPanel extends DockLayoutPanel {
+public class MoleculesPanel extends DockLayoutPanel implements MouseOverHandler, MouseOutHandler {
     Result result;
 
 //    final ToggleButton button = new ToggleButton("Download", "Molecules View");
     final CustomButton downloadBtn = new CustomButton(ReactomeImages.INSTANCE.downloadFile(), "Download");
     final CustomButton moleculeBtn = new CustomButton(ReactomeImages.INSTANCE.back(), "Molecule View");
 
+    FocusPanel infoPanel;
+    HelpPopup popup;
     DockLayoutPanel swapPanel;
     MoleculesViewPanel view;
     MoleculesDownloadPanel downloads;
@@ -143,10 +142,11 @@ public class MoleculesPanel extends DockLayoutPanel {
     }
 
     private Widget getInfo() {
-        HorizontalPanel infoPanel = new HorizontalPanel();
+        infoPanel = new FocusPanel();
         infoPanel.setStyleName("elv-Molecules-InfoPanel");
+        HorizontalPanel content = new HorizontalPanel();
         try{
-            ImageResource img = ReactomeImages.INSTANCE.information();
+            Image img = new Image(ReactomeImages.INSTANCE.information());
             String helpTitle = "Info";
             HTMLPanel helpContent = new HTMLPanel(
                     "The molecules tab shows you all the molecules of a complete pathway diagram.\n" +
@@ -158,13 +158,20 @@ public class MoleculesPanel extends DockLayoutPanel {
                     "Expanding by clicking on the '+' will provide you with further external links.\n" +
                     "Lists can be downloaded. Just click on the button in the top right\n" +
                     "corner, select the fields and types you are interested in and click 'Start Download'.");
-            infoPanel.add(new HelpPopupImage(img, helpTitle, helpContent));
+
+            content.add(img);
+            popup = new HelpPopup(helpTitle, helpContent);
+            infoPanel.addMouseOverHandler(this);
+            infoPanel.addMouseOutHandler(this);
+            infoPanel.getElement().getStyle().setProperty("cursor", "help");
         }catch (Exception e){
             e.printStackTrace();
         }
         HTMLPanel title = new HTMLPanel("Info");
         title.getElement().getStyle().setMarginLeft(10, Style.Unit.PX);
-        infoPanel.add(title);
+        content.add(title);
+
+        infoPanel.add(content.asWidget());
 
         return infoPanel;
     }
@@ -197,5 +204,14 @@ public class MoleculesPanel extends DockLayoutPanel {
         return downloads;
     }
 
-    
+
+    @Override
+    public void onMouseOver(MouseOverEvent event) {
+        popup.setPositionAndShow(event);
+    }
+
+    @Override
+    public void onMouseOut(MouseOutEvent event) {
+        popup.hide(true);
+    }
 }
