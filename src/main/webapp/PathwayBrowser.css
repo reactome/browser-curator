@@ -445,15 +445,18 @@
     border: 1px solid grey;
     color: #063da0;
     font-weight: bolder;
-    height: 20px;
-    margin: 5px 0 5px 5px;
-    padding: 4px 10px 4px 10px;
+    height: 30px;
     float: right;
 }
+
 .elv-Molecules-Button:hover{
     cursor: pointer;
     background-color:ghostwhite;
     border-radius: 5px;
+}
+
+.elv-Molecules-TopBar{
+    width: 100%;
 }
 
 .elv-InformationPanel-Download{

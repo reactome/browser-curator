@@ -49,6 +49,9 @@ public class MoleculesTable implements IsWidget  {
             Widget widget = display.get(molecule.getDbId());
             if(!molecule.isToHighlight()){
                 widget.addStyleName("elv-Details-MoleculesRow-undoHighlight");
+            }else{
+                //remove undoHighlight but keep all the other style information
+                widget.removeStyleName("elv-Details-MoleculesRow-undoHighlight");
             }
             vp.add(widget);
         }

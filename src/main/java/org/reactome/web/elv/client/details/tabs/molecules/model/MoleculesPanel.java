@@ -4,7 +4,10 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.client.ui.DockLayoutPanel;
+import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Widget;
 import org.reactome.web.elv.client.common.ReactomeImages;
 import org.reactome.web.elv.client.common.data.model.DatabaseObject;
 import org.reactome.web.elv.client.common.data.model.Event;
@@ -12,6 +15,7 @@ import org.reactome.web.elv.client.common.data.model.PhysicalEntity;
 import org.reactome.web.elv.client.common.data.model.Species;
 import org.reactome.web.elv.client.common.provider.InstanceTypeExplanation;
 import org.reactome.web.elv.client.common.provider.InstanceTypeIconProvider;
+import org.reactome.web.elv.client.common.widgets.button.CustomButton;
 import org.reactome.web.elv.client.details.tabs.molecules.model.data.Result;
 import org.reactome.web.elv.client.details.tabs.molecules.model.type.PropertyType;
 import org.reactome.web.elv.client.details.tabs.molecules.model.widget.MoleculesDownloadPanel;
@@ -26,7 +30,9 @@ import java.util.List;
 public class MoleculesPanel extends DockLayoutPanel {
     Result result;
 
-    final ToggleButton button = new ToggleButton("Download", "Molecules View");
+//    final ToggleButton button = new ToggleButton("Download", "Molecules View");
+    final CustomButton downloadBtn = new CustomButton(ReactomeImages.INSTANCE.downloadFile(), "Download");
+    final CustomButton moleculeBtn = new CustomButton(ReactomeImages.INSTANCE.back(), "Molecule View");
 
     DockLayoutPanel swapPanel;
     MoleculesViewPanel view;
@@ -34,6 +40,8 @@ public class MoleculesPanel extends DockLayoutPanel {
 
     public MoleculesPanel(final Result result, DatabaseObject databaseObject) {
         super(Style.Unit.PX);
+        //noinspection GWTStyleCheck
+        setStyleName("clearfix");
         addStyleName("elv-Details-Tab");
 
         this.result = result;
@@ -49,27 +57,47 @@ public class MoleculesPanel extends DockLayoutPanel {
         infoBar.add(getInfo());
         topBar.add(infoBar);
 
-        button.setTitle("Go to Download-View");
-        button.setDown(false);
-        button.addClickHandler(new ClickHandler() {
+        final HorizontalPanel buttonBar = new HorizontalPanel();
+        topBar.add(buttonBar);
+
+        downloadBtn.setTitle("Go to Download-View");
+        moleculeBtn.setTitle("Go back to Molecules-View");
+
+        downloadBtn.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
                 swapPanel.removeFromParent();
-                if (button.isDown()) {
-                    downloads.initialise(result);
-                    swapPanel = downloads;
-                    button.setTitle("Go back to Molecules-View");
-                } else {
-                    view.update(result);
-                    swapPanel = view;
-                    button.setTitle("Go to Download-View");
-                }
+                downloads.initialise(result);
+                swapPanel = downloads;
+
                 add(swapPanel);
+                buttonBar.clear();
+                buttonBar.add(moleculeBtn);
             }
         });
-        button.setStyleName("elv-Molecules-Button");
-        topBar.add(button);
+
+
+        moleculeBtn.addClickHandler(new ClickHandler() {
+            public void onClick(ClickEvent event) {
+                swapPanel.removeFromParent();
+                view.update(result);
+                swapPanel = view;
+
+                add(swapPanel);
+                buttonBar.clear();
+                buttonBar.add(downloadBtn);
+            }
+        });
+        downloadBtn.setStyleName("elv-Molecules-Button");
+        moleculeBtn.setStyleName("elv-Molecules-Button");
+        buttonBar.add(downloadBtn);
+
+        topBar.add(buttonBar);
+        buttonBar.getElement().getStyle().setFloat(Style.Float.RIGHT);
+        buttonBar.getElement().getStyle().setPaddingTop(1, Style.Unit.PX);
+        buttonBar.getElement().getStyle().setMarginTop(1, Style.Unit.PX);
+
         this.addNorth(topBar, 35);
-        topBar.getElement().getStyle().setWidth(99, Style.Unit.PCT);
+        topBar.setStyleName("elv-Molecules-TopBar");
         this.swapPanel = this.view;
         this.add(swapPanel);
     }

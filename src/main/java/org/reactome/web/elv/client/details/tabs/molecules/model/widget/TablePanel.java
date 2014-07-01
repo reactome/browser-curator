@@ -1,5 +1,7 @@
 package org.reactome.web.elv.client.details.tabs.molecules.model.widget;
 
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.logical.shared.OpenEvent;
 import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.user.client.ui.Composite;
@@ -11,7 +13,7 @@ import org.reactome.web.elv.client.details.tabs.molecules.model.type.PropertyTyp
 /**
  * @author Kerstin Hausmann <khaus@ebi.ac.uk>
  */
-public class TablePanel extends Composite implements OpenHandler<DisclosurePanel> {
+public class TablePanel extends Composite implements OpenHandler<DisclosurePanel>, CloseHandler<DisclosurePanel> {
     private DisclosurePanel disclosurePanel;
     private PropertyType propertyType;
     private Result result;
@@ -37,12 +39,18 @@ public class TablePanel extends Composite implements OpenHandler<DisclosurePanel
         setMoleculesData();
 
         this.disclosurePanel.addOpenHandler(this);
+        this.disclosurePanel.addCloseHandler(this);
         this.initWidget(this.disclosurePanel);
     }
 
     @Override
     public void onOpen(OpenEvent<DisclosurePanel> event) {
         updateMoleculesData();
+    }
+
+    @Override
+    public void onClose(CloseEvent<DisclosurePanel> event) {
+        this.disclosurePanel.clear();
     }
 
     public void update(int size, Result result){
