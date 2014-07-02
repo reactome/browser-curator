@@ -206,6 +206,19 @@ public class GAManager extends Controller {
     }
 
     @Override
+    public void onMoleculesDownloadStarted() {
+        this.trackEvent("DOWNLOAD", GAAction.SELECTED, GAModule.MOLECULES_TAB);
+    }
+
+    @Override
+    public void onMoleculesItemSelected(DatabaseObject molecule) {
+        if(!molecule.equals(this.state.getLastDatabaseObjectSelected())){
+            this.state.setLastDatabaseObjectSelected(molecule);
+            this.trackEvent(molecule,GAAction.SELECTED, GAModule.MOLECULES_TAB);
+        }
+    }
+
+    @Override
     public void onDetailedViewLoaded(DatabaseObject databaseObject){
         if(!databaseObject.equals(this.state.getLastDatabaseObjectExpanded())){
             this.state.setLastDatabaseObjectExpanded(databaseObject);
