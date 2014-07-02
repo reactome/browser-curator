@@ -151,12 +151,13 @@ public class MoleculesDownloadPanel extends DockLayoutPanel {
             }
         });
 
-        //Bringing together the three panels.
+        //Bringing together the two panels.
         FlowPanel controlArea = new FlowPanel();
         controlArea.insert(requiredType.asWidget(), 0);
         controlArea.insert(requiredFields.asWidget(), 1);
+        ScrollPanel scrollPanel = new ScrollPanel(controlArea);
 
-        this.addWest(controlArea, 200);
+        this.addWest(scrollPanel, 200);
         this.addSouth(buttonField, 35);
 
         //Preview
@@ -213,7 +214,7 @@ public class MoleculesDownloadPanel extends DockLayoutPanel {
                     }
 
                     if(this.identifierTB.getValue()){
-                        resultString += m.getIdentifier() + "\t\t";
+                        resultString += m.getIdentifier() + "\t";
                     }
 
                     if(this.nameTB.getValue()){
@@ -229,11 +230,11 @@ public class MoleculesDownloadPanel extends DockLayoutPanel {
             for(Molecule m : result.getProteins()){
                 if(m.isToHighlight()){
                     if(this.typeTB.getValue()){
-                        resultString += "Protein\t\t";
+                        resultString += "Protein\t";
                     }
 
                     if(this.identifierTB.getValue()){
-                        resultString += m.getIdentifier() + "\t\t";
+                        resultString += m.getIdentifier() + "\t";
                     }
 
                     if(this.nameTB.getValue()){
@@ -253,7 +254,7 @@ public class MoleculesDownloadPanel extends DockLayoutPanel {
                     }
 
                     if(this.identifierTB.getValue()){
-                        resultString += m.getIdentifier() + "\t\t";
+                        resultString += m.getIdentifier() + "\t";
                     }
 
                     if(this.nameTB.getValue()){
@@ -273,7 +274,7 @@ public class MoleculesDownloadPanel extends DockLayoutPanel {
                     }
 
                     if(this.identifierTB.getValue()){
-                        resultString += m.getIdentifier() + "\t\t";
+                        resultString += m.getIdentifier() + "\t";
                     }
 
                     if(this.nameTB.getValue()){
