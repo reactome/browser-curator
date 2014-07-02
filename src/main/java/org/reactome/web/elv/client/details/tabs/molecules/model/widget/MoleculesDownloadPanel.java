@@ -15,13 +15,13 @@ import org.reactome.web.elv.client.details.tabs.molecules.view.MoleculesView;
  */
 public class MoleculesDownloadPanel extends DockLayoutPanel {
     private Result result;
-    private ToggleButton typeTB;
-    private ToggleButton nameTB;
-    private ToggleButton identifierTB;
-    private ToggleButton chemTB;
-    private ToggleButton protTB;
-    private ToggleButton sequTB;
-    private ToggleButton otheTB;
+    private CheckBox typeTB;
+    private CheckBox nameTB;
+    private CheckBox identifierTB;
+    private CheckBox chemTB;
+    private CheckBox protTB;
+    private CheckBox sequTB;
+    private CheckBox otheTB;
     //private ArrayList<ToggleButton> fieldList;
     //private ArrayList<ToggleButton> typesList;
     private TextArea textArea;
@@ -51,13 +51,13 @@ public class MoleculesDownloadPanel extends DockLayoutPanel {
         VerticalPanel requiredType = new VerticalPanel();
         requiredType.add(new TextPanel("Please select the type of Molecules you are interested in:"));
 
-        chemTB = new ToggleButton("Chemical Compounds");
+        chemTB = new CheckBox("Chemical Compounds");
         chemTB.setTitle("Show or hide chemicals");
-        protTB = new ToggleButton("Proteins");
+        protTB = new CheckBox("Proteins");
         protTB.setTitle("Show or hide proteins");
-        sequTB = new ToggleButton("Sequences");
+        sequTB = new CheckBox("Sequences");
         sequTB.setTitle("Show or hide sequences");
-        otheTB = new ToggleButton("Others");
+        otheTB = new CheckBox("Others");
         otheTB.setTitle("Show or hide others");
 
         //Allow immediate changes to Preview by adding ClickHandler to every ToggleButton.
@@ -104,19 +104,19 @@ public class MoleculesDownloadPanel extends DockLayoutPanel {
         //Creating ToggleButton for each available attribute of molecules and adding Handler.
         VerticalPanel requiredFields = new VerticalPanel();
         requiredFields.add(new TextPanel("Please select the fields you are interested in:"));
-        typeTB = new ToggleButton("Type");
+        typeTB = new CheckBox("Type");
         typeTB.setTitle("Show or hide type column");
         typeTB.setValue(true);
         typeTB.addClickHandler(updateText);
         requiredFields.add(typeTB);
 
-        identifierTB = new ToggleButton("Identifier");
+        identifierTB = new CheckBox("Identifier");
         identifierTB.setTitle("Show or hide identifier column");
         identifierTB.setValue(true);
         identifierTB.addClickHandler(updateText);
         requiredFields.add(identifierTB);
 
-        nameTB = new ToggleButton("Name");
+        nameTB = new CheckBox("Name");
         nameTB.setTitle("Show or hide name column");
         nameTB.setValue(true);
         nameTB.addClickHandler(updateText);
