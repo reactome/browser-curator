@@ -8,6 +8,7 @@ import com.google.gwt.user.client.ui.*;
 import org.reactome.web.elv.client.details.model.widgets.TextPanel;
 import org.reactome.web.elv.client.details.tabs.molecules.model.data.Molecule;
 import org.reactome.web.elv.client.details.tabs.molecules.model.data.Result;
+import org.reactome.web.elv.client.details.tabs.molecules.view.MoleculesView;
 
 /**
  * @author Kerstin Hausmann <khaus@ebi.ac.uk>
@@ -26,10 +27,12 @@ public class MoleculesDownloadPanel extends DockLayoutPanel {
     private TextArea textArea;
 
     private Button startDownloadBtn = new Button("Start Download");
+    private MoleculesView.Presenter presenter;
 
-    public MoleculesDownloadPanel(Result result) {
+    public MoleculesDownloadPanel(Result result, MoleculesView.Presenter presenter) {
         super(Style.Unit.PX);
         this.result = result;
+        this.presenter = presenter;
         this.setWidth("99%");
         this.textArea = new TextArea();
     }
@@ -135,7 +138,6 @@ public class MoleculesDownloadPanel extends DockLayoutPanel {
                                   " or your will be redirected to a new tab in your browser where you can right click and" +
                                   " save the data.");
         startDownloadBtn.addClickHandler(new ClickHandler() {
-
             @Override
             public void onClick(ClickEvent event) {
                 if((chemTB.getValue() || protTB.getValue() || sequTB.getValue() || otheTB.getValue())
@@ -145,7 +147,7 @@ public class MoleculesDownloadPanel extends DockLayoutPanel {
                     Window.alert("You are trying to download an empty file.\n" +
                             "Please select at least one type of molecules AND one field for the download.");
                 }
-
+                presenter.moleculeDownloadStarted();
             }
         });
 

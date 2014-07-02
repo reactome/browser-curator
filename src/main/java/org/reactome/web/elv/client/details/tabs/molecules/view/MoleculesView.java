@@ -11,6 +11,7 @@ public interface MoleculesView extends DetailsTabView<MoleculesView.Presenter> {
     public interface Presenter extends DetailsTabView.Presenter {
         void getMoleculesData();
         void updateMoleculesData();
+        void moleculeDownloadStarted();
     }
 
     void setMoleculesData(Result result);

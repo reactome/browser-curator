@@ -16,6 +16,7 @@ import org.reactome.web.elv.client.details.tabs.molecules.model.data.Result;
 import org.reactome.web.elv.client.details.tabs.molecules.model.type.PropertyType;
 import org.reactome.web.elv.client.details.tabs.molecules.model.widget.MoleculesDownloadPanel;
 import org.reactome.web.elv.client.details.tabs.molecules.model.widget.MoleculesViewPanel;
+import org.reactome.web.elv.client.details.tabs.molecules.view.MoleculesView;
 import org.reactome.web.elv.client.popups.help.HelpPopup;
 import org.reactome.web.elv.client.popups.help.HelpPopupImage;
 
@@ -37,7 +38,7 @@ public class MoleculesPanel extends DockLayoutPanel implements MouseOverHandler,
     MoleculesViewPanel view;
     MoleculesDownloadPanel downloads;
 
-    public MoleculesPanel(final Result result, DatabaseObject databaseObject) {
+    public MoleculesPanel(final Result result, DatabaseObject databaseObject, MoleculesView.Presenter presenter) {
         super(Style.Unit.PX);
         //noinspection GWTStyleCheck
         setStyleName("clearfix");
@@ -46,7 +47,7 @@ public class MoleculesPanel extends DockLayoutPanel implements MouseOverHandler,
         this.result = result;
         this.swapPanel = new DockLayoutPanel(Style.Unit.PX);
         this.view = new MoleculesViewPanel(result);
-        this.downloads = new MoleculesDownloadPanel(result);
+        this.downloads = new MoleculesDownloadPanel(result, presenter);
 
         //Creating TopBar with a ToggleButton for switching between Molecule and Download View.
         HorizontalPanel topBar = new HorizontalPanel();
@@ -154,7 +155,8 @@ public class MoleculesPanel extends DockLayoutPanel implements MouseOverHandler,
                     "The molecules of a selected object appear highlighted in the molecules lists;\n" +
                     "a molecule selected in the list will be highlighted in the diagram.\n" +
                     "For each molecule you can see a symbol, a link to the main reference DB, a name and the number of\n" +
-                    "occurrences in the pathway.\n" +
+                    "occurrences in the pathway. Clicking on the symbol several times will allow you to circle through\n" +
+                    "all its occurrences in the diagram.\n" +
                     "Expanding by clicking on the '+' will provide you with further external links.\n" +
                     "Lists can be downloaded. Just click on the button in the top right\n" +
                     "corner, select the fields and types you are interested in and click 'Start Download'.");

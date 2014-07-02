@@ -69,16 +69,22 @@ public class MoleculesViewImpl implements MoleculesView/*, MoleculesLoadedHandle
      */
     @Override
     public void refreshTitle(Integer loadedMolecules){
-        String aux;
+        String aux = null;
         if(loadedMolecules == null){
             aux = "";
         }else if(loadedMolecules==0){
             aux = " (0)";
-        }else{
-//            aux = " (" + this.currentPanel.getNumberOfHighlightedMolecules() + "/" + loadedMolecules + ")";
-            aux = " (" + loadedMolecules + ")";
+        }else if(this.currentPanel.getNumberOfHighlightedMolecules() > 0){
+            if(this.currentPanel.getNumberOfHighlightedMolecules() == loadedMolecules){
+                aux = " (" + loadedMolecules + ")";
+            }else{
+                aux = " (" + this.currentPanel.getNumberOfHighlightedMolecules() + "/" + loadedMolecules + ")";
+            }
         }
-        this.title.getElement().setInnerHTML(TYPE.getTitle() + aux);
+
+        if(!aux.equals(null)){
+            this.title.getElement().setInnerHTML(TYPE.getTitle() + aux);
+        }
     }
 
     @Override
@@ -114,9 +120,9 @@ public class MoleculesViewImpl implements MoleculesView/*, MoleculesLoadedHandle
 //            this.showMoleculesPanel(this.currentPanel);
         }
 
-        if(currentPanel != null){
-            this.refreshTitle(this.currentPanel.getNumberOfLoadedMolecules());
-        }
+//        if(currentPanel != null){
+//            this.refreshTitle(this.currentPanel.getNumberOfLoadedMolecules());
+//        }
         //Needed for Subpathways:
         this.panelsLoaded.put(new IdPair(toShow.getDbId(), pathwayDiagram.getDbId()), this.currentPanel);
         this.panelsLoadedForPathways.put(pathway.getDbId(), this.currentPanel);
@@ -158,7 +164,7 @@ public class MoleculesViewImpl implements MoleculesView/*, MoleculesLoadedHandle
 
     @Override
     public void setMoleculesData(Result result) {
-        this.currentPanel = new MoleculesPanel(result, this.toShow);
+        this.currentPanel = new MoleculesPanel(result, this.toShow, this.presenter);
         //this.panelsLoaded.put(result, this.currentPanel);
         showMoleculesPanel(this.currentPanel);
     }
@@ -168,6 +174,8 @@ public class MoleculesViewImpl implements MoleculesView/*, MoleculesLoadedHandle
         this.currentPanel.update(result);
         this.tab.clear(); //in case a different result is currently shown
         this.tab.add(currentPanel);
+
+        this.refreshTitle(currentPanel.getNumberOfLoadedMolecules());
 
         this.panelsLoaded.put(new IdPair(pathwayDiagram.getDbId(), toShow.getDbId()), this.currentPanel);
         this.panelsLoadedForPathways.put(this.pathwayDiagram.getDbId(), this.currentPanel);

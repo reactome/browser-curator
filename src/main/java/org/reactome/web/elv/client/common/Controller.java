@@ -13,7 +13,6 @@ import org.reactome.web.elv.client.common.model.Path;
 import org.reactome.web.elv.client.details.events.DetailsSelection;
 import org.reactome.web.elv.client.details.model.DetailsTabType;
 import org.reactome.web.elv.client.details.tabs.analysis.events.AnalysisTabPathwaySelected;
-import org.reactome.web.elv.client.details.tabs.molecules.event.MoleculeItemSelected;
 import org.reactome.web.elv.client.hierarchy.model.HierarchySelection;
 import org.reactome.web.elv.client.manager.state.AdvancedState;
 import org.reactome.web.elv.client.manager.state.StateSelection;
@@ -147,6 +146,8 @@ public abstract class Controller implements ELVEventHandler {
             case MOLECULES_ITEM_SELECTED:
                 onMoleculesItemSelected((DatabaseObject) obj);
                 break;
+            case MOLECULES_DOWNLOAD_STARTED:
+                onMoleculesDownloadStarted();
 
                     /* DETAILS VIEW */
             case DETAILED_VIEW_LOADED:
@@ -286,6 +287,7 @@ public abstract class Controller implements ELVEventHandler {
 
     /* PARTICIPATING MOLECULES TAB */
     public void onMoleculesItemSelected(DatabaseObject molecule){}
+    public void onMoleculesDownloadStarted(){}
 
     /* DETAILS PANEL */
     public void onDetailedViewLoaded(DatabaseObject obj){}
