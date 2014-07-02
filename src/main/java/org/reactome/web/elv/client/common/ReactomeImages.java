@@ -85,6 +85,9 @@ public interface ReactomeImages extends ClientBundle {
     @Source("images/exclamation.png")
     ImageResource exclamation();
 
+    @Source("images/external_link_icon.gif")
+    ImageResource externalLink();
+
     @Source("images/details.png")
     ImageResource details();
 
