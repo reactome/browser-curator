@@ -266,4 +266,9 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
         Pair<Long, ELVEventType> tuple = new Pair<Long, ELVEventType>(peDbId, ELVEventType.MOLECULES_ITEM_SELECTED);
         this.eventBus.fireELVEvent(ELVEventType.DATABASE_OBJECT_REQUIRED, tuple);
     }
+
+    @Override
+    public void moleculeDownloadStarted() {
+        this.eventBus.fireELVEvent(ELVEventType.MOLECULES_DOWNLOAD_STARTED);
+    }
 }
