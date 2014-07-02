@@ -7,7 +7,7 @@ public enum PropertyType {
 
     PROTEINS("Proteins"),
     CHEMICAL_COMPOUNDS("Chemical Compounds"),
-    SEQUENCES("Sequences"),
+    SEQUENCES("DNA/RNA"),
     OTHERS("Others"),
     DOWNLOAD("Download");
 

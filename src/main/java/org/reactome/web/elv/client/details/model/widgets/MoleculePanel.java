@@ -8,6 +8,7 @@ import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
+import org.reactome.web.elv.client.common.ReactomeImages;
 import org.reactome.web.elv.client.common.data.factory.SchemaClass;
 import org.reactome.web.elv.client.common.data.model.DatabaseIdentifier;
 import org.reactome.web.elv.client.common.data.model.DatabaseObject;
@@ -79,11 +80,15 @@ public class MoleculePanel extends DetailsPanel implements OpenHandler<Disclosur
             }
         });
 
-        overview.insert(ref, 0); //First adding ref because length of name differs enormously!!!
+        overview.add(ref); //First adding ref because length of name differs enormously!!!
         ref.asWidget().getElement().getStyle().setFloat(Style.Float.LEFT);
         ref.asWidget().getElement().getStyle().setColor("blue");
+        ref.asWidget().getElement().getStyle().setTextDecoration(Style.TextDecoration.UNDERLINE);
         ref.addStyleName("elv-Details-Reference-MoleculesRow");
-        overview.insert(name, 1);
+
+        ref.getElement().appendChild(new Image(ReactomeImages.INSTANCE.externalLink()).getElement());
+
+        overview.add(name);
         //name.asWidget().getElement().getStyle().setFloat(Style.Float.LEFT);
         name.addStyleName("elv-Details-Name-MoleculesRow");
 

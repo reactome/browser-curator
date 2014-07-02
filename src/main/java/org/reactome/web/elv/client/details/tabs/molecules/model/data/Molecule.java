@@ -31,6 +31,8 @@ public class Molecule extends ReferenceEntity implements Comparable<Molecule>{
                 this.schemaClass = SchemaClass.getSchemaClass(SchemaClass.ENTITY_WITH_ACCESSIONED_SEQUENCE.schemaClass);
                 break;
             case REFERENCE_MOLECULE:
+            case SIMPLE_ENTITY: //Only to make sure that the URL for ALL chemicals is set, can be deleted after this is fixed
+                url = "http://www.ebi.ac.uk/chebi/searchId.do?chebiId=" + this.getIdentifier();
                 this.schemaClass = SchemaClass.getSchemaClass(SchemaClass.SIMPLE_ENTITY.schemaClass);
                 break;
             default:

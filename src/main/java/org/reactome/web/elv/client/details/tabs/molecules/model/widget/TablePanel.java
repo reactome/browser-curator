@@ -36,6 +36,7 @@ public class TablePanel extends Composite implements OpenHandler<DisclosurePanel
         this.disclosurePanel = DisclosurePanelFactory.getAdvancedDisclosurePanel(displayText, null);
 
         moleculesTable = new MoleculesTable(result);
+        //TODO: setMolecules the first time when group is opened not before
         setMoleculesData();
 
         this.disclosurePanel.addOpenHandler(this);
