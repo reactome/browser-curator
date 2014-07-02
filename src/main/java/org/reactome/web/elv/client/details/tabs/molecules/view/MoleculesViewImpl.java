@@ -75,14 +75,14 @@ public class MoleculesViewImpl implements MoleculesView/*, MoleculesLoadedHandle
         }else if(loadedMolecules==0){
             aux = " (0)";
         }else if(this.currentPanel.getNumberOfHighlightedMolecules() > 0){
-            if(this.currentPanel.getNumberOfHighlightedMolecules() == loadedMolecules){
+            if(this.currentPanel.getNumberOfHighlightedMolecules().equals(loadedMolecules)){
                 aux = " (" + loadedMolecules + ")";
             }else{
                 aux = " (" + this.currentPanel.getNumberOfHighlightedMolecules() + "/" + loadedMolecules + ")";
             }
         }
 
-        if(!aux.equals(null)){
+        if(aux != null){
             this.title.getElement().setInnerHTML(TYPE.getTitle() + aux);
         }
     }
@@ -114,15 +114,9 @@ public class MoleculesViewImpl implements MoleculesView/*, MoleculesLoadedHandle
             showWaitingMessage();
             toShow = databaseObject!=null?databaseObject:pathway;
             if(toShow==null) return;
-            //this.currentPanel = new MoleculesPanel(null);
-            //currentPanel.addMoleculesLoadedHandler(this);
             this.presenter.getMoleculesData();
-//            this.showMoleculesPanel(this.currentPanel);
         }
 
-//        if(currentPanel != null){
-//            this.refreshTitle(this.currentPanel.getNumberOfLoadedMolecules());
-//        }
         //Needed for Subpathways:
         this.panelsLoaded.put(new IdPair(toShow.getDbId(), pathwayDiagram.getDbId()), this.currentPanel);
         this.panelsLoadedForPathways.put(pathway.getDbId(), this.currentPanel);
@@ -144,10 +138,6 @@ public class MoleculesViewImpl implements MoleculesView/*, MoleculesLoadedHandle
             this.tab.add(currentPanel);
             this.refreshTitle(this.currentPanel.getNumberOfLoadedMolecules());
             return true;
-        } else if(panelsLoadedForPathways.containsKey(pathwayDiagram.getDbId())) {
-            this.currentPanel = this.panelsLoadedForPathways.get(pathwayDiagram.getDbId());
-            this.refreshTitle(this.currentPanel.getNumberOfLoadedMolecules());
-            return false;
         } else {
             this.refreshTitle(null);
             return false;
