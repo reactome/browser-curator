@@ -51,11 +51,11 @@ public class MoleculesPanel extends DockLayoutPanel implements MouseOverHandler,
 
         //Creating TopBar with a ToggleButton for switching between Molecule and Download View.
         HorizontalPanel topBar = new HorizontalPanel();
-        HorizontalPanel infoBar = new HorizontalPanel();
-        infoBar.add(getTitle(databaseObject));
-        infoBar.add(getSpecies(databaseObject));
-        infoBar.add(getInfo());
-        topBar.add(infoBar);
+//        HorizontalPanel infoBar = new HorizontalPanel();
+        topBar.add(getTitle(databaseObject));
+        topBar.add(getSpecies(databaseObject));
+        topBar.add(getInfo());
+//        topBar.add(infoBar);
 
         final HorizontalPanel buttonBar = new HorizontalPanel();
         topBar.add(buttonBar);
@@ -90,14 +90,15 @@ public class MoleculesPanel extends DockLayoutPanel implements MouseOverHandler,
         downloadBtn.setStyleName("elv-Molecules-Button");
         moleculeBtn.setStyleName("elv-Molecules-Button");
         buttonBar.add(downloadBtn);
+        buttonBar.setStyleName("elv-Molecules-ButtonBar");
 
         topBar.add(buttonBar);
-        buttonBar.getElement().getStyle().setFloat(Style.Float.RIGHT);
-        buttonBar.getElement().getStyle().setPaddingTop(1, Style.Unit.PX);
-        buttonBar.getElement().getStyle().setMarginTop(1, Style.Unit.PX);
+        buttonBar.getElement().getStyle().setFloat(Style.Float.LEFT);
+//        buttonBar.getElement().getStyle().setPaddingTop(1, Style.Unit.PX);
+//        buttonBar.getElement().getStyle().setMarginTop(1, Style.Unit.PX);
 
         this.addNorth(topBar, 35);
-        topBar.setStyleName("elv-Molecules-TopBar");
+//        topBar.setStyleName("elv-Molecules-TopBar");
         this.swapPanel = this.view;
         this.add(swapPanel);
     }
