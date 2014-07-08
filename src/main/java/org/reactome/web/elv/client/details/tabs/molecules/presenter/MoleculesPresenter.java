@@ -22,10 +22,7 @@ import org.reactome.web.elv.client.details.tabs.molecules.model.data.PhysicalToR
 import org.reactome.web.elv.client.details.tabs.molecules.model.data.Result;
 import org.reactome.web.elv.client.details.tabs.molecules.view.MoleculesView;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -36,7 +33,9 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
     private MoleculesView view;
     private DatabaseObject currentDatabaseObject;
     private Pathway currentPathway;
-    private LRUCache<Pathway, Result> cache = new LRUCache<Pathway, Result>();
+    private LRUCache<Pathway, Result> cachePathway = new LRUCache<Pathway, Result>(10);
+    private LRUCache<Long, HashSet<Molecule>> cacheDbObj= new LRUCache<Long, HashSet<Molecule>>(10);
+
     int count = 0;
     List<PhysicalToReferenceEntityMap> toHighlight = new ArrayList<PhysicalToReferenceEntityMap>();
 
@@ -86,14 +85,20 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
 //        String urlPathway  = "/ReactomeRESTfulAPI/RESTfulWS/getPhysicalToReferenceEntityMaps/" + currentPathway.getDbId();
         String urlPathway  = "/ReactomeRESTfulAPI/RESTfulWS/getParticipantsToReferenceEntityMaps/" + currentPathway.getDbId();
         String urlReaction = "/ReactomeRESTfulAPI/RESTfulWS/referenceEntity/" + currentDatabaseObject.getDbId();
-        if(cache.containsKey(currentPathway)){
-            Result result = cache.get(currentPathway);
+        if(cachePathway.containsKey(currentPathway)){
+            Result result = cachePathway.get(currentPathway);
             if(currentPathway.getDbId().equals(currentDatabaseObject.getDbId())){
                 result.highlight();
                 view.setMoleculesData(result);
             }else{
                 result.undoHighlighting(); //Previous highlighting needs to be undone before new one can be applied.
-                getReactionParticipants(result, urlReaction, false);
+
+                if(cacheDbObj.containsKey(currentDatabaseObject.getDbId())){
+                    useExistingParticipants(result, false);
+                }else{
+                    getReactionParticipants(result, urlReaction, false);
+                }
+
             }
         }else{
             //Not yet cached data needs to be requested.
@@ -108,10 +113,15 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
     @Override
     public void updateMoleculesData() {
         String urlReaction = "/ReactomeRESTfulAPI/RESTfulWS/referenceEntity/" + currentDatabaseObject.getDbId();
-        Result result = cache.get(currentPathway);
 
+        Result result = cachePathway.get(currentPathway);
         result.undoHighlighting();
-        getReactionParticipants(result, urlReaction, true);
+
+        if(cacheDbObj.containsKey(currentDatabaseObject.getDbId())){
+            useExistingParticipants(result, true);
+        }else{
+            getReactionParticipants(result, urlReaction, true);
+        }
     }
 
     /**
@@ -175,12 +185,16 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
 
                     Result result = new Result(resultList); //resultList is now duplicate-free.
                     result.setPhyEntityToRefEntitySet(mapSet);
-                    cache.put(currentPathway, result);
+                    cachePathway.put(currentPathway, result);
                     if(currentPathway.getDbId().equals(currentDatabaseObject.getDbId())){
                         result.highlight();
                         view.setMoleculesData(result);
                     }else{
-                        getReactionParticipants(result, urlReaction, false);
+                        if(cacheDbObj.containsKey(currentDatabaseObject.getDbId())){
+                            useExistingParticipants(result, false);
+                        }else{
+                            getReactionParticipants(result, urlReaction, false);
+                        }
                     }
                 }
 
@@ -216,10 +230,15 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
                     // Parsing the result text to a JSONArray because a reaction can contain many elements.
                     JSONArray jsonArray = JSONParser.parseStrict(response.getText()).isArray();
 
+                    Molecule molecule;
+                    HashSet<Molecule> molecules = new HashSet<Molecule>();
                     for(int i=0; i<jsonArray.size(); ++i){
                         JSONObject object = jsonArray.get(i).isObject();
-                        result.highlight(new Molecule(ModelFactory.getDatabaseObject(object).getSchemaClass(), object));
+                        molecule = new Molecule(ModelFactory.getDatabaseObject(object).getSchemaClass(), object);
+                        result.highlight(molecule);
+                        molecules.add(molecule);
                     }
+                    cacheDbObj.put(currentDatabaseObject.getDbId(), molecules);
 
                     if(update){
                         view.updateMoleculesData(result);
@@ -270,5 +289,49 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
     @Override
     public void moleculeDownloadStarted() {
         this.eventBus.fireELVEvent(ELVEventType.MOLECULES_DOWNLOAD_STARTED);
+    }
+
+    @Override
+    public void getMoleculeNumbers(DatabaseObject pathway, DatabaseObject databaseObject) {
+        currentPathway = (Pathway) pathway;
+        currentDatabaseObject = databaseObject;
+        String urlPathway  = "/ReactomeRESTfulAPI/RESTfulWS/getParticipantsToReferenceEntityMaps/" + pathway.getDbId();
+        String urlReaction = "/ReactomeRESTfulAPI/RESTfulWS/referenceEntity/" + databaseObject.getDbId();
+
+        if(!cachePathway.containsKey(pathway)){
+            getPathwayParticipants(urlPathway, urlReaction);
+        }else{
+
+            Result result = cachePathway.get(pathway);
+
+            if(pathway.getDbId().equals(databaseObject.getDbId())){
+                result.highlight();
+                view.setMoleculesData(result);
+            }else{
+                result.undoHighlighting(); //Previous highlighting needs to be undone before new one can be applied.
+
+                if(cacheDbObj.containsKey(databaseObject.getDbId())){
+                    useExistingParticipants(result, false);
+                }else{
+                    getReactionParticipants(result, urlReaction, false);
+                }
+            }
+
+            view.refreshTitle(result.getNumberOfHighlightedMolecules(), result.getNumberOfMolecules());
+        }
+
+    }
+
+    private void useExistingParticipants(Result result, boolean update){
+        HashSet<Molecule> molecules = new HashSet<Molecule>(cacheDbObj.get(currentDatabaseObject.getDbId()));
+        for(Molecule molecule : molecules){
+            result.highlight(molecule);
+        }
+
+        if(update){
+            view.updateMoleculesData(result);
+        }else{
+            view.setMoleculesData(result);
+        }
     }
 }

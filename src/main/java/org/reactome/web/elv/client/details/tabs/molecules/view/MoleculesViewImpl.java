@@ -21,19 +21,6 @@ public class MoleculesViewImpl implements MoleculesView/*, MoleculesLoadedHandle
     private HTMLPanel title;
     private DockLayoutPanel tab;
 
-    //private Map<Long, MoleculesPanel> panelsLoaded = new HashMap<Long, MoleculesPanel>();
-    //private Map<Long, MoleculesPanel> panelsLoadedForPathways = new HashMap<Long, MoleculesPanel>();
-    //Aren't Caches better? As they store only the least recently used data?
-    private class IdPair{
-        private Long pathwayId;
-        private Long toShowId;
-
-        private IdPair(Long pathwayId, Long toShowId) {
-            this.pathwayId = pathwayId;
-            this.toShowId = toShowId;
-        }
-    }
-    private LRUCache<IdPair, MoleculesPanel> panelsLoaded = new LRUCache<IdPair, MoleculesPanel>();
     private LRUCache<Long, MoleculesPanel> panelsLoadedForPathways = new LRUCache<Long, MoleculesPanel>();
 
     private MoleculesPanel currentPanel;
@@ -64,21 +51,22 @@ public class MoleculesViewImpl implements MoleculesView/*, MoleculesLoadedHandle
 
 
     /**
-     * Refreshing the title of MoleculesTab if number of loaded molecules has changed.
+     * Refreshing the title of MoleculesTab if number of loaded/highlighted molecules has changed.
+     * @param highlightedMolecules Number of highlighted molecules.
      * @param loadedMolecules Number of loaded molecules.
      */
     @Override
-    public void refreshTitle(Integer loadedMolecules){
+    public void refreshTitle(Integer highlightedMolecules, Integer loadedMolecules){
         String aux = null;
         if(loadedMolecules == null){
             aux = "";
         }else if(loadedMolecules==0){
             aux = " (0)";
-        }else if(this.currentPanel.getNumberOfHighlightedMolecules() > 0){
-            if(this.currentPanel.getNumberOfHighlightedMolecules().equals(loadedMolecules)){
+        }else if(highlightedMolecules > 0){
+            if(highlightedMolecules.equals(loadedMolecules)){
                 aux = " (" + loadedMolecules + ")";
             }else{
-                aux = " (" + this.currentPanel.getNumberOfHighlightedMolecules() + "/" + loadedMolecules + ")";
+                aux = " (" + highlightedMolecules + "/" + loadedMolecules + ")";
             }
         }
 
@@ -105,43 +93,35 @@ public class MoleculesViewImpl implements MoleculesView/*, MoleculesLoadedHandle
 
     @Override
     public void showInstanceDetails(Pathway pathway, DatabaseObject databaseObject) {
-        boolean exists = this.showInstanceDetailsIfExists(pathway, databaseObject);//needs to be called first!
-        this.pathwayDiagram = pathway;
-        if(this.getPathwayDetailsIfExist(pathway)){
-            this.presenter.updateMoleculesData();
-        }else if(!exists){
-            this.setInitialState();
+        toShow = databaseObject != null ? databaseObject : pathway;
+        pathwayDiagram = pathway;
+
+        boolean exists = this.showInstanceDetailsIfExists((Pathway) pathwayDiagram, toShow);//needs to be called first
+
+        if (!exists){
             showWaitingMessage();
-            toShow = databaseObject!=null?databaseObject:pathway;
             if(toShow==null) return;
             this.presenter.getMoleculesData();
+        }else{
+            this.presenter.updateMoleculesData();
         }
-
-        //Needed for Subpathways:
-        this.panelsLoaded.put(new IdPair(toShow.getDbId(), pathwayDiagram.getDbId()), this.currentPanel);
-        this.panelsLoadedForPathways.put(pathway.getDbId(), this.currentPanel);
     }
 
     @Override
     public boolean showInstanceDetailsIfExists(Pathway pathway, DatabaseObject databaseObject) {
-//        if(toShow != null && toShow.getDbId() != null && currentPanel != null){
-//            this.panelsLoaded.put(toShow.getDbId(), currentPanel);
-//        }
-        this.pathwayDiagram = pathway;
         toShow = databaseObject != null ? databaseObject : pathway;
-        IdPair dbIds = new IdPair(pathwayDiagram.getDbId(), toShow.getDbId());
+        pathwayDiagram = pathway;
 
-        if (this.panelsLoaded.containsKey(dbIds)) {
-            this.currentPanel = this.panelsLoaded.get(dbIds);
-            showMoleculesPanel(this.currentPanel);
-            this.tab.clear();
-            this.tab.add(currentPanel);
-            this.refreshTitle(this.currentPanel.getNumberOfLoadedMolecules());
+        presenter.getMoleculeNumbers(pathwayDiagram, toShow);
+
+        if (this.getPathwayDetailsIfExist(pathway)) {
+//            presenter.getMoleculeNumbers(pathwayDiagram, toShow);
             return true;
         } else {
-            this.refreshTitle(null);
+//            this.refreshTitle(null, null);
             return false;
         }
+//        return this.getPathwayDetailsIfExist(pathway);
     }
 
     private boolean getPathwayDetailsIfExist(Pathway pathway){
@@ -155,19 +135,21 @@ public class MoleculesViewImpl implements MoleculesView/*, MoleculesLoadedHandle
     @Override
     public void setMoleculesData(Result result) {
         this.currentPanel = new MoleculesPanel(result, this.toShow, this.presenter);
-        //this.panelsLoaded.put(result, this.currentPanel);
         showMoleculesPanel(this.currentPanel);
     }
 
     @Override
     public void updateMoleculesData(Result result) {
         this.currentPanel.update(result);
+        showMoleculesPanel(currentPanel);
+    }
+
+    private void showMoleculesPanel(MoleculesPanel panel) {
         this.tab.clear(); //in case a different result is currently shown
-        this.tab.add(currentPanel);
+        this.tab.add(panel);
 
-        this.refreshTitle(currentPanel.getNumberOfLoadedMolecules());
+        this.refreshTitle(panel.getNumberOfHighlightedMolecules(), panel.getNumberOfLoadedMolecules());
 
-        this.panelsLoaded.put(new IdPair(pathwayDiagram.getDbId(), toShow.getDbId()), this.currentPanel);
         this.panelsLoadedForPathways.put(this.pathwayDiagram.getDbId(), this.currentPanel);
     }
 
@@ -198,15 +180,6 @@ public class MoleculesViewImpl implements MoleculesView/*, MoleculesLoadedHandle
 
         this.tab.clear();
         this.tab.add(message);
-    }
-
-    private void showMoleculesPanel(MoleculesPanel panel) {
-        this.tab.clear();
-        this.tab.add(panel);
-        this.refreshTitle(panel.getNumberOfLoadedMolecules());
-
-        this.panelsLoaded.put(new IdPair(pathwayDiagram.getDbId(), toShow.getDbId()), this.currentPanel);
-        this.panelsLoadedForPathways.put(this.pathwayDiagram.getDbId(), this.currentPanel);
     }
 
 }

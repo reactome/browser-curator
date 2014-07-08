@@ -47,33 +47,17 @@ public class Result {
         return chemicals;
     }
 
-//    public void setChemicals(HashSet<Molecule> chemicals) {
-//        this.chemicals = chemicals;
-//    }
-
     public HashSet<Molecule> getProteins() {
         return proteins;
     }
-
-//    public void setProteins(HashSet<Molecule> proteins) {
-//        this.proteins = proteins;
-//    }
 
     public HashSet<Molecule> getSequences() {
         return sequences;
     }
 
-//    public void setSequences(HashSet<Molecule> sequences) {
-//        this.sequences = sequences;
-//    }
-
     public HashSet<Molecule> getOthers() {
         return others;
     }
-
-//    public void setOthers(HashSet<Molecule> others) {
-//        this.others = others;
-//    }
 
     public MapSet<PhysicalToReferenceEntityMap, Molecule> getPhyEntityToRefEntitySet() {
         return this.phyEntityToRefEntitySet;
@@ -228,8 +212,18 @@ public class Result {
         }
     }
 
+    public Integer getNumberOfHighlightedMolecules() {
+        int numOfHighlightedMolecules = 0;
+        numOfHighlightedMolecules += this.getNumHighlight(PropertyType.OTHERS);
+        numOfHighlightedMolecules += this.getNumHighlight(PropertyType.SEQUENCES);
+        numOfHighlightedMolecules += this.getNumHighlight(PropertyType.PROTEINS);
+        numOfHighlightedMolecules += this.getNumHighlight(PropertyType.CHEMICAL_COMPOUNDS);
+
+        return numOfHighlightedMolecules;
+    }
+
     public int getNumHighlight(PropertyType category) {
-        int numHighlight = -1;
+        int numHighlight;
         switch (category){
             case CHEMICAL_COMPOUNDS:
                 numHighlight = numHighlight(this.chemicals);

@@ -1,7 +1,8 @@
 package org.reactome.web.elv.client.details.tabs.molecules.model.widget;
 
-import com.google.gwt.user.client.ui.*;
-import org.reactome.web.elv.client.common.widgets.disclosure.DisclosureImages;
+import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
 import org.reactome.web.elv.client.details.model.widgets.MoleculePanel;
 import org.reactome.web.elv.client.details.tabs.molecules.model.data.Molecule;
 import org.reactome.web.elv.client.details.tabs.molecules.model.data.PhysicalToReferenceEntityMap;
@@ -23,7 +24,7 @@ public class MoleculesTable implements IsWidget  {
         this.result = result;
         vp = new VerticalPanel();
         vp.setWidth("99%");
-        vp.add(getLoadingMessage());
+//        vp.add(getLoadingMessage());
     }
 
     public void setMoleculesData(ArrayList<Molecule> molecules){
@@ -68,12 +69,12 @@ public class MoleculesTable implements IsWidget  {
         return vp;
     }
 
-    public static Widget getLoadingMessage(){
-        HorizontalPanel hp = new HorizontalPanel();
-        hp.add(new Image(DisclosureImages.INSTANCE.getLoadingImage()));
-        hp.add(new HTMLPanel("Loading..."));
-        hp.setSpacing(5);
-
-        return hp;
-    }
+//    public static Widget getLoadingMessage(){
+//        HorizontalPanel hp = new HorizontalPanel();
+//        hp.add(new Image(DisclosureImages.INSTANCE.getLoadingImage()));
+//        hp.add(new HTMLPanel("Loading..."));
+//        hp.setSpacing(5);
+//
+//        return hp;
+//    }
 }
