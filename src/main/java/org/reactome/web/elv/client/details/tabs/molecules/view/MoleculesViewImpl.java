@@ -49,7 +49,6 @@ public class MoleculesViewImpl implements MoleculesView/*, MoleculesLoadedHandle
         return this.title;
     }
 
-
     /**
      * Refreshing the title of MoleculesTab if number of loaded/highlighted molecules has changed.
      * @param highlightedMolecules Number of highlighted molecules.
@@ -114,14 +113,14 @@ public class MoleculesViewImpl implements MoleculesView/*, MoleculesLoadedHandle
 
         presenter.getMoleculeNumbers(pathwayDiagram, toShow);
 
-        if (this.getPathwayDetailsIfExist(pathway)) {
-//            presenter.getMoleculeNumbers(pathwayDiagram, toShow);
-            return true;
-        } else {
-//            this.refreshTitle(null, null);
-            return false;
-        }
-//        return this.getPathwayDetailsIfExist(pathway);
+//        if (this.getPathwayDetailsIfExist(pathway)) {
+////            presenter.getMoleculeNumbers(pathwayDiagram, toShow);
+//            return true;
+//        } else {
+////            this.refreshTitle(null, null);
+//            return false;
+//        }
+        return this.getPathwayDetailsIfExist(pathway);
     }
 
     private boolean getPathwayDetailsIfExist(Pathway pathway){

@@ -96,13 +96,13 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
                 if(cacheDbObj.containsKey(currentDatabaseObject.getDbId())){
                     useExistingParticipants(result, false);
                 }else{
-                    getReactionParticipants(result, urlReaction, false);
+                    getReactionParticipants(result, urlReaction, false, false);
                 }
 
             }
         }else{
             //Not yet cached data needs to be requested.
-            getPathwayParticipants(urlPathway, urlReaction);
+            getPathwayParticipants(urlPathway, urlReaction, false);
         }
     }
 
@@ -120,7 +120,7 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
         if(cacheDbObj.containsKey(currentDatabaseObject.getDbId())){
             useExistingParticipants(result, true);
         }else{
-            getReactionParticipants(result, urlReaction, true);
+            getReactionParticipants(result, urlReaction, true, false);
         }
     }
 
@@ -129,7 +129,7 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
      * @param urlPathway Request-URL for RESTfulService
      * @param urlReaction Request-URL for RESTfulService
      */
-    private void getPathwayParticipants(final String urlPathway, final String urlReaction) {
+    private void getPathwayParticipants(final String urlPathway, final String urlReaction, final boolean refreshTitle) {
         RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, urlPathway);
         requestBuilder.setHeader("Accept", "application/json");
 
@@ -193,7 +193,7 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
                         if(cacheDbObj.containsKey(currentDatabaseObject.getDbId())){
                             useExistingParticipants(result, false);
                         }else{
-                            getReactionParticipants(result, urlReaction, false);
+                            getReactionParticipants(result, urlReaction, false, refreshTitle);
                         }
                     }
                 }
@@ -219,7 +219,7 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
      * @param urlReaction Request-URL for RESTfulService
      * @param update boolean if update necessary
      */
-    private void getReactionParticipants(final Result result, String urlReaction, final boolean update) {
+    private void getReactionParticipants(final Result result, String urlReaction, final boolean update, final boolean refreshTitle) {
         RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, urlReaction);
         requestBuilder.setHeader("Accept", "application/json");
 
@@ -242,7 +242,9 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
 
                     if(update){
                         view.updateMoleculesData(result);
-                    } else {
+                    }else if(refreshTitle){
+                        view.refreshTitle(result.getNumberOfHighlightedMolecules(), result.getNumberOfMolecules());
+                    }else {
                         view.setMoleculesData(result);
                     }
                 }
@@ -299,9 +301,10 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
         String urlReaction = "/ReactomeRESTfulAPI/RESTfulWS/referenceEntity/" + databaseObject.getDbId();
 
         if(!cachePathway.containsKey(pathway)){
-            getPathwayParticipants(urlPathway, urlReaction);
+            /* Boolean to avoid complete reset of view, but function call necessary to get numbers of highlighted and
+            * total number of molecules. Results are cached anyway.*/
+            getPathwayParticipants(urlPathway, urlReaction, true);
         }else{
-
             Result result = cachePathway.get(pathway);
 
             if(pathway.getDbId().equals(databaseObject.getDbId())){
@@ -313,7 +316,7 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
                 if(cacheDbObj.containsKey(databaseObject.getDbId())){
                     useExistingParticipants(result, false);
                 }else{
-                    getReactionParticipants(result, urlReaction, false);
+                    getReactionParticipants(result, urlReaction, false, true);
                 }
             }
 
