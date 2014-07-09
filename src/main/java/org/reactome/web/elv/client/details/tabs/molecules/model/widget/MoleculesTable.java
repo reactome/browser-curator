@@ -68,13 +68,4 @@ public class MoleculesTable implements IsWidget  {
     public Widget asWidget() {
         return vp;
     }
-
-//    public static Widget getLoadingMessage(){
-//        HorizontalPanel hp = new HorizontalPanel();
-//        hp.add(new Image(DisclosureImages.INSTANCE.getLoadingImage()));
-//        hp.add(new HTMLPanel("Loading..."));
-//        hp.setSpacing(5);
-//
-//        return hp;
-//    }
 }
