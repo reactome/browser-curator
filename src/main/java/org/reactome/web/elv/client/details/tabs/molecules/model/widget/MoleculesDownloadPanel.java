@@ -18,19 +18,17 @@ import java.util.HashSet;
  */
 public class MoleculesDownloadPanel extends DockLayoutPanel {
     private Result result;
-    private CheckBox typeTB;
-    private CheckBox nameTB;
-    private CheckBox identifierTB;
-    private CheckBox chemTB;
-    private CheckBox protTB;
-    private CheckBox sequTB;
-    private CheckBox otheTB;
-    //private ArrayList<ToggleButton> fieldList;
-    //private ArrayList<ToggleButton> typesList;
+    private final CheckBox typeTB;
+    private final CheckBox nameTB;
+    private final CheckBox identifierTB;
+    private final CheckBox chemTB;
+    private final CheckBox protTB;
+    private final CheckBox sequTB;
+    private final CheckBox otheTB;
     private TextArea textArea;
 
-    private Button startDownloadBtn = new Button("Start Download");
-    private MoleculesView.Presenter presenter;
+    private final Button startDownloadBtn = new Button("Start Download");
+    private final MoleculesView.Presenter presenter;
 
     public MoleculesDownloadPanel(Result result, MoleculesView.Presenter presenter) {
         super(Style.Unit.PX);
@@ -39,6 +37,7 @@ public class MoleculesDownloadPanel extends DockLayoutPanel {
         this.setWidth("99%");
         this.textArea = new TextArea();
 
+        // Initialising and setting all the currently available checkboxes.
         chemTB = new CheckBox(PropertyType.CHEMICAL_COMPOUNDS.getTitle());
         chemTB.setTitle("Show or hide " + PropertyType.CHEMICAL_COMPOUNDS.getTitle());
         chemTB.setValue(true);
@@ -69,8 +68,6 @@ public class MoleculesDownloadPanel extends DockLayoutPanel {
     }
 
     public void initialise(final Result result){
-        //fieldList = new ArrayList<ToggleButton>();
-        //typesList = new ArrayList<ToggleButton>();
         this.clear(); //if not cleared then updated panels are added under old ones
 
         TextPanel information = new TextPanel(" Here you can download the information the Molecules Tab provides.\n" +
@@ -174,6 +171,10 @@ public class MoleculesDownloadPanel extends DockLayoutPanel {
         this.addStyleName("elv-Details-OverviewPanel");
     }
 
+    /**
+     * Uses files in resources/public to enable download.
+     * @param text from preview
+     */
     public static native void alertDownload(String text) /*-{
         $wnd.saveAs(
             new Blob(
@@ -185,22 +186,22 @@ public class MoleculesDownloadPanel extends DockLayoutPanel {
     }-*/;
 
     /**
-     * Converting ResultObject into text for preview according to buttons pressed.
+     * Converting ResultObject into text for preview according to checkboxes.
      * @return String for preview
      */
     private String resultToText() {
         String resultString = "";
 
         //Adding column names:
-        if(typeTB != null && typeTB.getValue()){
+        if(typeTB.getValue()){
             resultString += "MoleculeType\t";
         }
 
-        if(nameTB != null && identifierTB.getValue()){
+        if(identifierTB.getValue()){
             resultString += "Identifier\t";
         }
 
-        if(nameTB != null && nameTB.getValue()){
+        if(nameTB.getValue()){
             resultString += "MoleculeName\t";
         }
 
@@ -217,6 +218,13 @@ public class MoleculesDownloadPanel extends DockLayoutPanel {
         return resultString;
     }
 
+    /**
+     * Converting HashSet<Molecule> for one PropertyType into text taking into account checked boxes.
+     * @param checkbox If not checked then this type of molecules does not need to be considered.
+     * @param molecules List of molecules that has to be turned into a string.
+     * @param string PropertyType as string (to be attached in front of every line)
+     * @return String resultString
+     */
     private String buildGroupString(CheckBox checkbox, HashSet<Molecule> molecules, String string){
         String resultString = "";
         if(checkbox != null && checkbox.getValue()){

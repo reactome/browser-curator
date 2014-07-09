@@ -10,6 +10,11 @@ import org.reactome.web.elv.client.common.utils.Console;
 /**
  * @author Kerstin Hausmann <khaus@ebi.ac.uk>
  */
+
+/**
+ * Instead of adding peDbId to the Class DatabaseObject PhysicalToReferenceEntityMap was created.
+ * Everything except peDbId is similar to DatabaseObject.
+ */
 public class PhysicalToReferenceEntityMap {
     private Long dbId;
     private String _displayName;
@@ -18,27 +23,6 @@ public class PhysicalToReferenceEntityMap {
     private Long peDbId;
     private String displayName;
     private SchemaClass schemaClass;
-
-    /*DatabaseObject {
-    private Long dbId;
-    private String _displayName;
-    private String displayName;
-    private SchemaClass schemaClass;
-    private StableIdentifier stableIdentifier;*/
-
-//    public PhysicalEntity(SchemaClass schemaClass, JSONObject jsonObject) {
-//        if(jsonObject.containsKey("peDbId")){
-//            this.peDbId = FactoryUtils.getLongValue(jsonObject, "peDbId");
-//        }
-//
-//        if(jsonObject.containsKey("displayName")){
-//            this.displayName = FactoryUtils.getStringValue(jsonObject, "displayName");
-//        }
-//
-//        this.schemaClass = FactoryUtils.getSchemaClass(jsonObject);
-//
-//        checkDatabaseObject(schemaClass);
-//    }
 
     public PhysicalToReferenceEntityMap(JSONObject jsonObject) {
         if(jsonObject.containsKey("dbId")){
@@ -67,7 +51,7 @@ public class PhysicalToReferenceEntityMap {
         checkDatabaseObject(schemaClass);
     }
 
-    public Long getDbId() {
+    Long getDbId() {
         return dbId;
     }
 

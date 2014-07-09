@@ -16,12 +16,12 @@ import org.reactome.web.elv.client.details.tabs.molecules.presenter.LRUCache;
 public class MoleculesViewImpl implements MoleculesView/*, MoleculesLoadedHandler */{
     //private static final String PREFIX = "\t\t[MoleculesView] -> ";
     private final DetailsTabType TYPE = DetailsTabType.PARTICIPATING_MOLECULES;
-    MoleculesView.Presenter presenter;
+    private MoleculesView.Presenter presenter;
 
-    private HTMLPanel title;
-    private DockLayoutPanel tab;
+    private final HTMLPanel title;
+    private final DockLayoutPanel tab;
 
-    private LRUCache<Long, MoleculesPanel> panelsLoadedForPathways = new LRUCache<Long, MoleculesPanel>();
+    private final LRUCache<Long, MoleculesPanel> panelsLoadedForPathways = new LRUCache<Long, MoleculesPanel>();
 
     private MoleculesPanel currentPanel;
     private DatabaseObject toShow;
@@ -90,6 +90,12 @@ public class MoleculesViewImpl implements MoleculesView/*, MoleculesLoadedHandle
         this.presenter = presenter;
     }
 
+    /**
+     * Show instance details for one selected item in context of the lowest pathway with diagram.
+     * Selected item and pathway can be the same.
+     * @param pathway lowest pathway with diagram in hierachy
+     * @param databaseObject selected item
+     */
     @Override
     public void showInstanceDetails(Pathway pathway, DatabaseObject databaseObject) {
         toShow = databaseObject != null ? databaseObject : pathway;
@@ -106,6 +112,12 @@ public class MoleculesViewImpl implements MoleculesView/*, MoleculesLoadedHandle
         }
     }
 
+    /**
+     * Use data from already loaded pathway to show instance details for one selected item in context of the lowest
+     * pathway with diagram. Selected item and pathway can be the same.
+     * @param pathway lowest pathway with diagram in hierachy
+     * @param databaseObject selected item
+     */
     @Override
     public boolean showInstanceDetailsIfExists(Pathway pathway, DatabaseObject databaseObject) {
         toShow = databaseObject != null ? databaseObject : pathway;
@@ -123,6 +135,11 @@ public class MoleculesViewImpl implements MoleculesView/*, MoleculesLoadedHandle
         return this.getPathwayDetailsIfExist(pathway);
     }
 
+    /**
+     * Get pathway details if they have already been loaded.
+     * @param pathway that might have been loaded already.
+     * @return details exist (true) or don't exist yet (false)
+     */
     private boolean getPathwayDetailsIfExist(Pathway pathway){
         if(this.panelsLoadedForPathways.containsKey(pathway.getDbId())){
             this.currentPanel = this.panelsLoadedForPathways.get(pathway.getDbId());
@@ -131,18 +148,30 @@ public class MoleculesViewImpl implements MoleculesView/*, MoleculesLoadedHandle
         return false;
     }
 
+    /**
+     * Create and set data of a new MoleculesPanel.
+     * @param result new result, to be set
+     */
     @Override
     public void setMoleculesData(Result result) {
         this.currentPanel = new MoleculesPanel(result, this.toShow, this.presenter);
         showMoleculesPanel(this.currentPanel);
     }
 
+    /**
+     * Set updated data for a MoleculesPanel.
+     * @param result updated result
+     */
     @Override
     public void updateMoleculesData(Result result) {
         this.currentPanel.update(result);
         showMoleculesPanel(currentPanel);
     }
 
+    /**
+     * Clear current view, show new one, update title of tab and add loaded panel to cache.
+     * @param panel new view, to be displayed
+     */
     private void showMoleculesPanel(MoleculesPanel panel) {
         this.tab.clear(); //in case a different result is currently shown
         this.tab.add(panel);

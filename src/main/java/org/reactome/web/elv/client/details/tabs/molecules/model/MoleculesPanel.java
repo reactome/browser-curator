@@ -25,17 +25,15 @@ import java.util.List;
  * @author Kerstin Hausmann <khaus@ebi.ac.uk>
  */
 public class MoleculesPanel extends DockLayoutPanel implements MouseOverHandler, MouseOutHandler {
-    Result result;
 
-//    final ToggleButton button = new ToggleButton("Download", "Molecules View");
-    final CustomButton downloadBtn = new CustomButton(ReactomeImages.INSTANCE.downloadFile(), "Download");
-    final CustomButton moleculeBtn = new CustomButton(ReactomeImages.INSTANCE.back(), "Molecule View");
+    private Result result;
+    private final CustomButton downloadBtn = new CustomButton(ReactomeImages.INSTANCE.downloadFile(), "Download");
+    private final CustomButton moleculeBtn = new CustomButton(ReactomeImages.INSTANCE.back(), "Molecule View");
 
-    FocusPanel infoPanel;
-    HelpPopup popup;
-    DockLayoutPanel swapPanel;
-    MoleculesViewPanel view;
-    MoleculesDownloadPanel downloads;
+    private HelpPopup popup;
+    private DockLayoutPanel swapPanel;
+    private final MoleculesViewPanel view;
+    private final MoleculesDownloadPanel downloads;
 
     public MoleculesPanel(final Result result, DatabaseObject databaseObject, MoleculesView.Presenter presenter) {
         super(Style.Unit.PX);
@@ -48,20 +46,20 @@ public class MoleculesPanel extends DockLayoutPanel implements MouseOverHandler,
         this.view = new MoleculesViewPanel(result);
         this.downloads = new MoleculesDownloadPanel(result, presenter);
 
-        //Creating TopBar with a ToggleButton for switching between Molecule and Download View.
+        //Creating TopBar with a "self made" ToggleButton for switching between Molecule and Download View.
         HorizontalPanel topBar = new HorizontalPanel();
-//        HorizontalPanel infoBar = new HorizontalPanel();
         topBar.add(getTitle(databaseObject));
         topBar.add(getSpecies(databaseObject));
         topBar.add(getInfo());
-//        topBar.add(infoBar);
 
         final HorizontalPanel buttonBar = new HorizontalPanel();
         topBar.add(buttonBar);
 
+        //Setting two different messages for ToggleBtn
         downloadBtn.setTitle("Go to Download-View");
         moleculeBtn.setTitle("Go back to Molecules-View");
 
+        //ClickHandler for DownloadBtn
         downloadBtn.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
                 swapPanel.removeFromParent();
@@ -74,7 +72,7 @@ public class MoleculesPanel extends DockLayoutPanel implements MouseOverHandler,
             }
         });
 
-
+        //ClickHandler for MoleculeBtn
         moleculeBtn.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
                 swapPanel.removeFromParent();
@@ -86,6 +84,8 @@ public class MoleculesPanel extends DockLayoutPanel implements MouseOverHandler,
                 buttonBar.add(downloadBtn);
             }
         });
+
+        //Setting same style for both buttons
         downloadBtn.setStyleName("elv-Molecules-Button");
         moleculeBtn.setStyleName("elv-Molecules-Button");
         buttonBar.add(downloadBtn);
@@ -93,15 +93,17 @@ public class MoleculesPanel extends DockLayoutPanel implements MouseOverHandler,
 
         topBar.add(buttonBar);
         buttonBar.getElement().getStyle().setFloat(Style.Float.LEFT);
-//        buttonBar.getElement().getStyle().setPaddingTop(1, Style.Unit.PX);
-//        buttonBar.getElement().getStyle().setMarginTop(1, Style.Unit.PX);
 
         this.addNorth(topBar, 35);
-//        topBar.setStyleName("elv-Molecules-TopBar");
         this.swapPanel = this.view;
         this.add(swapPanel);
     }
 
+    /**
+     * Get title for current position in pathway.
+     * @param databaseObject currently selected entity
+     * @return Widget titlePanel
+     */
     private Widget getTitle(DatabaseObject databaseObject) {
         HorizontalPanel titlePanel = new HorizontalPanel();
         titlePanel.setStyleName("elv-Details-Title");
@@ -120,6 +122,11 @@ public class MoleculesPanel extends DockLayoutPanel implements MouseOverHandler,
         return titlePanel;
     }
 
+    /**
+     * Get currently selected species.
+     * @param databaseObject currently selected entity
+     * @return Widget speciesPanel
+     */
     private Widget getSpecies(DatabaseObject databaseObject){
         String species = null;
         if(databaseObject instanceof PhysicalEntity){
@@ -142,8 +149,12 @@ public class MoleculesPanel extends DockLayoutPanel implements MouseOverHandler,
         return speciesPanel;
     }
 
+    /**
+     * Create and get infoPanel with a short instruction on how to use the Molecule Tab
+     * @return Widget infoPanel
+     */
     private Widget getInfo() {
-        infoPanel = new FocusPanel();
+        FocusPanel infoPanel = new FocusPanel();
         infoPanel.setStyleName("elv-Molecules-InfoPanel");
         HorizontalPanel content = new HorizontalPanel();
         try{
@@ -178,6 +189,10 @@ public class MoleculesPanel extends DockLayoutPanel implements MouseOverHandler,
         return infoPanel;
     }
 
+    /**
+     * Get number of loaded molecules.
+     * @return int numberOfLoadedMolecules
+     */
     public Integer getNumberOfLoadedMolecules() {
         if(result == null){
             return 0;
@@ -185,27 +200,37 @@ public class MoleculesPanel extends DockLayoutPanel implements MouseOverHandler,
         return result.getNumberOfMolecules();
     }
 
+    /**
+     * Get number of highlighted molecules.
+     * @return int numberOfHighlightedMolecules
+     */
     public Integer getNumberOfHighlightedMolecules() {
         return result.getNumberOfHighlightedMolecules();
     }
 
-    //Avoids loading if Pathway-with-Diagram stays the same.
+    /**
+     * Update avoids loading if Pathway-with-Diagram stays the same.
+     * @param result updated version of result
+     */
     public void update(Result result) {
         this.result = result;
         this.view.update(result);
         this.downloads.update(result);
     }
 
-    public MoleculesDownloadPanel getDownload() {
-        return downloads;
-    }
-
-
+    /**
+     *OnMouseOver lets infoPopup appear.
+     * @param event MouseOverEvent
+     */
     @Override
     public void onMouseOver(MouseOverEvent event) {
         popup.setPositionAndShow(event);
     }
 
+    /**
+     * OnMouseOut makes infoPopup disappear.
+     * @param event MouseOutEvent
+     */
     @Override
     public void onMouseOut(MouseOutEvent event) {
         popup.hide(true);

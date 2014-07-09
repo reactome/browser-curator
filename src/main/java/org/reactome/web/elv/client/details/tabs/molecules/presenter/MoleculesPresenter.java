@@ -30,14 +30,14 @@ import java.util.*;
  */
 public class MoleculesPresenter extends Controller implements MoleculesView.Presenter, MoleculeSelectedHandler {
     private static final String PREFIX = "\t\t[MoleculesPres] -> ";
-    private MoleculesView view;
+    private final MoleculesView view;
     private DatabaseObject currentDatabaseObject;
     private Pathway currentPathway;
-    private LRUCache<Pathway, Result> cachePathway = new LRUCache<Pathway, Result>(10);
-    private LRUCache<Long, HashSet<Molecule>> cacheDbObj= new LRUCache<Long, HashSet<Molecule>>(10);
+    private final LRUCache<Pathway, Result> cachePathway = new LRUCache<Pathway, Result>(10);
+    private final LRUCache<Long, HashSet<Molecule>> cacheDbObj= new LRUCache<Long, HashSet<Molecule>>(10);
 
-    int count = 0;
-    List<PhysicalToReferenceEntityMap> toHighlight = new ArrayList<PhysicalToReferenceEntityMap>();
+    private int count = 0;
+    private List<PhysicalToReferenceEntityMap> toHighlight = new ArrayList<PhysicalToReferenceEntityMap>();
 
     public MoleculesPresenter(EventBus eventBus, MoleculesView view) {
         super(eventBus);
@@ -59,6 +59,12 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
         view.setInitialState();
     }
 
+    /**
+     * Show instance details for one selected item in context of the lowest pathway with diagram.
+     * Selected item and pathway can be the same.
+     * @param pathway lowest pathway with diagram in hierachy
+     * @param databaseObject selected item
+     */
     @Override
     public void showInstanceDetails(Pathway pathway, DatabaseObject databaseObject) {
         if(databaseObject != null){
@@ -94,7 +100,7 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
                 result.undoHighlighting(); //Previous highlighting needs to be undone before new one can be applied.
 
                 if(cacheDbObj.containsKey(currentDatabaseObject.getDbId())){
-                    useExistingParticipants(result, false);
+                    useExistingReactionParticipants(result, false);
                 }else{
                     getReactionParticipants(result, urlReaction, false, false);
                 }
@@ -118,7 +124,7 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
         result.undoHighlighting();
 
         if(cacheDbObj.containsKey(currentDatabaseObject.getDbId())){
-            useExistingParticipants(result, true);
+            useExistingReactionParticipants(result, true);
         }else{
             getReactionParticipants(result, urlReaction, true, false);
         }
@@ -191,7 +197,7 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
                         view.setMoleculesData(result);
                     }else{
                         if(cacheDbObj.containsKey(currentDatabaseObject.getDbId())){
-                            useExistingParticipants(result, false);
+                            useExistingReactionParticipants(result, false);
                         }else{
                             getReactionParticipants(result, urlReaction, false, refreshTitle);
                         }
@@ -264,6 +270,11 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
         }
     }
 
+    /**
+     * If a molecule is selected, meaning its icon was clicked, then the corresponding entity in the diagram needs to
+     * be selected. Further clicks allow circling through all entities that are or contain this specific molecule.
+     * @param physicalEntityList list of physical entities in diagram that are or contain this specific molecule.
+     */
     @Override
     public void moleculeSelected(List<PhysicalToReferenceEntityMap> physicalEntityList) {
         if(physicalEntityList != null){
@@ -288,11 +299,19 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
         this.eventBus.fireELVEvent(ELVEventType.DATABASE_OBJECT_REQUIRED, tuple);
     }
 
+    /**
+     * Enables tracking the frequency users use available download.
+     */
     @Override
     public void moleculeDownloadStarted() {
         this.eventBus.fireELVEvent(ELVEventType.MOLECULES_DOWNLOAD_STARTED);
     }
 
+    /**
+     * Get molecules numbers for headline of tab.
+     * @param pathway lowest pathway with diagram in hierachy
+     * @param databaseObject selected item
+     */
     @Override
     public void getMoleculeNumbers(DatabaseObject pathway, DatabaseObject databaseObject) {
         currentPathway = (Pathway) pathway;
@@ -314,7 +333,7 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
                 result.undoHighlighting(); //Previous highlighting needs to be undone before new one can be applied.
 
                 if(cacheDbObj.containsKey(databaseObject.getDbId())){
-                    useExistingParticipants(result, false);
+                    useExistingReactionParticipants(result, false);
                 }else{
                     getReactionParticipants(result, urlReaction, false, true);
                 }
@@ -325,7 +344,13 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
 
     }
 
-    private void useExistingParticipants(Result result, boolean update){
+    /**
+     * If ReactionParticipants have already been loaded and are still stored in the cach then those should be used
+     * to avoid requesting them again from the RESTful.
+     * @param result current result
+     * @param update decides whether view should be updated (true) or newly set (false)
+     */
+    private void useExistingReactionParticipants(Result result, boolean update){
         HashSet<Molecule> molecules = new HashSet<Molecule>(cacheDbObj.get(currentDatabaseObject.getDbId()));
         for(Molecule molecule : molecules){
             result.highlight(molecule);

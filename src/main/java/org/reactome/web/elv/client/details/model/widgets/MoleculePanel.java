@@ -68,7 +68,6 @@ public class MoleculePanel extends DetailsPanel implements OpenHandler<Disclosur
         name.setTitle("refDbID, Name, Occurrences in Pathway");
 
         //Link to external reference database.
-        //String referenceDB = this.referenceEntity.getReferenceDatabase().getDisplayName();
         String identifier  = this.molecule.getIdentifier();
         //String string = this.referenceEntity.getReferenceDatabase().getUrl(); => NULL
         Anchor ref = new Anchor(identifier, this.molecule.getUrl(), "_blank");
@@ -89,7 +88,6 @@ public class MoleculePanel extends DetailsPanel implements OpenHandler<Disclosur
         ref.getElement().appendChild(new Image(ReactomeImages.INSTANCE.externalLink()).getElement());
 
         overview.add(name);
-        //name.asWidget().getElement().getStyle().setFloat(Style.Float.LEFT);
         name.addStyleName("elv-Details-Name-MoleculesRow");
 
         overview.setHeight("99%");
@@ -104,6 +102,11 @@ public class MoleculePanel extends DetailsPanel implements OpenHandler<Disclosur
         return this.molecule;
     }
 
+    /**
+     * If further information about external references for a molecule is required it has to be received from
+     * the RESTful and will be done by DataRequiredListener/Handler.
+     * @param event OpenEvent
+     */
     @Override
     public void onOpen(OpenEvent<DisclosurePanel> event) {
         if(!isLoaded()){
@@ -111,6 +114,11 @@ public class MoleculePanel extends DetailsPanel implements OpenHandler<Disclosur
         }
     }
 
+    /**
+     * Once further information about external references for a molecule have been received from the RESTful
+     * this data has to be set in the few.
+     * @param data molecule with additional attributes set.
+     */
     @Override
     public void setReceivedMoleculeData(Molecule data){
         this.molecule = this.molecule.addData(data);
@@ -144,12 +152,17 @@ public class MoleculePanel extends DetailsPanel implements OpenHandler<Disclosur
         setLoaded(true);
     }
 
+    /**
+     * Once the icon of a Molecule is clicked, all the PhysicalEntities need to be found and the first one has to be
+     * selected in the diagram. All the entities are forwarded to MoleculeSelectedListner to manage circling through
+     * all the occurrences.
+     * @param clickEvent ClickEvent
+     */
     @Override
     public void onClick(ClickEvent clickEvent) {
         List<PhysicalToReferenceEntityMap> select = new ArrayList<PhysicalToReferenceEntityMap>();
         List<PhysicalToReferenceEntityMap> highlight = new ArrayList<PhysicalToReferenceEntityMap>();
         for(PhysicalToReferenceEntityMap phyEntity : physicalEntities){
-            //DatabaseObject databaseObj = phyEntity;
 
             if(phyEntity.getSchemaClass() != SchemaClass.COMPLEX && phyEntity.getSchemaClass() != SchemaClass.CANDIDATE_SET
                     && phyEntity.getSchemaClass() != SchemaClass.DEFINED_SET && phyEntity.getSchemaClass() != SchemaClass.ENTITY_SET

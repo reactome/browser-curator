@@ -13,9 +13,9 @@ import org.reactome.web.elv.client.details.tabs.molecules.model.type.PropertyTyp
 /**
  * @author Kerstin Hausmann <khaus@ebi.ac.uk>
  */
-public class TablePanel extends Composite implements OpenHandler<DisclosurePanel>, CloseHandler<DisclosurePanel>{
-    private DisclosurePanel disclosurePanel;
-    private PropertyType propertyType;
+class TablePanel extends Composite implements OpenHandler<DisclosurePanel>, CloseHandler<DisclosurePanel>{
+    private final DisclosurePanel disclosurePanel;
+    private final PropertyType propertyType;
     private Result result;
     private int size;
     private MoleculesTable moleculesTable;
@@ -29,21 +29,28 @@ public class TablePanel extends Composite implements OpenHandler<DisclosurePanel
 
         int toHighlight = result.getNumHighlight(propertyType);
         if(toHighlight == this.size){
-            displayText = propertyType.getTitle() + " (" + this.size + ")";
+            displayText = propertyType.getTitle() + " (" + this.size + ")"; // size/size will be replaced by size only
         }else{
             displayText = propertyType.getTitle() + " (" + result.getNumHighlight(propertyType) + "/" + this.size + ")";
         }
 
         this.disclosurePanel = DisclosurePanelFactory.getAdvancedDisclosurePanel(displayText, null);
 
-        disclosurePanel.setContent(getLoadingMessage("Loading molecules..."));
+        //set loadingMessage
+        disclosurePanel.setContent(getLoadingMessage());
         disclosurePanel.setAnimationEnabled(true);
 
+        //set all the handlers
         this.disclosurePanel.addOpenHandler(this);
         this.disclosurePanel.addCloseHandler(this);
         this.initWidget(this.disclosurePanel);
     }
 
+    /**
+     * If disclosurePanel is opened for the first time the data is set,
+     * for any following openEvent the data will be updated instead.
+     * @param event OpenEvent
+     */
     @Override
     public void onOpen(OpenEvent<DisclosurePanel> event) {
         if(moleculesTable == null){//loading/opening the first time
@@ -54,11 +61,21 @@ public class TablePanel extends Composite implements OpenHandler<DisclosurePanel
         }
     }
 
+    /**
+     * If disclosurePanel is closed, first all the content is cleared away,
+     * otherwise the content will be displayed until the panel is closed (which is not the right behaviour)!
+     * @param event CloseEvent
+     */
     @Override
     public void onClose(CloseEvent<DisclosurePanel> event) {
         this.disclosurePanel.clear();
     }
 
+    /**
+     * Updating the result, the data of the disclosurePanel and the text in disclosureHeader.
+     * @param size new number of molecules of one category
+     * @param result updated version of result.
+     */
     public void update(int size, Result result){
         this.result = result;
         this.size = size;
@@ -75,6 +92,9 @@ public class TablePanel extends Composite implements OpenHandler<DisclosurePanel
         this.disclosurePanel.getHeaderTextAccessor().setText(displayText);
     }
 
+    /**
+     * Setting the Molecules Data.
+     */
     private void setMoleculesData(){
         switch (propertyType){
             case CHEMICAL_COMPOUNDS:
@@ -93,6 +113,9 @@ public class TablePanel extends Composite implements OpenHandler<DisclosurePanel
         this.disclosurePanel.setContent(moleculesTable.asWidget());
     }
 
+    /**
+     * Updating the Molecules Data.
+     */
     private void updateMoleculesData(){
         switch (propertyType){
             case CHEMICAL_COMPOUNDS:
@@ -111,10 +134,14 @@ public class TablePanel extends Composite implements OpenHandler<DisclosurePanel
         this.disclosurePanel.setContent(moleculesTable.asWidget());
     }
 
-    public static Widget getLoadingMessage(String customMessage){
+    /**
+     * Getting a panel with loading message and symbol.
+     * @return Widget
+     */
+    private static Widget getLoadingMessage(){
         HorizontalPanel hp = new HorizontalPanel();
         hp.add(new Image(DisclosureImages.INSTANCE.getLoadingImage()));
-        hp.add(new HTMLPanel(customMessage));
+        hp.add(new HTMLPanel("Loading molecules..."));
         hp.setSpacing(5);
 
         return hp;
