@@ -11,12 +11,13 @@ public abstract class LocationHelper {
         PRODUCTION,
         DEV,
         CURATOR,
+        LOCALHOST,
         OTHER
     }
 
     public static Location getLocation(){
+        String hostName = Window.Location.getHostName();
         if(GWT.isScript()){
-            String hostName = Window.Location.getHostName();
             if(hostName.equals("www.reactome.org") || hostName.equals("reactome.org")){
                 return Location.PRODUCTION;
             }
@@ -27,6 +28,31 @@ public abstract class LocationHelper {
                 return Location.CURATOR;
             }
         }
-        return Location.OTHER;
+        if(hostName.equals("localhost") || hostName.equals("127.0.0.1")){
+            return Location.LOCALHOST;
+        }else {
+            return Location.OTHER;
+        }
+    }
+
+    public static boolean isAnalysisAvailable(){
+        switch (getLocation()){
+            case PRODUCTION:
+            case DEV:
+            case LOCALHOST:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    public static boolean isBeta(){
+        switch (getLocation()){
+            case PRODUCTION:
+            case CURATOR:
+                return false;
+            default:
+                return true;
+        }
     }
 }

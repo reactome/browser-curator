@@ -22,6 +22,9 @@ public interface ReactomeImages extends ClientBundle {
     @Source("images/analysisTools.png")
     ImageResource analysisTool();
 
+    @Source("images/analysisToolsDisabled.png")
+    ImageResource analysisToolsDisabled();
+
     @Source("images/back.png")
     ImageResource back();
 

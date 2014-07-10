@@ -30,7 +30,7 @@ abstract class TabsFactory {
         //just for keep the order in DetailsTabType (at the very beginning both seems
         //to be the same, but later on, if you decide to change the order, will only
         //have to change change it in "DetailsTabType", not here
-        for (DetailsTabType type : DetailsTabType.values()) {
+        for (DetailsTabType type : DetailsTabType.values(true)) {
             switch (type){
                 case OVERVIEW:
                     list.add(new OverviewPresenter(eventBus, new OverviewViewImpl()));

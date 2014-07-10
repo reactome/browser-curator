@@ -106,7 +106,7 @@ public class ToolBarPanel extends HTMLPanel implements ClickHandler {
         banner.getElement().getStyle().setCursor(com.google.gwt.dom.client.Style.Cursor.POINTER);
         add(banner);
 
-        if(!LocationHelper.getLocation().equals(LocationHelper.Location.PRODUCTION)){
+        if(LocationHelper.isBeta()){
             Image phase = new Image(ReactomeImages.INSTANCE.beta());
             banner.getElement().getStyle().setMarginLeft(15, com.google.gwt.dom.client.Style.Unit.PX);
             phase.setTitle("Back to homepage");

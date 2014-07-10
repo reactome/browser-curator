@@ -1,5 +1,10 @@
 package org.reactome.web.elv.client.center.model;
 
+import org.reactome.web.elv.client.common.LocationHelper;
+
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * @author Antonio Fabregat <fabregat@ebi.ac.uk>
  */
@@ -17,7 +22,7 @@ public enum CenterToolType {
     }
 
     public static CenterToolType getByCode(String code){
-        for (CenterToolType centerToolType : values()) {
+        for (CenterToolType centerToolType : values(true)) {
             if(centerToolType.getCode().equals(code)){
                 return centerToolType;
             }
@@ -39,7 +44,7 @@ public enum CenterToolType {
 
     public static int getIndex(CenterToolType type){
         int index = 0;
-        for (CenterToolType centerToolType : values()) {
+        for (CenterToolType centerToolType : values()) {  //This is not location dependent!
             if(centerToolType.equals(type))
                 return index;
             index++;
@@ -49,5 +54,19 @@ public enum CenterToolType {
 
     public String getTitle() {
         return title;
+    }
+
+    public static List<CenterToolType> values(boolean location){
+        List<CenterToolType> rtn = new LinkedList<CenterToolType>();
+        for (CenterToolType centerToolType : values()) {
+            if(centerToolType.equals(ANALYSIS) && location){
+                if(LocationHelper.isAnalysisAvailable()) {
+                    rtn.add(centerToolType);
+                }
+            }else{
+                rtn.add(centerToolType);
+            }
+        }
+        return rtn;
     }
 }
