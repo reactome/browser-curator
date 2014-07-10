@@ -11,19 +11,16 @@ import org.reactome.web.elv.client.details.tabs.molecules.model.type.PropertyTyp
  * @author Kerstin Hausmann <khaus@ebi.ac.uk>
  */
 public class MoleculesViewPanel extends DockLayoutPanel {
-    Result result;
 
-    ScrollPanel scrollPanel;
-    VerticalPanel containerTP; //necessary because scrollPanel can contain only ONE child, contains all TablePanels
-    TablePanel chemicalsPanel;
-    TablePanel proteinsPanel;
-    TablePanel sequencesPanel;
-    TablePanel othersPanel;
+    private ScrollPanel scrollPanel;
+    private final VerticalPanel containerTP; //necessary because scrollPanel can contain only ONE child, contains all TablePanels
+    private TablePanel chemicalsPanel;
+    private TablePanel proteinsPanel;
+    private TablePanel sequencesPanel;
+    private TablePanel othersPanel;
 
     public MoleculesViewPanel(final Result result) {
         super(Style.Unit.PX);
-
-        this.result = result;
 
         //Creating and filling container for TablePanels.
         containerTP = new VerticalPanel();
@@ -31,6 +28,10 @@ public class MoleculesViewPanel extends DockLayoutPanel {
         containerTP.getElement().getStyle().setPaddingTop(5, Style.Unit.PX);
         containerTP.getElement().getStyle().setPaddingBottom(25, Style.Unit.PX);
 
+        /**
+         * Creating all the required TablePanels. If there are no Molecules of one type then the corresponding
+         * TablePanel will not be set.
+         */
         int size;
         if(result != null){
             size = result.getChemicals().size();
@@ -76,9 +77,11 @@ public class MoleculesViewPanel extends DockLayoutPanel {
         this.add(scrollPanel);
     }
 
-    //Avoids loading if Pathway-with-Diagram stays the same.
+    /**
+     * Avoids loading if Pathway-with-Diagram stays the same.
+     * @param result updated version of result
+     */
     public void update(Result result) {
-        this.result = result;
 
         //Update all the TablePanels for the Molecules...
         int size;

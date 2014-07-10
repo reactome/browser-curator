@@ -47,33 +47,17 @@ public class Result {
         return chemicals;
     }
 
-//    public void setChemicals(HashSet<Molecule> chemicals) {
-//        this.chemicals = chemicals;
-//    }
-
     public HashSet<Molecule> getProteins() {
         return proteins;
     }
-
-//    public void setProteins(HashSet<Molecule> proteins) {
-//        this.proteins = proteins;
-//    }
 
     public HashSet<Molecule> getSequences() {
         return sequences;
     }
 
-//    public void setSequences(HashSet<Molecule> sequences) {
-//        this.sequences = sequences;
-//    }
-
     public HashSet<Molecule> getOthers() {
         return others;
     }
-
-//    public void setOthers(HashSet<Molecule> others) {
-//        this.others = others;
-//    }
 
     public MapSet<PhysicalToReferenceEntityMap, Molecule> getPhyEntityToRefEntitySet() {
         return this.phyEntityToRefEntitySet;
@@ -83,7 +67,10 @@ public class Result {
         this.phyEntityToRefEntitySet = phyEntityToRefEntitySet;
     }
 
-    /*getters for sorted molecules arrays*/
+     /**
+     * Getter for sorted chemicals, molecules are sorted according to their highlighting status ans then there name.
+     * @return ArrayList<Molecule> with sorted chemicals
+     */
     public ArrayList<Molecule> getSortedChemicals(){
         ArrayList<ArrayList<Molecule>> split = splitHighlighted(this.chemicals);
         ArrayList<Molecule> sortedColour = new ArrayList<Molecule>(split.get(0));
@@ -94,6 +81,10 @@ public class Result {
         return sortedColour;
     }
 
+    /**
+     * Getter for sorted proteins, molecules are sorted according to their highlighting status ans then there name.
+     * @return ArrayList<Molecule> with sorted proteins
+     */
     public ArrayList<Molecule> getSortedProteins(){
         ArrayList<ArrayList<Molecule>> split = splitHighlighted(this.proteins);
         ArrayList<Molecule> sortedColour = new ArrayList<Molecule>(split.get(0));
@@ -104,6 +95,10 @@ public class Result {
         return sortedColour;
     }
 
+    /**
+     * Getter for sorted sequences, molecules are sorted according to their highlighting status ans then there name.
+     * @return ArrayList<Molecule> with sorted sequences
+     */
     public ArrayList<Molecule> getSortedSequences(){
         ArrayList<ArrayList<Molecule>> split = splitHighlighted(this.sequences);
         ArrayList<Molecule> sortedColour = new ArrayList<Molecule>(split.get(0));
@@ -114,6 +109,10 @@ public class Result {
         return sortedColour;
     }
 
+    /**
+     * Getter for sorted other molecules, molecules are sorted according to their highlighting status ans then there name.
+     * @return ArrayList<Molecule> with sorted other molecules
+     */
     public ArrayList<Molecule> getSortedOthers(){
         ArrayList<ArrayList<Molecule>> split = splitHighlighted(this.others);
         ArrayList<Molecule> sortedColour = new ArrayList<Molecule>(split.get(0));
@@ -124,6 +123,12 @@ public class Result {
         return sortedColour;
     }
 
+    /**
+     * Splitting HashSet<Molecule> into two separate lists. One contains the highlighted and one the ones that are to
+     * be faded out.
+     * @param molecules to be split into highlighted and faded ones.
+     * @return one ArrayList containing a list of molecules to be highlighted AND a list of molecules to be faded out.
+     */
     private ArrayList<ArrayList<Molecule>> splitHighlighted(HashSet<Molecule> molecules) {
         ArrayList<Molecule> colour = new ArrayList<Molecule>();
         ArrayList<Molecule> grey   = new ArrayList<Molecule>();
@@ -142,7 +147,10 @@ public class Result {
         return all;
     }
 
-    /*getter for total number of Molecules in Result*/
+    /**
+     * Getter for total number of Molecules in Result.
+     * @return int totalNumber
+     */
     public Integer getNumberOfMolecules() {
         Integer number = 0;
         if(chemicals != null){
@@ -163,7 +171,10 @@ public class Result {
         return number;
     }
 
-    /*methods for highlighting and redo highlighting*/
+    /**
+     * Method for highlighting a molecule.
+     * @param molecule to be highlighted
+     */
     public void highlight(Molecule molecule){
         HashSet<Molecule> current;
         molecule.setToHighlight(true);
@@ -182,6 +193,12 @@ public class Result {
         }
     }
 
+    /**
+     * Finds molecule in HashSet<Molecule> and highlights it.
+     * @param molecule to be found and highlighted
+     * @param current search space
+     * @return HashSet<Molecule>
+     */
     private HashSet<Molecule> iterate(Molecule molecule, HashSet<Molecule> current){
         ArrayList<Molecule> list = new ArrayList<Molecule>(current);
         for(Molecule m : list){
@@ -192,6 +209,9 @@ public class Result {
         return new HashSet<Molecule>(list);
     }
 
+    /**
+     * Method to highlight a whole Result.
+     */
     public void highlight() {
         for(Molecule m : this.chemicals){
             m.setToHighlight(true);
@@ -210,6 +230,9 @@ public class Result {
         }
     }
 
+    /**
+     * Method to undo highlighting of a whole Result.
+     */
     public void undoHighlighting() {
         for(Molecule m : this.chemicals){
             m.setToHighlight(false);
@@ -228,8 +251,27 @@ public class Result {
         }
     }
 
+    /**
+     * Get the number of highlighted molecules in a result.
+     * @return numOfHighlightedMolecules
+     */
+    public Integer getNumberOfHighlightedMolecules() {
+        int numOfHighlightedMolecules = 0;
+        numOfHighlightedMolecules += this.getNumHighlight(PropertyType.OTHERS);
+        numOfHighlightedMolecules += this.getNumHighlight(PropertyType.SEQUENCES);
+        numOfHighlightedMolecules += this.getNumHighlight(PropertyType.PROTEINS);
+        numOfHighlightedMolecules += this.getNumHighlight(PropertyType.CHEMICAL_COMPOUNDS);
+
+        return numOfHighlightedMolecules;
+    }
+
+    /**
+     * Get the number of highlighted molecules in one category.
+     * @param category PropertyType for which the highlighted molecules should be counted.
+     * @return numHighlight
+     */
     public int getNumHighlight(PropertyType category) {
-        int numHighlight = -1;
+        int numHighlight;
         switch (category){
             case CHEMICAL_COMPOUNDS:
                 numHighlight = numHighlight(this.chemicals);
@@ -250,6 +292,11 @@ public class Result {
         return numHighlight;
     }
 
+    /**
+     * Get the number of highlighted molecules in a HashSet<Molecule>.
+     * @param toHighlight HashSet containing Molecules that have to be highlighted
+     * @return numHighlight
+     */
     private int numHighlight(HashSet<Molecule> toHighlight){
         int numHighlight = 0;
         for(Molecule molecule : toHighlight){

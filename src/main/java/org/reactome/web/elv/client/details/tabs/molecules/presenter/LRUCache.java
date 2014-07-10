@@ -6,14 +6,20 @@ import java.util.Map;
 /**
  * @author Kerstin Hausmann <khaus@ebi.ac.uk>
  */
+
+/**
+ * LRUCache with two possible ctr (standard-size of Cache is 5).
+ * @param <K>
+ * @param <V>
+ */
 public class LRUCache<K, V> extends LinkedHashMap<K, V> {
-    private int MAX_SIZE;
+    private final int MAX_SIZE;
 
     public LRUCache() {
         MAX_SIZE = 5;
     }
-    public LRUCache(int MAX_SIZE) {
-        super(MAX_SIZE + 1, 1.0f, true);
+    public LRUCache(int size) {
+        this.MAX_SIZE = size;
     }
 
     @Override

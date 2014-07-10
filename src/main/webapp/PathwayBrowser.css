@@ -437,6 +437,7 @@
     height: 20px;
     margin: 5px 0 5px 5px;
     padding: 4px 10px 4px 10px;
+    float: left;
 }
 
 .elv-Molecules-Button{
@@ -445,8 +446,8 @@
     border: 1px solid grey;
     color: #063da0;
     font-weight: bolder;
-    height: 30px;
-    float: right;
+    height: 29px;
+    float: left;
 }
 
 .elv-Molecules-Button:hover{
@@ -455,8 +456,11 @@
     border-radius: 5px;
 }
 
-.elv-Molecules-TopBar{
-    width: 100%;
+.elv-Molecules-ButtonBar{
+    height: 30px;
+    margin: 4px 0 5px 2px;
+    /*padding: 4px 10px 4px 10px;*/
+    float: left;
 }
 
 .elv-InformationPanel-Download{

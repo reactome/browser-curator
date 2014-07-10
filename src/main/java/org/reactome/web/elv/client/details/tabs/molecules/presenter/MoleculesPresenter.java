@@ -22,10 +22,7 @@ import org.reactome.web.elv.client.details.tabs.molecules.model.data.PhysicalToR
 import org.reactome.web.elv.client.details.tabs.molecules.model.data.Result;
 import org.reactome.web.elv.client.details.tabs.molecules.view.MoleculesView;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -33,12 +30,14 @@ import java.util.Map;
  */
 public class MoleculesPresenter extends Controller implements MoleculesView.Presenter, MoleculeSelectedHandler {
     private static final String PREFIX = "\t\t[MoleculesPres] -> ";
-    private MoleculesView view;
+    private final MoleculesView view;
     private DatabaseObject currentDatabaseObject;
     private Pathway currentPathway;
-    private LRUCache<Pathway, Result> cache = new LRUCache<Pathway, Result>();
-    int count = 0;
-    List<PhysicalToReferenceEntityMap> toHighlight = new ArrayList<PhysicalToReferenceEntityMap>();
+    private final LRUCache<Pathway, Result> cachePathway = new LRUCache<Pathway, Result>(10);
+    private final LRUCache<Long, HashSet<Molecule>> cacheDbObj= new LRUCache<Long, HashSet<Molecule>>(10);
+
+    private int count = 0;
+    private List<PhysicalToReferenceEntityMap> toHighlight = new ArrayList<PhysicalToReferenceEntityMap>();
 
     public MoleculesPresenter(EventBus eventBus, MoleculesView view) {
         super(eventBus);
@@ -60,6 +59,12 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
         view.setInitialState();
     }
 
+    /**
+     * Show instance details for one selected item in context of the lowest pathway with diagram.
+     * Selected item and pathway can be the same.
+     * @param pathway lowest pathway with diagram in hierachy
+     * @param databaseObject selected item
+     */
     @Override
     public void showInstanceDetails(Pathway pathway, DatabaseObject databaseObject) {
         if(databaseObject != null){
@@ -86,18 +91,24 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
 //        String urlPathway  = "/ReactomeRESTfulAPI/RESTfulWS/getPhysicalToReferenceEntityMaps/" + currentPathway.getDbId();
         String urlPathway  = "/ReactomeRESTfulAPI/RESTfulWS/getParticipantsToReferenceEntityMaps/" + currentPathway.getDbId();
         String urlReaction = "/ReactomeRESTfulAPI/RESTfulWS/referenceEntity/" + currentDatabaseObject.getDbId();
-        if(cache.containsKey(currentPathway)){
-            Result result = cache.get(currentPathway);
+        if(cachePathway.containsKey(currentPathway)){
+            Result result = cachePathway.get(currentPathway);
             if(currentPathway.getDbId().equals(currentDatabaseObject.getDbId())){
                 result.highlight();
                 view.setMoleculesData(result);
             }else{
                 result.undoHighlighting(); //Previous highlighting needs to be undone before new one can be applied.
-                getReactionParticipants(result, urlReaction, false);
+
+                if(cacheDbObj.containsKey(currentDatabaseObject.getDbId())){
+                    useExistingReactionParticipants(result, false);
+                }else{
+                    getReactionParticipants(result, urlReaction, false, false);
+                }
+
             }
         }else{
             //Not yet cached data needs to be requested.
-            getPathwayParticipants(urlPathway, urlReaction);
+            getPathwayParticipants(urlPathway, urlReaction, false);
         }
     }
 
@@ -108,10 +119,15 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
     @Override
     public void updateMoleculesData() {
         String urlReaction = "/ReactomeRESTfulAPI/RESTfulWS/referenceEntity/" + currentDatabaseObject.getDbId();
-        Result result = cache.get(currentPathway);
 
+        Result result = cachePathway.get(currentPathway);
         result.undoHighlighting();
-        getReactionParticipants(result, urlReaction, true);
+
+        if(cacheDbObj.containsKey(currentDatabaseObject.getDbId())){
+            useExistingReactionParticipants(result, true);
+        }else{
+            getReactionParticipants(result, urlReaction, true, false);
+        }
     }
 
     /**
@@ -119,7 +135,7 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
      * @param urlPathway Request-URL for RESTfulService
      * @param urlReaction Request-URL for RESTfulService
      */
-    private void getPathwayParticipants(final String urlPathway, final String urlReaction) {
+    private void getPathwayParticipants(final String urlPathway, final String urlReaction, final boolean refreshTitle) {
         RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, urlPathway);
         requestBuilder.setHeader("Accept", "application/json");
 
@@ -175,12 +191,16 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
 
                     Result result = new Result(resultList); //resultList is now duplicate-free.
                     result.setPhyEntityToRefEntitySet(mapSet);
-                    cache.put(currentPathway, result);
+                    cachePathway.put(currentPathway, result);
                     if(currentPathway.getDbId().equals(currentDatabaseObject.getDbId())){
                         result.highlight();
                         view.setMoleculesData(result);
                     }else{
-                        getReactionParticipants(result, urlReaction, false);
+                        if(cacheDbObj.containsKey(currentDatabaseObject.getDbId())){
+                            useExistingReactionParticipants(result, false);
+                        }else{
+                            getReactionParticipants(result, urlReaction, false, refreshTitle);
+                        }
                     }
                 }
 
@@ -205,7 +225,7 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
      * @param urlReaction Request-URL for RESTfulService
      * @param update boolean if update necessary
      */
-    private void getReactionParticipants(final Result result, String urlReaction, final boolean update) {
+    private void getReactionParticipants(final Result result, String urlReaction, final boolean update, final boolean refreshTitle) {
         RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, urlReaction);
         requestBuilder.setHeader("Accept", "application/json");
 
@@ -216,14 +236,21 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
                     // Parsing the result text to a JSONArray because a reaction can contain many elements.
                     JSONArray jsonArray = JSONParser.parseStrict(response.getText()).isArray();
 
+                    Molecule molecule;
+                    HashSet<Molecule> molecules = new HashSet<Molecule>();
                     for(int i=0; i<jsonArray.size(); ++i){
                         JSONObject object = jsonArray.get(i).isObject();
-                        result.highlight(new Molecule(ModelFactory.getDatabaseObject(object).getSchemaClass(), object));
+                        molecule = new Molecule(ModelFactory.getDatabaseObject(object).getSchemaClass(), object);
+                        result.highlight(molecule);
+                        molecules.add(molecule);
                     }
+                    cacheDbObj.put(currentDatabaseObject.getDbId(), molecules);
 
                     if(update){
                         view.updateMoleculesData(result);
-                    } else {
+                    }else if(refreshTitle){
+                        view.refreshTitle(result.getNumberOfHighlightedMolecules(), result.getNumberOfMolecules());
+                    }else {
                         view.setMoleculesData(result);
                     }
                 }
@@ -243,6 +270,11 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
         }
     }
 
+    /**
+     * If a molecule is selected, meaning its icon was clicked, then the corresponding entity in the diagram needs to
+     * be selected. Further clicks allow circling through all entities that are or contain this specific molecule.
+     * @param physicalEntityList list of physical entities in diagram that are or contain this specific molecule.
+     */
     @Override
     public void moleculeSelected(List<PhysicalToReferenceEntityMap> physicalEntityList) {
         if(physicalEntityList != null){
@@ -267,8 +299,71 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
         this.eventBus.fireELVEvent(ELVEventType.DATABASE_OBJECT_REQUIRED, tuple);
     }
 
+    /**
+     * Enables tracking the frequency users use available download.
+     */
     @Override
     public void moleculeDownloadStarted() {
         this.eventBus.fireELVEvent(ELVEventType.MOLECULES_DOWNLOAD_STARTED);
+    }
+
+    /**
+     * Get molecules numbers for headline of tab.
+     * @param pathway lowest pathway with diagram in hierachy
+     * @param databaseObject selected item
+     */
+    @Override
+    public void getMoleculeNumbers(DatabaseObject pathway, DatabaseObject databaseObject) {
+        currentPathway = (Pathway) pathway;
+        currentDatabaseObject = databaseObject;
+        //String urlPathway  = "/ReactomeRESTfulAPI/RESTfulWS/getParticipantsToReferenceEntityMaps/" + pathway.getDbId();
+        String urlReaction = "/ReactomeRESTfulAPI/RESTfulWS/referenceEntity/" + databaseObject.getDbId();
+
+        if(!cachePathway.containsKey(pathway)){
+            /* Pathway has not been loaded yet => don't show any numbers. */
+            view.refreshTitle(null, null);
+        }else{
+            Result result = cachePathway.get(pathway);
+
+            if(pathway.getDbId().equals(databaseObject.getDbId())){
+                result.highlight();
+                //view.setMoleculesData(result);
+            }else{
+                result.undoHighlighting(); //Previous highlighting needs to be undone before new one can be applied.
+
+                /* Instead of using useExistingReactionParticipants(result, false); this has to be done here manually
+                 * to avoid unnecessary reload of view and to keep download view if active. */
+                 if(cacheDbObj.containsKey(databaseObject.getDbId())){
+                    HashSet<Molecule> molecules = new HashSet<Molecule>(cacheDbObj.get(currentDatabaseObject.getDbId()));
+                    for(Molecule molecule : molecules){
+                        result.highlight(molecule);
+                    }
+
+                }else{
+                    getReactionParticipants(result, urlReaction, false, true);
+                }
+            }
+            view.refreshTitle(result.getNumberOfHighlightedMolecules(), result.getNumberOfMolecules());
+        }
+
+    }
+
+    /**
+     * If ReactionParticipants have already been loaded and are still stored in the cach then those should be used
+     * to avoid requesting them again from the RESTful.
+     * @param result current result
+     * @param update decides whether view should be updated (true) or newly set (false)
+     */
+    private void useExistingReactionParticipants(Result result, boolean update){
+        HashSet<Molecule> molecules = new HashSet<Molecule>(cacheDbObj.get(currentDatabaseObject.getDbId()));
+        for(Molecule molecule : molecules){
+            result.highlight(molecule);
+        }
+
+        if(update){
+            view.updateMoleculesData(result);
+        }else{
+            view.setMoleculesData(result);
+        }
     }
 }

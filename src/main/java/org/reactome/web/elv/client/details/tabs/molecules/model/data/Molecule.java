@@ -11,10 +11,14 @@ import java.util.List;
  * @author Kerstin Hausmann <khaus@ebi.ac.uk>
  */
 
+/**
+ * Molecule is an extension of ReferenceEntity to add additional information, facilitate the access to some already
+ * existent attributes and implement compareTo.
+ */
 public class Molecule extends ReferenceEntity implements Comparable<Molecule>{
-    private SchemaClass schemaClass;
+    private final SchemaClass schemaClass;
     private String url;
-    private boolean toHighlight;
+    private boolean toHighlight; //whether the Molecule should be highlighted in the Molecules List
     private int occurrenceInPathway = 0;
 
     public Molecule(SchemaClass schemaClass, JSONObject jsonObject) {
@@ -25,6 +29,8 @@ public class Molecule extends ReferenceEntity implements Comparable<Molecule>{
             url = url.substring(1, url.length()-1);
         }
 
+        /*To use the images for Molecules consistently in the Molecules tab and in the Overview tab it is necessary
+        * to switch from ReferenceEntity to PhysicalEntity.*/
         switch (schemaClass){
             case REFERENCE_GENE_PRODUCT:
             case REFERENCE_ISOFORM:
@@ -44,7 +50,7 @@ public class Molecule extends ReferenceEntity implements Comparable<Molecule>{
         return url;
     }
 
-    public void setUrl(String url) {
+    void setUrl(String url) {
         this.url = url;
     }
 
