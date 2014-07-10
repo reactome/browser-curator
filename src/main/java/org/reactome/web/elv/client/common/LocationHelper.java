@@ -45,4 +45,14 @@ public abstract class LocationHelper {
                 return false;
         }
     }
+
+    public static boolean isBeta(){
+        switch (getLocation()){
+            case PRODUCTION:
+            case CURATOR:
+                return false;
+            default:
+                return true;
+        }
+    }
 }
