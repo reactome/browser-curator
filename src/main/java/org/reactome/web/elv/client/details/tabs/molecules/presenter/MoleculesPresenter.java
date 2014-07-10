@@ -316,13 +316,12 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
     public void getMoleculeNumbers(DatabaseObject pathway, DatabaseObject databaseObject) {
         currentPathway = (Pathway) pathway;
         currentDatabaseObject = databaseObject;
-        String urlPathway  = "/ReactomeRESTfulAPI/RESTfulWS/getParticipantsToReferenceEntityMaps/" + pathway.getDbId();
+        //String urlPathway  = "/ReactomeRESTfulAPI/RESTfulWS/getParticipantsToReferenceEntityMaps/" + pathway.getDbId();
         String urlReaction = "/ReactomeRESTfulAPI/RESTfulWS/referenceEntity/" + databaseObject.getDbId();
 
         if(!cachePathway.containsKey(pathway)){
-            /* Boolean to avoid complete reset of view, but function call necessary to get numbers of highlighted and
-            * total number of molecules. Results are cached anyway.*/
-            getPathwayParticipants(urlPathway, urlReaction, true);
+            /* Pathway has not been loaded yet => don't show any numbers. */
+            view.refreshTitle(null, null);
         }else{
             Result result = cachePathway.get(pathway);
 
