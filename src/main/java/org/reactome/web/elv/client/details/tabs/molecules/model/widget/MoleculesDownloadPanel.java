@@ -8,26 +8,27 @@ import com.google.gwt.user.client.ui.*;
 import org.reactome.web.elv.client.details.model.widgets.TextPanel;
 import org.reactome.web.elv.client.details.tabs.molecules.model.data.Molecule;
 import org.reactome.web.elv.client.details.tabs.molecules.model.data.Result;
+import org.reactome.web.elv.client.details.tabs.molecules.model.type.PropertyType;
 import org.reactome.web.elv.client.details.tabs.molecules.view.MoleculesView;
+
+import java.util.HashSet;
 
 /**
  * @author Kerstin Hausmann <khaus@ebi.ac.uk>
  */
 public class MoleculesDownloadPanel extends DockLayoutPanel {
     private Result result;
-    private CheckBox typeTB;
-    private CheckBox nameTB;
-    private CheckBox identifierTB;
-    private CheckBox chemTB;
-    private CheckBox protTB;
-    private CheckBox sequTB;
-    private CheckBox otheTB;
-    //private ArrayList<ToggleButton> fieldList;
-    //private ArrayList<ToggleButton> typesList;
+    private final CheckBox typeTB;
+    private final CheckBox nameTB;
+    private final CheckBox identifierTB;
+    private final CheckBox chemTB;
+    private final CheckBox protTB;
+    private final CheckBox sequTB;
+    private final CheckBox otheTB;
     private TextArea textArea;
 
-    private Button startDownloadBtn = new Button("Start Download");
-    private MoleculesView.Presenter presenter;
+    private final Button startDownloadBtn = new Button("Start Download");
+    private final MoleculesView.Presenter presenter;
 
     public MoleculesDownloadPanel(Result result, MoleculesView.Presenter presenter) {
         super(Style.Unit.PX);
@@ -35,11 +36,38 @@ public class MoleculesDownloadPanel extends DockLayoutPanel {
         this.presenter = presenter;
         this.setWidth("99%");
         this.textArea = new TextArea();
+
+        // Initialising and setting all the currently available checkboxes.
+        chemTB = new CheckBox(PropertyType.CHEMICAL_COMPOUNDS.getTitle());
+        chemTB.setTitle("Show or hide " + PropertyType.CHEMICAL_COMPOUNDS.getTitle());
+        chemTB.setValue(true);
+
+        protTB = new CheckBox(PropertyType.PROTEINS.getTitle());
+        protTB.setTitle("Show or hide " + PropertyType.PROTEINS.getTitle());
+        protTB.setValue(true);
+
+        sequTB = new CheckBox(PropertyType.SEQUENCES.getTitle());
+        sequTB.setTitle("Show or hide " + PropertyType.SEQUENCES.getTitle());
+        sequTB.setValue(true);
+
+        otheTB = new CheckBox(PropertyType.OTHERS.getTitle());
+        otheTB.setTitle("Show or hide " + PropertyType.OTHERS.getTitle());
+        otheTB.setValue(true);
+
+        typeTB = new CheckBox("Type");
+        typeTB.setTitle("Show or hide type column");
+        typeTB.setValue(true);
+
+        identifierTB = new CheckBox("Identifier");
+        identifierTB.setTitle("Show or hide identifier column");
+        identifierTB.setValue(true);
+
+        nameTB = new CheckBox("Name");
+        nameTB.setTitle("Show or hide name column");
+        nameTB.setValue(true);
     }
 
     public void initialise(final Result result){
-        //fieldList = new ArrayList<ToggleButton>();
-        //typesList = new ArrayList<ToggleButton>();
         this.clear(); //if not cleared then updated panels are added under old ones
 
         TextPanel information = new TextPanel(" Here you can download the information the Molecules Tab provides.\n" +
@@ -51,16 +79,7 @@ public class MoleculesDownloadPanel extends DockLayoutPanel {
         VerticalPanel requiredType = new VerticalPanel();
         requiredType.add(new TextPanel("Please select the type of Molecules you are interested in:"));
 
-        chemTB = new CheckBox("Chemical Compounds");
-        chemTB.setTitle("Show or hide chemicals");
-        protTB = new CheckBox("Proteins");
-        protTB.setTitle("Show or hide proteins");
-        sequTB = new CheckBox("Sequences");
-        sequTB.setTitle("Show or hide sequences");
-        otheTB = new CheckBox("Others");
-        otheTB.setTitle("Show or hide others");
-
-        //Allow immediate changes to Preview by adding ClickHandler to every ToggleButton.
+        //Allow immediate changes to Preview by adding ClickHandler to every CheckBox.
         ClickHandler updateText = new ClickHandler() {
             @Override
             public void onClick(ClickEvent clickEvent) {
@@ -71,31 +90,23 @@ public class MoleculesDownloadPanel extends DockLayoutPanel {
 
         //Checking for each category of molecules if they are present before adding Handler.
         if(result.getChemicals().size() > 0){
-            chemTB.setValue(true);
             requiredType.add(chemTB);
             chemTB.addClickHandler(updateText);
-            //this.typesList.add(chemTB);
         }
 
         if(result.getProteins().size() > 0){
-            protTB.setValue(true);
             requiredType.add(protTB);
             protTB.addClickHandler(updateText);
-            //this.typesList.add(protTB);
         }
 
         if(result.getSequences().size() > 0){
-            sequTB.setValue(true);
             requiredType.add(sequTB);
             sequTB.addClickHandler(updateText);
-            //this.typesList.add(sequTB);
         }
 
         if(result.getOthers().size() > 0){
-            otheTB.setValue(true);
             requiredType.add(otheTB);
             otheTB.addClickHandler(updateText);
-            //this.typesList.add(otheTB);
         }
 
         requiredType.setStyleName("elv-SelectionPanels-Download");
@@ -104,26 +115,15 @@ public class MoleculesDownloadPanel extends DockLayoutPanel {
         //Creating ToggleButton for each available attribute of molecules and adding Handler.
         VerticalPanel requiredFields = new VerticalPanel();
         requiredFields.add(new TextPanel("Please select the fields you are interested in:"));
-        typeTB = new CheckBox("Type");
-        typeTB.setTitle("Show or hide type column");
-        typeTB.setValue(true);
+
         typeTB.addClickHandler(updateText);
         requiredFields.add(typeTB);
 
-        identifierTB = new CheckBox("Identifier");
-        identifierTB.setTitle("Show or hide identifier column");
-        identifierTB.setValue(true);
         identifierTB.addClickHandler(updateText);
         requiredFields.add(identifierTB);
 
-        nameTB = new CheckBox("Name");
-        nameTB.setTitle("Show or hide name column");
-        nameTB.setValue(true);
         nameTB.addClickHandler(updateText);
         requiredFields.add(nameTB);
-
-        //this.fieldList.add(typeTB);
-        //this.fieldList.add(nameTB);
 
         requiredFields.setStyleName("elv-SelectionPanels-Download");
 
@@ -171,6 +171,10 @@ public class MoleculesDownloadPanel extends DockLayoutPanel {
         this.addStyleName("elv-Details-OverviewPanel");
     }
 
+    /**
+     * Uses files in resources/public to enable download.
+     * @param text from preview
+     */
     public static native void alertDownload(String text) /*-{
         $wnd.saveAs(
             new Blob(
@@ -182,22 +186,22 @@ public class MoleculesDownloadPanel extends DockLayoutPanel {
     }-*/;
 
     /**
-     * Converting ResultObject into text for preview according to buttons pressed.
+     * Converting ResultObject into text for preview according to checkboxes.
      * @return String for preview
      */
     private String resultToText() {
         String resultString = "";
 
         //Adding column names:
-        if(typeTB != null && typeTB.getValue()){
+        if(typeTB.getValue()){
             resultString += "MoleculeType\t";
         }
 
-        if(nameTB != null && identifierTB.getValue()){
+        if(identifierTB.getValue()){
             resultString += "Identifier\t";
         }
 
-        if(nameTB != null && nameTB.getValue()){
+        if(nameTB.getValue()){
             resultString += "MoleculeName\t";
         }
 
@@ -206,11 +210,28 @@ public class MoleculesDownloadPanel extends DockLayoutPanel {
             resultString += "\n";
         }
 
-        if(chemTB != null && this.chemTB.getValue()){
-            for(Molecule m : result.getChemicals()){
+        resultString += buildGroupString(chemTB, result.getChemicals(), PropertyType.CHEMICAL_COMPOUNDS.getTitle());
+        resultString += buildGroupString(protTB, result.getProteins(), PropertyType.PROTEINS.getTitle());
+        resultString += buildGroupString(sequTB, result.getSequences(), PropertyType.SEQUENCES.getTitle());
+        resultString += buildGroupString(otheTB, result.getOthers(), PropertyType.OTHERS.getTitle());
+
+        return resultString;
+    }
+
+    /**
+     * Converting HashSet<Molecule> for one PropertyType into text taking into account checked boxes.
+     * @param checkbox If not checked then this type of molecules does not need to be considered.
+     * @param molecules List of molecules that has to be turned into a string.
+     * @param string PropertyType as string (to be attached in front of every line)
+     * @return String resultString
+     */
+    private String buildGroupString(CheckBox checkbox, HashSet<Molecule> molecules, String string){
+        String resultString = "";
+        if(checkbox != null && checkbox.getValue()){
+            for(Molecule m : molecules){
                 if(m.isToHighlight()){
                     if(this.typeTB.getValue()){
-                        resultString += "Chemical\t";
+                        resultString += string + "\t";
                     }
 
                     if(this.identifierTB.getValue()){
@@ -225,67 +246,6 @@ public class MoleculesDownloadPanel extends DockLayoutPanel {
                 }
             }
         }
-
-        if(protTB != null && this.protTB.getValue()){
-            for(Molecule m : result.getProteins()){
-                if(m.isToHighlight()){
-                    if(this.typeTB.getValue()){
-                        resultString += "Protein\t";
-                    }
-
-                    if(this.identifierTB.getValue()){
-                        resultString += m.getIdentifier() + "\t";
-                    }
-
-                    if(this.nameTB.getValue()){
-                        resultString += m.getDisplayName() + "\t";
-                    }
-
-                    resultString += "\n";
-                }
-            }
-        }
-
-        if(sequTB != null && this.sequTB.getValue()){
-            for(Molecule m : result.getSequences()){
-                if(m.isToHighlight()){
-                    if(this.typeTB.getValue()){
-                        resultString += "Sequence\t";
-                    }
-
-                    if(this.identifierTB.getValue()){
-                        resultString += m.getIdentifier() + "\t";
-                    }
-
-                    if(this.nameTB.getValue()){
-                        resultString += m.getDisplayName() + "\t";
-                    }
-
-                    resultString += "\n";
-                }
-            }
-        }
-
-        if(otheTB != null && this.otheTB.getValue()){
-            for(Molecule m : result.getOthers()){
-                if(m.isToHighlight()){
-                    if(this.typeTB.getValue()){
-                        resultString += "Other\t";
-                    }
-
-                    if(this.identifierTB.getValue()){
-                        resultString += m.getIdentifier() + "\t";
-                    }
-
-                    if(this.nameTB.getValue()){
-                        resultString += m.getDisplayName() + "\t";
-                    }
-
-                    resultString += "\n";
-                }
-            }
-        }
-
         return resultString;
     }
 
@@ -298,26 +258,5 @@ public class MoleculesDownloadPanel extends DockLayoutPanel {
         textArea.setText(resultToText());
         textArea.setStyleName("elv-PreviewPanel-Download");
     }
-
-//
-//    public ArrayList<String> getSelectedTypes() {
-//        ArrayList<String> types = new ArrayList<String>();
-//        for(ToggleButton tb : typesList){
-//            if(tb.getValue()){
-//                types.add(tb.getText());
-//            }
-//        }
-//        return types;
-//    }
-//
-//    public ArrayList<String> getSelectedFields() {
-//        ArrayList<String> fields = new ArrayList<String>();
-//        for(ToggleButton tb : fieldList){
-//            if(tb.getValue()){
-//                fields.add(tb.getText());
-//            }
-//        }
-//        return fields;
-//    }
 }
 

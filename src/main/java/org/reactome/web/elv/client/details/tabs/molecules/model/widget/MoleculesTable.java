@@ -1,7 +1,8 @@
 package org.reactome.web.elv.client.details.tabs.molecules.model.widget;
 
-import com.google.gwt.user.client.ui.*;
-import org.reactome.web.elv.client.common.widgets.disclosure.DisclosureImages;
+import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
 import org.reactome.web.elv.client.details.model.widgets.MoleculePanel;
 import org.reactome.web.elv.client.details.tabs.molecules.model.data.Molecule;
 import org.reactome.web.elv.client.details.tabs.molecules.model.data.PhysicalToReferenceEntityMap;
@@ -14,18 +15,21 @@ import java.util.Set;
 /**
  * @author Kerstin Hausmann <khaus@ebi.ac.uk>
  */
-public class MoleculesTable implements IsWidget  {
+class MoleculesTable implements IsWidget  {
     private VerticalPanel vp;
-    private Result result;
-    private HashMap<Long, Widget> display = new HashMap<Long, Widget>();
+    private final Result result;
+    private final HashMap<Long, Widget> display = new HashMap<Long, Widget>();
 
     public MoleculesTable(Result result) {
         this.result = result;
         vp = new VerticalPanel();
         vp.setWidth("99%");
-        vp.add(getLoadingMessage());
     }
 
+    /**
+     * Setting Molecules Data.
+     * @param molecules to be displayed
+     */
     public void setMoleculesData(ArrayList<Molecule> molecules){
         VerticalPanel vp = new VerticalPanel();
         vp.setWidth("99%");
@@ -42,6 +46,10 @@ public class MoleculesTable implements IsWidget  {
         this.vp = vp;
     }
 
+    /**
+     * Updating Molecules Data.
+     * @param molecules to be displayed
+     */
     public void updateMoleculesData(ArrayList<Molecule> molecules){
         VerticalPanel vp = new VerticalPanel();
         vp.setWidth("99%");
@@ -59,21 +67,21 @@ public class MoleculesTable implements IsWidget  {
         this.vp = vp;
     }
 
+    /**
+     * Getting all PhysicalEntities in current Pathway to which the referenceEntity of a Molecule refers to.
+     * @param molecule for which PhysicalEntities are required.
+     * @return Set<PhysicalToReferenceEntityMap>
+     */
     private Set<PhysicalToReferenceEntityMap> getPhysicalEntities(Molecule molecule) {
         return this.result.getPhyEntityToRefEntitySet().getKeys(molecule);
     }
 
+    /**
+     * Get widget of MoleculesTable.
+     * @return Widget vp
+     */
     @Override
     public Widget asWidget() {
         return vp;
-    }
-
-    public static Widget getLoadingMessage(){
-        HorizontalPanel hp = new HorizontalPanel();
-        hp.add(new Image(DisclosureImages.INSTANCE.getLoadingImage()));
-        hp.add(new HTMLPanel("Loading..."));
-        hp.setSpacing(5);
-
-        return hp;
     }
 }
