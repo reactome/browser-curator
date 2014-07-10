@@ -17,6 +17,7 @@ public class MoleculesViewImpl implements MoleculesView/*, MoleculesLoadedHandle
     //private static final String PREFIX = "\t\t[MoleculesView] -> ";
     private final DetailsTabType TYPE = DetailsTabType.PARTICIPATING_MOLECULES;
     private MoleculesView.Presenter presenter;
+    private boolean exists = false;
 
     private final HTMLPanel title;
     private final DockLayoutPanel tab;
@@ -101,7 +102,8 @@ public class MoleculesViewImpl implements MoleculesView/*, MoleculesLoadedHandle
         toShow = databaseObject != null ? databaseObject : pathway;
         pathwayDiagram = pathway;
 
-        boolean exists = this.showInstanceDetailsIfExists((Pathway) pathwayDiagram, toShow);//needs to be called first
+        //exists = this.showInstanceDetailsIfExists((Pathway) pathwayDiagram, toShow);//needs to be called first
+        //BUT redundant call as showInstanceDetailsIfExists is always called first.
 
         if (!exists){
             showWaitingMessage();
@@ -132,7 +134,9 @@ public class MoleculesViewImpl implements MoleculesView/*, MoleculesLoadedHandle
 ////            this.refreshTitle(null, null);
 //            return false;
 //        }
-        return this.getPathwayDetailsIfExist(pathway);
+        exists = this.getPathwayDetailsIfExist(pathway);
+        //return this.getPathwayDetailsIfExist(pathway);
+        return exists; //because of override, otherwise not needed
     }
 
     /**

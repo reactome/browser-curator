@@ -328,17 +328,22 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
 
             if(pathway.getDbId().equals(databaseObject.getDbId())){
                 result.highlight();
-                view.setMoleculesData(result);
+                //view.setMoleculesData(result);
             }else{
                 result.undoHighlighting(); //Previous highlighting needs to be undone before new one can be applied.
 
-                if(cacheDbObj.containsKey(databaseObject.getDbId())){
-                    useExistingReactionParticipants(result, false);
+                /* Instead of using useExistingReactionParticipants(result, false); this has to be done here manually
+                 * to avoid unnecessary reload of view and to keep download view if active. */
+                 if(cacheDbObj.containsKey(databaseObject.getDbId())){
+                    HashSet<Molecule> molecules = new HashSet<Molecule>(cacheDbObj.get(currentDatabaseObject.getDbId()));
+                    for(Molecule molecule : molecules){
+                        result.highlight(molecule);
+                    }
+
                 }else{
                     getReactionParticipants(result, urlReaction, false, true);
                 }
             }
-
             view.refreshTitle(result.getNumberOfHighlightedMolecules(), result.getNumberOfMolecules());
         }
 
