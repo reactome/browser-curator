@@ -38,7 +38,7 @@ public class EntityWithAccessionedSequencePanel extends DetailsPanel implements 
             vp.add(getCoordinatesPanel(this.ewas.getStartCoordinate(), this.ewas.getEndCoordinate()));
         }
         vp.add(getReferenceSequencePanel(this.ewas.getReferenceEntity()));
-        if(this.ewas.getHasModifiedResidue()!=null){
+        if(this.ewas.getHasModifiedResidue()!=null && !this.ewas.getHasModifiedResidue().isEmpty()){
             vp.add(getModifiedResiduePanel(this.ewas.getHasModifiedResidue()));
         }
         initWidget(vp);
