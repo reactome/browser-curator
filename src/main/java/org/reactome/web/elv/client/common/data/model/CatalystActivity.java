@@ -2,7 +2,11 @@ package org.reactome.web.elv.client.common.data.model;
 
 import com.google.gwt.json.client.JSONObject;
 import org.reactome.web.elv.client.common.data.factory.FactoryUtils;
+import org.reactome.web.elv.client.common.data.factory.ModelFactory;
 import org.reactome.web.elv.client.common.data.factory.SchemaClass;
+
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author Antonio Fabregat <fabregat@ebi.ac.uk>
@@ -12,6 +16,7 @@ public class CatalystActivity extends DatabaseObject implements Regulator {
     private GO_MolecularFunction activity;
     private PhysicalEntity physicalEntity;
     private String physicalEntityClass;
+    private List<DatabaseObject> activeUnit = new LinkedList<DatabaseObject>();
 
     public CatalystActivity(JSONObject jsonObject) {
         super(SchemaClass.CATALYST_ACTIVITY, jsonObject);
@@ -27,6 +32,10 @@ public class CatalystActivity extends DatabaseObject implements Regulator {
         if(jsonObject.containsKey("physicalEntityClass")){
             this.physicalEntityClass = FactoryUtils.getStringValue(jsonObject, "physicalEntityClass");
         }
+
+        for (JSONObject object : FactoryUtils.getObjectList(jsonObject, "activeUnit")) {
+            this.activeUnit.add(ModelFactory.getDatabaseObject(object));
+        }
     }
 
     public GO_MolecularFunction getActivity() {
@@ -39,5 +48,9 @@ public class CatalystActivity extends DatabaseObject implements Regulator {
 
     public String getPhysicalEntityClass() {
         return physicalEntityClass;
+    }
+
+    public List<DatabaseObject> getActiveUnit() {
+        return activeUnit;
     }
 }
