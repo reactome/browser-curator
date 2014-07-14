@@ -1,6 +1,7 @@
 package org.reactome.web.elv.client.details.tabs.molecules.view;
 
 import org.reactome.web.elv.client.common.data.model.DatabaseObject;
+import org.reactome.web.elv.client.common.data.model.Pathway;
 import org.reactome.web.elv.client.details.tabs.DetailsTabView;
 import org.reactome.web.elv.client.details.tabs.molecules.model.data.Result;
 
@@ -19,4 +20,6 @@ public interface MoleculesView extends DetailsTabView<MoleculesView.Presenter> {
     void setMoleculesData(Result result);
     void updateMoleculesData(Result result);
     void refreshTitle(Integer highlightedMolecules, Integer loadedMolecules);
+    void moleculesDownloadRequired();
+    void setCurrentPanel(Pathway pathway, boolean download);
 }

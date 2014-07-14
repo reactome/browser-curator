@@ -34,6 +34,7 @@ public class MoleculesPanel extends DockLayoutPanel implements MouseOverHandler,
     private DockLayoutPanel swapPanel;
     private final MoleculesViewPanel view;
     private final MoleculesDownloadPanel downloads;
+    final HorizontalPanel buttonBar;
 
     public MoleculesPanel(final Result result, DatabaseObject databaseObject, MoleculesView.Presenter presenter) {
         super(Style.Unit.PX);
@@ -54,7 +55,7 @@ public class MoleculesPanel extends DockLayoutPanel implements MouseOverHandler,
         leftBar.add(getTitle(databaseObject));
         leftBar.add(getSpecies(databaseObject));
 
-        final HorizontalPanel buttonBar = new HorizontalPanel();
+        buttonBar = new HorizontalPanel();
         leftBar.add(buttonBar);
 
         //Setting two different messages for ToggleBtn
@@ -242,5 +243,18 @@ public class MoleculesPanel extends DockLayoutPanel implements MouseOverHandler,
     @Override
     public void onMouseOut(MouseOutEvent event) {
         popup.hide(true);
+    }
+
+    /**
+     * Used if DownloadTabs requires MoleculesDownload
+     */
+    public void moleculesDownloadRequired() {
+        swapPanel.removeFromParent();
+        downloads.initialise(result);
+        swapPanel = downloads;
+
+        add(swapPanel);
+        buttonBar.clear();
+        buttonBar.add(moleculeBtn);
     }
 }

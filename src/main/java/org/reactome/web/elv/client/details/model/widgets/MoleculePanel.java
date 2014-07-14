@@ -87,6 +87,11 @@ public class MoleculePanel extends DetailsPanel implements OpenHandler<Disclosur
 
         ref.getElement().appendChild(new Image(ReactomeImages.INSTANCE.externalLink()).getElement());
 
+        /*Changes for disease flag
+        if(molecule.isDisease()){
+            overview.add(new Image(ReactomeImages.INSTANCE.isDisease()));
+        }*/
+
         overview.add(name);
         name.addStyleName("elv-Details-Name-MoleculesRow");
 

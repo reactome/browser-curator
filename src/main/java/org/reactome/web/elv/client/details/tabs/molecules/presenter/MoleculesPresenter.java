@@ -33,7 +33,7 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
     private final MoleculesView view;
     private DatabaseObject currentDatabaseObject;
     private Pathway currentPathway;
-    private final LRUCache<Pathway, Result> cachePathway = new LRUCache<Pathway, Result>(10);
+    private final LRUCache<Pathway, Result> cachePathway = new LRUCache<Pathway, Result>(15);
     private final LRUCache<Long, HashSet<Molecule>> cacheDbObj= new LRUCache<Long, HashSet<Molecule>>(10);
 
     private int count = 0;
@@ -108,7 +108,7 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
             }
         }else{
             //Not yet cached data needs to be requested.
-            getPathwayParticipants(urlPathway, urlReaction, false);
+            getPathwayParticipants(urlPathway, urlReaction);
         }
     }
 
@@ -135,7 +135,7 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
      * @param urlPathway Request-URL for RESTfulService
      * @param urlReaction Request-URL for RESTfulService
      */
-    private void getPathwayParticipants(final String urlPathway, final String urlReaction, final boolean refreshTitle) {
+    private void getPathwayParticipants(final String urlPathway, final String urlReaction) {
         RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, urlPathway);
         requestBuilder.setHeader("Accept", "application/json");
 
@@ -199,7 +199,7 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
                         if(cacheDbObj.containsKey(currentDatabaseObject.getDbId())){
                             useExistingReactionParticipants(result, false);
                         }else{
-                            getReactionParticipants(result, urlReaction, false, refreshTitle);
+                            getReactionParticipants(result, urlReaction, false, false);
                         }
                     }
                 }
@@ -366,4 +366,20 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
             view.setMoleculesData(result);
         }
     }
+
+    /**
+     * Used if DownloadTab requires MoleculesDownload
+     * @param pathway current selected pathway
+     */
+    @Override
+    public void onMoleculesDownloadRequired(Pathway pathway){
+        if(!cachePathway.containsKey(pathway)){
+            this.currentPathway = pathway;
+            this.currentDatabaseObject = pathway;
+            view.setCurrentPanel(pathway, true);
+        }else{
+            view.moleculesDownloadRequired();
+        }
+    }
+
 }

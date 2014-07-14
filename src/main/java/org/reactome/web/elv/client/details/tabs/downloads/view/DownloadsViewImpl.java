@@ -10,6 +10,7 @@ import org.reactome.web.elv.client.common.data.model.Pathway;
 import org.reactome.web.elv.client.common.provider.InstanceTypeExplanation;
 import org.reactome.web.elv.client.common.provider.InstanceTypeIconProvider;
 import org.reactome.web.elv.client.details.model.DetailsTabType;
+import org.reactome.web.elv.client.details.tabs.downloads.model.DownloadMolecule;
 import org.reactome.web.elv.client.details.tabs.downloads.model.DownloadPanel;
 import org.reactome.web.elv.client.details.tabs.downloads.model.DownloadType;
 import org.reactome.web.elv.client.popups.help.HelpPopupImage;
@@ -91,6 +92,15 @@ public class DownloadsViewImpl implements DownloadsView {
             dp.getElement().getStyle().setMarginBottom(15, Style.Unit.PX);
             flowPanel.add(dp);
         }
+
+        //Molecules Download
+        DownloadMolecule dm = new DownloadMolecule(this.presenter, pathway);
+        dm.getElement().getStyle().setMarginLeft(30, Style.Unit.PX);
+        dm.getElement().getStyle().setMarginRight(30, Style.Unit.PX);
+        dm.getElement().getStyle().setMarginTop(15, Style.Unit.PX);
+        dm.getElement().getStyle().setMarginBottom(15, Style.Unit.PX);
+        flowPanel.add(dm);
+
         ScrollPanel sp = new ScrollPanel(flowPanel);
         sp.setStyleName("elv-Download-ItemsPanel");
         aux.add(sp);

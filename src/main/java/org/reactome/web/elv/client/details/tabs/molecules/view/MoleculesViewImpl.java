@@ -13,11 +13,12 @@ import org.reactome.web.elv.client.details.tabs.molecules.presenter.LRUCache;
 /**
  * @author Kerstin Hausmann <khaus@ebi.ac.uk>
  */
-public class MoleculesViewImpl implements MoleculesView/*, MoleculesLoadedHandler */{
+public class MoleculesViewImpl implements MoleculesView{
     //private static final String PREFIX = "\t\t[MoleculesView] -> ";
     private final DetailsTabType TYPE = DetailsTabType.PARTICIPATING_MOLECULES;
     private MoleculesView.Presenter presenter;
     private boolean exists = false;
+    private boolean download = false;
 
     private final HTMLPanel title;
     private final DockLayoutPanel tab;
@@ -153,6 +154,29 @@ public class MoleculesViewImpl implements MoleculesView/*, MoleculesLoadedHandle
     }
 
     /**
+     * Setter for currentPanel, otherwise nullptr exception for unloaded pathways in case
+     * DownloadTab requires MoleculesDownload.
+     * @param pathway current pathway
+     * @param download true if DownloadView is required
+     */
+    @Override
+    public void setCurrentPanel(Pathway pathway, boolean download){
+        this.download = download;
+        if(currentPanel == null){
+            currentPanel = new MoleculesPanel(null, pathway, this.presenter);
+        }
+    }
+
+    /**
+     * Used if DownloadTab requires MoleculesDownload.
+     */
+    @Override
+    public void moleculesDownloadRequired() {
+        download = false;
+        currentPanel.moleculesDownloadRequired();
+    }
+
+    /**
      * Create and set data of a new MoleculesPanel.
      * @param result new result, to be set
      */
@@ -160,6 +184,9 @@ public class MoleculesViewImpl implements MoleculesView/*, MoleculesLoadedHandle
     public void setMoleculesData(Result result) {
         this.currentPanel = new MoleculesPanel(result, this.toShow, this.presenter);
         showMoleculesPanel(this.currentPanel);
+        if(download){
+            this.moleculesDownloadRequired();
+        }
     }
 
     /**
@@ -170,6 +197,9 @@ public class MoleculesViewImpl implements MoleculesView/*, MoleculesLoadedHandle
     public void updateMoleculesData(Result result) {
         this.currentPanel.update(result);
         showMoleculesPanel(currentPanel);
+        if(download){
+            this.moleculesDownloadRequired();
+        }
     }
 
     /**
