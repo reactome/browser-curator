@@ -34,6 +34,7 @@ public class MoleculesPanel extends DockLayoutPanel implements MouseOverHandler,
     private DockLayoutPanel swapPanel;
     private final MoleculesViewPanel view;
     private final MoleculesDownloadPanel downloads;
+    final HorizontalPanel buttonBar;
 
     public MoleculesPanel(final Result result, DatabaseObject databaseObject, MoleculesView.Presenter presenter) {
         super(Style.Unit.PX);
@@ -48,12 +49,14 @@ public class MoleculesPanel extends DockLayoutPanel implements MouseOverHandler,
 
         //Creating TopBar with a "self made" ToggleButton for switching between Molecule and Download View.
         HorizontalPanel topBar = new HorizontalPanel();
-        topBar.add(getTitle(databaseObject));
-        topBar.add(getSpecies(databaseObject));
-        topBar.add(getInfo());
+        topBar.getElement().getStyle().setWidth(100, Style.Unit.PCT);
 
-        final HorizontalPanel buttonBar = new HorizontalPanel();
-        topBar.add(buttonBar);
+        HorizontalPanel leftBar = new HorizontalPanel();
+        leftBar.add(getTitle(databaseObject));
+        leftBar.add(getSpecies(databaseObject));
+
+        buttonBar = new HorizontalPanel();
+        leftBar.add(buttonBar);
 
         //Setting two different messages for ToggleBtn
         downloadBtn.setTitle("Go to Download-View");
@@ -91,8 +94,14 @@ public class MoleculesPanel extends DockLayoutPanel implements MouseOverHandler,
         buttonBar.add(downloadBtn);
         buttonBar.setStyleName("elv-Molecules-ButtonBar");
 
-        topBar.add(buttonBar);
+        leftBar.add(buttonBar);
         buttonBar.getElement().getStyle().setFloat(Style.Float.LEFT);
+        topBar.add(leftBar);
+
+        Widget info = getInfo();
+        topBar.add(info);
+        info.getElement().getStyle().setFloat(Style.Float.RIGHT);
+        info.getElement().getStyle().setMarginRight(5, Style.Unit.PX);
 
         this.addNorth(topBar, 35);
         this.swapPanel = this.view;
@@ -234,5 +243,18 @@ public class MoleculesPanel extends DockLayoutPanel implements MouseOverHandler,
     @Override
     public void onMouseOut(MouseOutEvent event) {
         popup.hide(true);
+    }
+
+    /**
+     * Used if DownloadTabs requires MoleculesDownload
+     */
+    public void moleculesDownloadRequired() {
+        swapPanel.removeFromParent();
+        downloads.initialise(result);
+        swapPanel = downloads;
+
+        add(swapPanel);
+        buttonBar.clear();
+        buttonBar.add(moleculeBtn);
     }
 }

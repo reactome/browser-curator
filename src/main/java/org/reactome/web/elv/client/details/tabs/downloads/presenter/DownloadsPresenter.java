@@ -5,6 +5,8 @@ import org.reactome.web.elv.client.common.Controller;
 import org.reactome.web.elv.client.common.EventBus;
 import org.reactome.web.elv.client.common.data.model.DatabaseObject;
 import org.reactome.web.elv.client.common.data.model.Pathway;
+import org.reactome.web.elv.client.common.events.ELVEventType;
+import org.reactome.web.elv.client.details.model.DetailsTabType;
 import org.reactome.web.elv.client.details.tabs.DetailsTabView;
 import org.reactome.web.elv.client.details.tabs.downloads.view.DownloadsView;
 
@@ -59,5 +61,12 @@ public class DownloadsPresenter extends Controller implements DownloadsView.Pres
     @Override
     public void showInstanceDetailsIfExists(Pathway pathway, DatabaseObject databaseObject) {
         view.showInstanceDetailsIfExists(pathway, databaseObject);
+    }
+
+    @Override
+    public void swapToMolecules(Pathway pathway) {
+        //Molecules Tab needs to be loaded so this is necessary here, eventhough it is not the best way to do it
+        eventBus.fireELVEvent(ELVEventType.STATE_MANAGER_DETAILS_TAB_SELECTED, DetailsTabType.PARTICIPATING_MOLECULES);
+        eventBus.fireELVEvent(ELVEventType.MOLECULES_DOWNLOAD_REQUIRED, pathway);
     }
 }

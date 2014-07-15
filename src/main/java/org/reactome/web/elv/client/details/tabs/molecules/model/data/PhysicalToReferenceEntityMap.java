@@ -22,6 +22,7 @@ public class PhysicalToReferenceEntityMap {
 
     private Long peDbId;
     private String displayName;
+    //private boolean disease = false; Changes for disease flag
     private SchemaClass schemaClass;
 
     public PhysicalToReferenceEntityMap(JSONObject jsonObject) {
@@ -45,6 +46,11 @@ public class PhysicalToReferenceEntityMap {
         if(jsonObject.containsKey("peDbId")){
             this.peDbId = FactoryUtils.getLongValue(jsonObject, "peDbId");
         }
+
+        /*Changes for disease flag
+        for (JSONObject object : FactoryUtils.getObjectList(jsonObject, "disease")) {
+            this.disease = true;
+        }*/
 
         this.schemaClass = FactoryUtils.getSchemaClass(jsonObject);
 
@@ -79,6 +85,10 @@ public class PhysicalToReferenceEntityMap {
         return peDbId;
     }
 
+    /*Changes for disease flag
+    public boolean isDisease() {
+        return disease;
+    }*/
 
     private void checkDatabaseObject(SchemaClass schemaClass){
         if(this.peDbId.equals(0L) || this.displayName == null){

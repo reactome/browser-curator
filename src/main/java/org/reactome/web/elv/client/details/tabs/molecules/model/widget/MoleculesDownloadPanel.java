@@ -5,11 +5,13 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
+import org.reactome.web.elv.client.common.ReactomeImages;
 import org.reactome.web.elv.client.details.model.widgets.TextPanel;
 import org.reactome.web.elv.client.details.tabs.molecules.model.data.Molecule;
 import org.reactome.web.elv.client.details.tabs.molecules.model.data.Result;
 import org.reactome.web.elv.client.details.tabs.molecules.model.type.PropertyType;
 import org.reactome.web.elv.client.details.tabs.molecules.view.MoleculesView;
+import org.reactome.web.elv.client.common.widgets.button.CustomButton;
 
 import java.util.HashSet;
 
@@ -27,7 +29,7 @@ public class MoleculesDownloadPanel extends DockLayoutPanel {
     private final CheckBox otheTB;
     private TextArea textArea;
 
-    private final Button startDownloadBtn = new Button("Start Download");
+    private final CustomButton startDownloadBtn = new CustomButton(ReactomeImages.INSTANCE.downloadFile(), "Start Download");
     private final MoleculesView.Presenter presenter;
 
     public MoleculesDownloadPanel(Result result, MoleculesView.Presenter presenter) {
@@ -132,7 +134,7 @@ public class MoleculesDownloadPanel extends DockLayoutPanel {
         //Chrome, Chrome for Android, Firefox 20+, IE 10+, Opera 15+, Safari 6.1+
         VerticalPanel buttonField = new VerticalPanel();
         buttonField.add(startDownloadBtn);
-        startDownloadBtn.getElement().getStyle().setFloat(Style.Float.RIGHT);
+        startDownloadBtn.setStyleName("elv-Download-Button");
         buttonField.setStyleName("elv-ButtonPanel-Download");
         startDownloadBtn.setTitle("Depending on your browser you can either download your file by clicking on this button" +
                                   " or your will be redirected to a new tab in your browser where you can right click and" +
@@ -158,7 +160,7 @@ public class MoleculesDownloadPanel extends DockLayoutPanel {
         ScrollPanel scrollPanel = new ScrollPanel(controlArea);
 
         this.addWest(scrollPanel, 200);
-        this.addSouth(buttonField, 35);
+        this.addEast(buttonField, 100);
 
         //Preview
         this.textArea = new TextArea();

@@ -20,10 +20,12 @@ public class Molecule extends ReferenceEntity implements Comparable<Molecule>{
     private String url;
     private boolean toHighlight; //whether the Molecule should be highlighted in the Molecules List
     private int occurrenceInPathway = 0;
+    //private boolean disease; Changes for disease flag
 
-    public Molecule(SchemaClass schemaClass, JSONObject jsonObject) {
+    public Molecule(SchemaClass schemaClass, JSONObject jsonObject/*, boolean disease*/) {
         super(schemaClass, jsonObject);
         toHighlight = false;
+        //this.disease = disease;Changes for disease flag
         if(jsonObject.isObject().containsKey("url")){
             url = jsonObject.isObject().get("url").toString();
             url = url.substring(1, url.length()-1);
@@ -37,8 +39,7 @@ public class Molecule extends ReferenceEntity implements Comparable<Molecule>{
                 this.schemaClass = SchemaClass.getSchemaClass(SchemaClass.ENTITY_WITH_ACCESSIONED_SEQUENCE.schemaClass);
                 break;
             case REFERENCE_MOLECULE:
-            case SIMPLE_ENTITY: //Only to make sure that the URL for ALL chemicals is set, can be deleted after this is fixed
-                url = "http://www.ebi.ac.uk/chebi/searchId.do?chebiId=" + this.getIdentifier();
+            case SIMPLE_ENTITY:
                 this.schemaClass = SchemaClass.getSchemaClass(SchemaClass.SIMPLE_ENTITY.schemaClass);
                 break;
             default:
@@ -74,6 +75,10 @@ public class Molecule extends ReferenceEntity implements Comparable<Molecule>{
         return schemaClass;
     }
 
+    /*Changes for disease flag
+    public boolean isDisease() {
+        return disease;
+    }*/
 
     @Override
     public int compareTo(Molecule o) {

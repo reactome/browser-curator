@@ -148,6 +148,9 @@ public abstract class Controller implements ELVEventHandler {
                 break;
             case MOLECULES_DOWNLOAD_STARTED:
                 onMoleculesDownloadStarted();
+            case MOLECULES_DOWNLOAD_REQUIRED:
+                onMoleculesDownloadRequired((Pathway) obj);
+                break;
 
                     /* DETAILS VIEW */
             case DETAILED_VIEW_LOADED:
@@ -288,6 +291,7 @@ public abstract class Controller implements ELVEventHandler {
     /* PARTICIPATING MOLECULES TAB */
     public void onMoleculesItemSelected(DatabaseObject molecule){}
     public void onMoleculesDownloadStarted(){}
+    public void onMoleculesDownloadRequired(Pathway pathway){}
 
     /* DETAILS PANEL */
     public void onDetailedViewLoaded(DatabaseObject obj){}
