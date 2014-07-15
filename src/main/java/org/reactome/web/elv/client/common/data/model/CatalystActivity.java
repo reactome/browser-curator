@@ -16,7 +16,7 @@ public class CatalystActivity extends DatabaseObject implements Regulator {
     private GO_MolecularFunction activity;
     private PhysicalEntity physicalEntity;
     private String physicalEntityClass;
-    private List<DatabaseObject> activeUnit = new LinkedList<DatabaseObject>();
+    private List<PhysicalEntity> activeUnit = new LinkedList<PhysicalEntity>();
 
     public CatalystActivity(JSONObject jsonObject) {
         super(SchemaClass.CATALYST_ACTIVITY, jsonObject);
@@ -34,7 +34,7 @@ public class CatalystActivity extends DatabaseObject implements Regulator {
         }
 
         for (JSONObject object : FactoryUtils.getObjectList(jsonObject, "activeUnit")) {
-            this.activeUnit.add(ModelFactory.getDatabaseObject(object));
+            this.activeUnit.add((PhysicalEntity) ModelFactory.getDatabaseObject(object));
         }
     }
 
@@ -50,7 +50,7 @@ public class CatalystActivity extends DatabaseObject implements Regulator {
         return physicalEntityClass;
     }
 
-    public List<DatabaseObject> getActiveUnit() {
+    public List<PhysicalEntity> getActiveUnit() {
         return activeUnit;
     }
 }

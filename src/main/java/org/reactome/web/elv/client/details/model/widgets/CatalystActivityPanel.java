@@ -9,7 +9,6 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import org.reactome.web.elv.client.common.data.model.CatalystActivity;
 import org.reactome.web.elv.client.common.data.model.DatabaseObject;
-import org.reactome.web.elv.client.common.data.model.Domain;
 import org.reactome.web.elv.client.common.data.model.PhysicalEntity;
 import org.reactome.web.elv.client.common.widgets.disclosure.DisclosurePanelFactory;
 
@@ -63,18 +62,11 @@ public class CatalystActivityPanel extends DetailsPanel implements OpenHandler<D
 
         if(!catalystActivity.getActiveUnit().isEmpty()){
             vp.add(new Label("Active Unit:"));
-            for (DatabaseObject dbObject : catalystActivity.getActiveUnit()) {
-                Widget caPanel = null;
-                if(dbObject instanceof Domain){
-//                    caPanel = new DomainPanel((Domain) dbObject);
-                }else if(dbObject instanceof PhysicalEntity){
-                    caPanel = new PhysicalEntityPanel((PhysicalEntity) dbObject);
-                }
-                if(caPanel != null){
-                    caPanel.setWidth("98%");
-                    caPanel.getElement().getStyle().setMarginLeft(15, Style.Unit.PX);
-                    vp.add(caPanel);
-                }
+            for (PhysicalEntity dbObject : catalystActivity.getActiveUnit()) {
+                Widget caPanel = new PhysicalEntityPanel(dbObject);
+                caPanel.setWidth("98%");
+                caPanel.getElement().getStyle().setMarginLeft(15, Style.Unit.PX);
+                vp.add(caPanel);
             }
         }
 
