@@ -370,7 +370,7 @@ public class TourManager extends Controller implements TourQuestionEventHandler,
 
     private void tourToDiagramViewerStep3(){
         tourStateChanged(TourStage.TEST_DIAGRAM, 3);
-        message.setContent("Please click on the settings icon on the rop right corner of the diagram panel to see " +
+        message.setContent("Please click on the settings icon on the top right corner of the diagram panel to see " +
                 "a list of options\n" +
                 "NOTE: You can also right click on an empty region of the diagram to see other options\n" +
                 "Please click on Next to continue");
@@ -412,10 +412,17 @@ public class TourManager extends Controller implements TourQuestionEventHandler,
 
     private void tourToDetailsPanelStep3(){
         tourStateChanged(TourStage.TEST_DETAILS, 3);
-        message.setContent("The current tab shows the Participating Molecules\n" +
-                "It shows the participants of the selected instance\n" +
-                "You can either browse or download the data\n" +
-                "HINT: Use the plus symbols to expand the content\n" +
+        message.setContent("The current tab shows the Participating Molecules. " +
+                "It shows the participants of the selected instance as a list.\n" +
+                "You can either browse or download the data.\n" +
+                "Use the plus symbols to expand the content or " +
+                "click on the Download button to go to the Download view.\n" +
+                "Each molecule has a link to its main reference DB, a name (usually combined with an identifier) " +
+                "and a number, that tells you how often it occurs in the selected pathway.\n" +
+                "Clicking on the button of a molecule selects it in the diagram. Clicking several times " +
+                "will allow you to circle through all occurences one after another.\n" +
+                "Looking at a subpathway, reaction, complex, set, protein or any other enity will fade out " +
+                "all the other entries in the list and put the specifically selected ones on top." +
                 "Please select the Structures tab or click on Next to continue");
     }
 
