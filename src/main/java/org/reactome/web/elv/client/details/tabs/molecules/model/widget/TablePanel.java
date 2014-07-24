@@ -109,18 +109,8 @@ class TablePanel extends Composite implements OpenHandler<DisclosurePanel>, Clos
         this.size = size;
 
         if(this.disclosurePanel.isOpen()){
-            disclosurePanel.setContent(getLoadingMessage());
-            disclosurePanel.setAnimationEnabled(true);
-            GWT.runAsync(new RunAsyncCallback() {
-                public void onFailure(Throwable caught) {
-                    Console.warn("Ups, something went wrong in Molecules Tab. Take a look at TablePanel > update.");
-                }
-
-                public void onSuccess() {
-                    moleculesTable.updateMoleculesData(result.getSorted(propertyType));
-                    disclosurePanel.setContent(moleculesTable.asWidget());
-                }
-            });
+            moleculesTable.updateMoleculesData(result.getSorted(propertyType));
+            disclosurePanel.setContent(moleculesTable.asWidget());
         }
 
         int toHighlight = result.getNumHighlight(propertyType);

@@ -22,4 +22,7 @@ public interface MoleculesView extends DetailsTabView<MoleculesView.Presenter> {
     void refreshTitle(Integer highlightedMolecules, Integer loadedMolecules);
     void moleculesDownloadRequired();
     void setCurrentPanel(Pathway pathway, boolean download);
+
+    void setLoadingMsg();
+    void clearLoadingMsg();
 }

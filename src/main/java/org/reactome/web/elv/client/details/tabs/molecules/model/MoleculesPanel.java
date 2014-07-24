@@ -12,6 +12,7 @@ import org.reactome.web.elv.client.common.data.model.Species;
 import org.reactome.web.elv.client.common.provider.InstanceTypeExplanation;
 import org.reactome.web.elv.client.common.provider.InstanceTypeIconProvider;
 import org.reactome.web.elv.client.common.widgets.button.CustomButton;
+import org.reactome.web.elv.client.common.widgets.disclosure.DisclosureImages;
 import org.reactome.web.elv.client.details.tabs.molecules.model.data.Result;
 import org.reactome.web.elv.client.details.tabs.molecules.model.widget.MoleculesDownloadPanel;
 import org.reactome.web.elv.client.details.tabs.molecules.model.widget.MoleculesViewPanel;
@@ -35,6 +36,7 @@ public class MoleculesPanel extends DockLayoutPanel implements MouseOverHandler,
     private final MoleculesViewPanel view;
     private final MoleculesDownloadPanel downloads;
     final HorizontalPanel buttonBar;
+    private HorizontalPanel loadingPanel = new HorizontalPanel();
 
     public MoleculesPanel(final Result result, DatabaseObject databaseObject, MoleculesView.Presenter presenter) {
         super(Style.Unit.PX);
@@ -56,7 +58,6 @@ public class MoleculesPanel extends DockLayoutPanel implements MouseOverHandler,
         leftBar.add(getSpecies(databaseObject));
 
         buttonBar = new HorizontalPanel();
-        leftBar.add(buttonBar);
 
         //Setting two different messages for ToggleBtn
         downloadBtn.setTitle("Go to Download-View");
@@ -96,6 +97,9 @@ public class MoleculesPanel extends DockLayoutPanel implements MouseOverHandler,
 
         leftBar.add(buttonBar);
         buttonBar.getElement().getStyle().setFloat(Style.Float.LEFT);
+
+        leftBar.add(loadingPanel);
+        loadingPanel.getElement().getStyle().setMarginTop(5, Style.Unit.PX);
         topBar.add(leftBar);
 
         Widget info = getInfo();
@@ -196,6 +200,33 @@ public class MoleculesPanel extends DockLayoutPanel implements MouseOverHandler,
         infoPanel.add(content.asWidget());
 
         return infoPanel;
+    }
+
+    /**
+     * Gets a panel with loading message and symbol.
+     * @return Widget
+     */
+    private static Widget getLoadingMessage(){
+        HorizontalPanel hp = new HorizontalPanel();
+        hp.add(new Image(DisclosureImages.INSTANCE.getLoadingImage()));
+        hp.add(new HTMLPanel("Please wait while the data for selection is retrieved..."));
+        hp.setSpacing(5);
+
+        return hp;
+    }
+
+    /**
+     * Sets loading Message when the Diagram has to select an entity triggered by clicking on a Molecule's button
+     */
+    public void setLoadingPanel(){
+        this.loadingPanel.add(getLoadingMessage());
+    }
+
+    /**
+     * Removes the Message that appears after a Molecule's button was clicked
+     */
+    public void clearLoadingPanel(){
+        this.loadingPanel.clear();
     }
 
     /**
