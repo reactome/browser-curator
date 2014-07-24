@@ -6,6 +6,7 @@ import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.logical.shared.OpenEvent;
 import com.google.gwt.event.logical.shared.OpenHandler;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.*;
 import org.reactome.web.elv.client.common.utils.Console;
 import org.reactome.web.elv.client.common.widgets.disclosure.DisclosureImages;
@@ -58,21 +59,34 @@ class TablePanel extends Composite implements OpenHandler<DisclosurePanel>, Clos
     public void onOpen(OpenEvent<DisclosurePanel> event) {
         disclosurePanel.setContent(getLoadingMessage());
         disclosurePanel.setAnimationEnabled(true);
-        GWT.runAsync(new RunAsyncCallback() {
-            public void onFailure(Throwable caught) {
-                Console.warn("Ups, something went wrong in Molecules Tab. Take a look at TablePanel > onOpen.");
-            }
 
-            public void onSuccess() {
-                if (moleculesTable == null) {//loading/opening the first time
-                    moleculesTable = new MoleculesTable(result);
-                    moleculesTable.setMoleculesData(result.getSorted(propertyType));
-                } else {
-                    moleculesTable.updateMoleculesData(result.getSorted(propertyType));
-                }
-                disclosurePanel.setContent(moleculesTable.asWidget());
+        /**
+         * Instead of using GWT.runAsync which must we placed in a Timer's run method (but schedule time can be 0)
+         * I also looked into Class Scheduler (scheduleDeferred, scheduleFinally, scheduleFeixedDelay) and it looks
+         * like the more elegant solution BUT it does not (always) show the loading symbol.
+         */
+        Timer timer = new Timer(){
+            @Override
+            public void run() {
+                GWT.runAsync(new RunAsyncCallback() {
+                    public void onFailure(Throwable caught) {
+                        Console.warn("Ups, something went wrong in Molecules Tab. Take a look at TablePanel > onOpen.");
+                    }
+
+                    public void onSuccess() {
+                        if (moleculesTable == null) {//loading/opening the first time
+                            moleculesTable = new MoleculesTable(result);
+                            moleculesTable.setMoleculesData(result.getSorted(propertyType));
+                        } else {
+                            moleculesTable.updateMoleculesData(result.getSorted(propertyType));
+                        }
+                        disclosurePanel.setContent(moleculesTable.asWidget());
+                    }
+                });
             }
-        });
+        };
+        timer.schedule(0);//If timer is not in place, the loading symbol never appears (excpet in the debug modus)
+
     }
 
     /**
@@ -117,52 +131,6 @@ class TablePanel extends Composite implements OpenHandler<DisclosurePanel>, Clos
         }
         this.disclosurePanel.getHeaderTextAccessor().setText(displayText);
     }
-
-    /**
-     * Setting the Molecules Data.
-     */
-//    private void setMoleculesData(){
-//        switch (propertyType){
-//            case CHEMICAL_COMPOUNDS:
-//                MoleculesDataListener.getMoleculesDataListener().setMoleculesData(result.getSortedChemicals());
-//                //moleculesTable.setMoleculesData(result.getSortedChemicals());
-//                break;
-//            case PROTEINS:
-//                MoleculesDataListener.getMoleculesDataListener().setMoleculesData(result.getSortedProteins());
-//                //moleculesTable.setMoleculesData(result.getSortedProteins());
-//                break;
-//            case SEQUENCES:
-//                MoleculesDataListener.getMoleculesDataListener().setMoleculesData(result.getSortedSequences());
-//                //moleculesTable.setMoleculesData(result.getSortedSequences());
-//                break;
-//            default:
-//                MoleculesDataListener.getMoleculesDataListener().setMoleculesData(result.getSortedOthers());
-//                //moleculesTable.setMoleculesData(result.getSortedOthers());
-//                break;
-//        }
-//        this.disclosurePanel.setContent(moleculesTable.asWidget());
-//    }
-//
-//    /**
-//     * Updating the Molecules Data.
-//     */
-//    private void updateMoleculesData(){
-//        switch (propertyType){
-//            case CHEMICAL_COMPOUNDS:
-//                moleculesTable.updateMoleculesData(result.getSortedChemicals());
-//                break;
-//            case PROTEINS:
-//                moleculesTable.updateMoleculesData(result.getSortedProteins());
-//                break;
-//            case SEQUENCES:
-//                moleculesTable.updateMoleculesData(result.getSortedSequences());
-//                break;
-//            default:
-//                moleculesTable.updateMoleculesData(result.getSortedOthers());
-//                break;
-//        }
-//        this.disclosurePanel.setContent(moleculesTable.asWidget());
-//    }
 
     /**
      * Getting a panel with loading message and symbol.
