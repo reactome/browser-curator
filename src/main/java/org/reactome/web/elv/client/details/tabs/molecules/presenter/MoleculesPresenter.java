@@ -306,7 +306,7 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
             if(!cacheSubPathway.containsKey(toHighlight)){
                 pathwaysForEntities();
             }else{
-                eventBus.fireELVEvent(ELVEventType.SELECT_SUBPATHWAY);
+                onSelectSubpathway();
             }
         }else{ //CGB
             String msg = "Sorry, this functionality is not yet available for Diagrams that contain entites\n" +
@@ -374,9 +374,8 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
                     }
 
 //                    TODO: How about handling molecules that exist in gb as well as in currently displayed diagram?!
-
-                    for(int i = 0; i < pathways.size(); ++i){
-                        queryEventAncestors(pathways.get(i).getDbId());
+                    for (Pathway pathway : pathways) {
+                        queryEventAncestors(pathway.getDbId());
                     }
                 }
 
@@ -431,7 +430,7 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
                                 subPWtoHighlight.add(pathways.get(i + 1).getDbId());
                                 cacheSubPathway.put(toHighlight, subPWtoHighlight);
                                 try {
-                                    eventBus.fireELVEvent(ELVEventType.SELECT_SUBPATHWAY);
+                                    onSelectSubpathway();
                                 }catch (Exception e){
                                     selectEntity();
                                 }
@@ -478,8 +477,7 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
     /**
      * Select a specific subpathway (which contains all toHighlight) in the Diagram.
      */
-    @Override
-    public void onSelectSubpathway() {
+    private void onSelectSubpathway() {
         //After all queryEventAncestors have been found => highlightSubPW();
         if(cacheSubPathway.containsKey(toHighlight) && cacheSubPathway.get(toHighlight).size() > count){
             Pair<Long, ELVEventType> tuple = new Pair<Long, ELVEventType>(cacheSubPathway.get(toHighlight).get(count), ELVEventType.DIAGRAM_ENTITY_SELECTED);
