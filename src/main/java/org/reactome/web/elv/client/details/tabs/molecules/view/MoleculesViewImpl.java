@@ -247,9 +247,9 @@ public class MoleculesViewImpl implements MoleculesView{
     /**
      * Sets loading Message when the Diagram has to select an entity triggered by clicking on a Molecule's button
      */
-    public void setLoadingMsg(){
+    public void setLoadingMsg(String msg){
         currentPanel.clearLoadingPanel();
-        currentPanel.setLoadingPanel();
+        currentPanel.setLoadingPanel(msg);
     }
 
     /**

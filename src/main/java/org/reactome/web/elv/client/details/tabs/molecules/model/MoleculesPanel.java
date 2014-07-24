@@ -206,10 +206,18 @@ public class MoleculesPanel extends DockLayoutPanel implements MouseOverHandler,
      * Gets a panel with loading message and symbol.
      * @return Widget
      */
-    private static Widget getLoadingMessage(){
+    private static Widget getLoadingMessage(String msg){
         HorizontalPanel hp = new HorizontalPanel();
-        hp.add(new Image(DisclosureImages.INSTANCE.getLoadingImage()));
-        hp.add(new HTMLPanel("Please wait while the data for selection is retrieved..."));
+
+
+        if(msg == null || msg.isEmpty()){
+            hp.add(new Image(DisclosureImages.INSTANCE.getLoadingImage()));
+            hp.add(new HTMLPanel("Please wait while the data for selection is retrieved..."));
+        }else{
+            hp.add(new Image(ReactomeImages.INSTANCE.exclamation()));
+            hp.add(new HTMLPanel(msg));
+        }
+
         hp.setSpacing(5);
 
         return hp;
@@ -218,8 +226,8 @@ public class MoleculesPanel extends DockLayoutPanel implements MouseOverHandler,
     /**
      * Sets loading Message when the Diagram has to select an entity triggered by clicking on a Molecule's button
      */
-    public void setLoadingPanel(){
-        this.loadingPanel.add(getLoadingMessage());
+    public void setLoadingPanel(String msg){
+        this.loadingPanel.add(getLoadingMessage(msg));
     }
 
     /**

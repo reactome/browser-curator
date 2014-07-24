@@ -23,6 +23,6 @@ public interface MoleculesView extends DetailsTabView<MoleculesView.Presenter> {
     void moleculesDownloadRequired();
     void setCurrentPanel(Pathway pathway, boolean download);
 
-    void setLoadingMsg();
+    void setLoadingMsg(String msg);
     void clearLoadingMsg();
 }

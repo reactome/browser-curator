@@ -5,7 +5,6 @@ import com.google.gwt.http.client.*;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
-import com.google.gwt.user.client.Window;
 import org.reactome.web.elv.client.common.Controller;
 import org.reactome.web.elv.client.common.EventBus;
 import org.reactome.web.elv.client.common.data.factory.ModelFactory;
@@ -284,7 +283,7 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
      */
     @Override
     public void moleculeSelected(List<PhysicalToReferenceEntityMap> physicalEntityList) {
-        view.setLoadingMsg();
+        view.setLoadingMsg(null);
 
         if(physicalEntityList != null){
             for(int i = 0; i < physicalEntityList.size() && i < toHighlight.size(); ++i){
@@ -310,9 +309,9 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
                 eventBus.fireELVEvent(ELVEventType.SELECT_SUBPATHWAY);
             }
         }else{ //CGB
-            Window.alert("Sorry, this functionality is not yet available for Diagrams that contain entites\n" +
-                    "for Complexes, Sets, Proteins, Chemicals etc. AND entites for Subpathways at the same time.");
-            view.clearLoadingMsg();
+            String msg = "Sorry, this functionality is not yet available for Diagrams that contain entites\n" +
+                    "for Complexes, Sets, Proteins, Chemicals etc. AND entites for Subpathways at the same time.";
+            view.setLoadingMsg(msg);
 //            try{
 //                pathwaysForEntities();
 //            }catch (Exception e){
