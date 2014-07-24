@@ -76,9 +76,18 @@ public class PhysicalEntityPanel extends DetailsPanel implements OpenHandler<Dis
         if(this.physicalEntity instanceof Complex){
             Complex complex = (Complex) this.physicalEntity;
             vp.add(getHasComponentsPanel("Has components:", complex.getHasComponent()));
-        }else if(this.physicalEntity instanceof EntitySet){
+        }
+
+        if(this.physicalEntity instanceof EntitySet) {
             EntitySet entitySet = (EntitySet) this.physicalEntity;
             vp.add(getHasComponentsPanel("Has members:", entitySet.getHasMember()));
+        }
+
+        if(this.physicalEntity instanceof CandidateSet){
+            CandidateSet candidateSet = (CandidateSet) this.physicalEntity;
+            if(!candidateSet.getHasCandidate().isEmpty()){
+                vp.add(getHasComponentsPanel("Has candidates:", candidateSet.getHasCandidate()));
+            }
         }
 
         if(this.physicalEntity instanceof EntityWithAccessionedSequence){
