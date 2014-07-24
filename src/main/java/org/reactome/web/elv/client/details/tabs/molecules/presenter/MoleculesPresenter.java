@@ -8,7 +8,9 @@ import com.google.gwt.json.client.JSONParser;
 import org.reactome.web.elv.client.common.Controller;
 import org.reactome.web.elv.client.common.EventBus;
 import org.reactome.web.elv.client.common.data.factory.ModelFactory;
+import org.reactome.web.elv.client.common.data.factory.SchemaClass;
 import org.reactome.web.elv.client.common.data.model.DatabaseObject;
+import org.reactome.web.elv.client.common.data.model.Event;
 import org.reactome.web.elv.client.common.data.model.Pathway;
 import org.reactome.web.elv.client.common.events.ELVEventType;
 import org.reactome.web.elv.client.common.model.Pair;
@@ -20,6 +22,7 @@ import org.reactome.web.elv.client.details.tabs.DetailsTabView;
 import org.reactome.web.elv.client.details.tabs.molecules.model.data.Molecule;
 import org.reactome.web.elv.client.details.tabs.molecules.model.data.PhysicalToReferenceEntityMap;
 import org.reactome.web.elv.client.details.tabs.molecules.model.data.Result;
+import org.reactome.web.elv.client.details.tabs.molecules.model.type.PathwayType;
 import org.reactome.web.elv.client.details.tabs.molecules.view.MoleculesView;
 
 import java.util.*;
@@ -35,9 +38,12 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
     private Pathway currentPathway;
     private final LRUCache<Pathway, Result> cachePathway = new LRUCache<Pathway, Result>(15);
     private final LRUCache<Long, HashSet<Molecule>> cacheDbObj= new LRUCache<Long, HashSet<Molecule>>(10);
+    private final LRUCache<List<PhysicalToReferenceEntityMap>, List<Long>> cacheSubPathway
+            = new LRUCache<List<PhysicalToReferenceEntityMap>, List<Long>>(15);
 
     private int count = 0;
     private List<PhysicalToReferenceEntityMap> toHighlight = new ArrayList<PhysicalToReferenceEntityMap>();
+    private List<Long> subPWtoHighlight = new ArrayList<Long>();
 
     public MoleculesPresenter(EventBus eventBus, MoleculesView view) {
         super(eventBus);
@@ -207,7 +213,7 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
                 @Override
                 public void onError(Request request, Throwable exception) {
                     //TODO
-                    Console.error(PREFIX + "sry, getPhysicalToReferenceEntityMaps received an error instead of a response");
+                    Console.error(PREFIX + "Sorry, getPathwayParticipants received an error instead of a response");
                     if(!GWT.isScript()){
                         Console.error(getClass() + exception.getMessage());
                     }
@@ -215,7 +221,7 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
             });
         } catch (RequestException ex) {
             //TODO
-            Console.error(PREFIX + "sry, getPhysicalToReferenceEntityMaps caught an error!" );
+            Console.error(PREFIX + "Sorry, getPathwayParticipants caught an error!" );
         }
     }
 
@@ -258,7 +264,7 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
                 @Override
                 public void onError(Request request, Throwable exception) {
                     //TODO
-                    Console.error(PREFIX + "sry, getPathwayParticipants received an error instead of a response");
+                    Console.error(PREFIX + "Sorry, getReactionParticipants received an error instead of a response");
                     if(!GWT.isScript()){
                         Console.error(getClass() + exception.getMessage());
                     }
@@ -266,7 +272,7 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
             });
         } catch (RequestException ex) {
             //TODO
-            Console.error(PREFIX + "sry, getPathwayParticipants caught an error!" );
+            Console.error(PREFIX + "Sorry, getReactionParticipants caught an error!" );
         }
     }
 
@@ -277,6 +283,8 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
      */
     @Override
     public void moleculeSelected(List<PhysicalToReferenceEntityMap> physicalEntityList) {
+        view.setLoadingMsg(null);
+
         if(physicalEntityList != null){
             for(int i = 0; i < physicalEntityList.size() && i < toHighlight.size(); ++i){
                 if(!physicalEntityList.get(i).getPeDbId().equals(toHighlight.get(i).getPeDbId())){
@@ -287,16 +295,198 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
             toHighlight = physicalEntityList;
         }
 
-        Long peDbId;
         if(count >= toHighlight.size()){
             count = 0; // Circling through all entities in toHighlight.
         }
-        peDbId = toHighlight.get(count).getPeDbId();
+
+        PathwayType type = determineType();
+        if(type.equals(PathwayType.NGB)){
+            selectEntity();
+        }else if (type.equals(PathwayType.OGB)){
+            if(!cacheSubPathway.containsKey(toHighlight)){
+                pathwaysForEntities();
+            }else{
+                eventBus.fireELVEvent(ELVEventType.SELECT_SUBPATHWAY);
+            }
+        }else{ //CGB
+            String msg = "Sorry, this functionality is not yet available for Diagrams that contain entites\n" +
+                    "for Complexes, Sets, Proteins, Chemicals etc. AND entites for Subpathways at the same time.";
+            view.setLoadingMsg(msg);
+//            try{
+//                pathwaysForEntities();
+//            }catch (Exception e){
+//                selectEntity();
+//            }
+        }
+    }
+
+    /**
+     * Method to determine the type of the currently displayed diagram
+     * @return PathwayType (OGB, NGB, CGB)
+     */
+    private PathwayType determineType() {
+        List<Event> events = this.currentPathway.getHasEvent();
+        PathwayType pt = null;
+        for(Event e : events){
+            if (e.getSchemaClass() == SchemaClass.PATHWAY){
+                Pathway p = (Pathway) e;
+
+                if(pt == null){
+                    if(p.getHasDiagram()){
+                        pt = PathwayType.OGB; //only green boxes
+                    }else{
+                        pt = PathwayType.NGB; //no green boxes
+                    }
+                }else{
+                    if(p.getHasDiagram() && pt == PathwayType.NGB || !p.getHasDiagram() && pt == PathwayType.OGB){
+                        return PathwayType.CGB; //diagram that contains green boxes
+                    }
+                }
+            }
+        }
+        return pt;
+    }
+
+    /**
+     * Post all pDbIds from toHighlight to get a list of pathways that contain all elements.
+     */
+    private void pathwaysForEntities() {
+        String url = "/ReactomeRESTfulAPI/RESTfulWS/pathwaysForEntities/";
+        RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.POST, url);
+        requestBuilder.setHeader("Content-Type", "text/plain");
+        requestBuilder.setHeader("Accept", "application/json");
+
+        try {
+            String post = "ID=";
+            for(PhysicalToReferenceEntityMap entity : toHighlight){
+                post += entity.getPeDbId() + ",";
+            }
+            requestBuilder.sendRequest(post, new RequestCallback() {
+
+                @Override
+                public void onResponseReceived(Request request, Response response) {
+                    JSONArray list = JSONParser.parseStrict(response.getText()).isArray();
+
+                    ArrayList<Pathway> pathways = new ArrayList<Pathway>();
+                    for(int i=0; i<list.size(); ++i){
+                        JSONObject object = list.get(i).isObject();
+                        pathways.add(new Pathway(object));
+                    }
+
+//                    TODO: How about handling molecules that exist in gb as well as in currently displayed diagram?!
+
+                    for(int i = 0; i < pathways.size(); ++i){
+                        queryEventAncestors(pathways.get(i).getDbId());
+                    }
+                }
+
+                @Override
+                public void onError(Request request, Throwable exception) {
+                    //TODO
+                    Console.error(PREFIX + "Sorry, pathwaysForEntities received an error instead of a response");
+                    if(!GWT.isScript()){
+                        Console.error(getClass() + exception.getMessage());
+                    }
+                }
+
+            });
+        } catch (RequestException ex) {
+            //TODO
+            Console.error(PREFIX + "Sorry, pathwaysForEntities received an error instead of a response");
+        }
+    }
+
+    /**
+     * Get a partial hierachry for a specific (sub)pathway. If a (sub)pathway in hierarchy that is one level
+     * below the currently displayed one exists than highlight it in the Diagram. If it does not exist the
+     * toHighlight elements should be found in the currently displayed Diagram.
+     * @param dbId pDbId of subpathway
+     */
+    private void queryEventAncestors(Long dbId) {
+        RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, "/ReactomeRESTfulAPI/RESTfulWS/queryEventAncestors/" + dbId);
+        requestBuilder.setHeader("Accept", "application/json");
+
+        try {
+            requestBuilder.sendRequest(null, new RequestCallback() {
+
+                public void onResponseReceived(Request request, Response response) {
+                    JSONArray list = JSONParser.parseStrict(response.getText()).isArray();
+
+                    //Creating a list of pathways (that are above the one that contains all toHighlight)
+                    ArrayList<Pathway> pathways = new ArrayList<Pathway>();
+                    for(int i=0; i<list.size(); ++i){
+                        JSONObject object = list.get(i).isObject();
+                        JSONArray array = (JSONArray) object.get("databaseObject");
+
+                        for(int j=0; j<array.size(); ++j){
+                            JSONObject pw = array.get(j).isObject();
+                            pathways.add(new Pathway(pw));
+                        }
+                    }
+
+//                    if(pathways.toString().contains(currentPathway.getDbId().toString())){
+                    for(int i = 0; i < pathways.size(); i++){
+                        if(currentPathway.getDbId().equals(pathways.get(i).getDbId())){
+                            if(i+1 < pathways.size() && pathways.get(i+1).getHasDiagram()){
+                                subPWtoHighlight.add(pathways.get(i + 1).getDbId());
+                                cacheSubPathway.put(toHighlight, subPWtoHighlight);
+                                try {
+                                    eventBus.fireELVEvent(ELVEventType.SELECT_SUBPATHWAY);
+                                }catch (Exception e){
+                                    selectEntity();
+                                }
+                            }else{
+                                //Entity in CUGB diagram
+                                selectEntity();
+//                                return;
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void onError(Request request, Throwable exception) {
+                    //TODO
+                    Console.error(PREFIX + "Sorry, queryEventAncestors received an error instead of a response");
+                    if(!GWT.isScript()){
+                        Console.error(getClass() + exception.getMessage());
+                    }
+                }
+            });
+        } catch (RequestException ex) {
+            //TODO
+            Console.error(PREFIX + "Sorry, queryEventAncestors caught an error!" );
+        }
+    }
+
+    /**
+     * Select a specific entity (identified by its peDbId) in the Diagram.
+     */
+    private void selectEntity() {
+        if(toHighlight.size() <= count){
+            count = 0; // for circling through
+        }
+        Long peDbId = toHighlight.get(count).getPeDbId();
         ++count;
 
         //Delegation mechanism
         Pair<Long, ELVEventType> tuple = new Pair<Long, ELVEventType>(peDbId, ELVEventType.MOLECULES_ITEM_SELECTED);
         this.eventBus.fireELVEvent(ELVEventType.DATABASE_OBJECT_REQUIRED, tuple);
+        view.clearLoadingMsg();
+    }
+
+    /**
+     * Select a specific subpathway (which contains all toHighlight) in the Diagram.
+     */
+    @Override
+    public void onSelectSubpathway() {
+        //After all queryEventAncestors have been found => highlightSubPW();
+        if(cacheSubPathway.containsKey(toHighlight) && cacheSubPathway.get(toHighlight).size() > count){
+            Pair<Long, ELVEventType> tuple = new Pair<Long, ELVEventType>(cacheSubPathway.get(toHighlight).get(count), ELVEventType.DIAGRAM_ENTITY_SELECTED);
+            eventBus.fireELVEvent(ELVEventType.DATABASE_OBJECT_REQUIRED, tuple);
+            ++count;
+            view.clearLoadingMsg();
+        }
     }
 
     /**

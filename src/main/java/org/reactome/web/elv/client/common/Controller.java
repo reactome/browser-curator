@@ -143,6 +143,12 @@ public abstract class Controller implements ELVEventHandler {
                 break;
 
                    /* PARTICIPATING MOLECULES TAB */
+            case SELECT_SUBPATHWAY:
+                onSelectSubpathway();
+                break;
+            case CHECK_SELECT:
+                onCheckSelect();
+                break;
             case MOLECULES_ITEM_SELECTED:
                 onMoleculesItemSelected((DatabaseObject) obj);
                 break;
@@ -289,6 +295,8 @@ public abstract class Controller implements ELVEventHandler {
     public void onDiagramKeyOpened(){}
 
     /* PARTICIPATING MOLECULES TAB */
+    public void onSelectSubpathway() {}
+    public void onCheckSelect() {}
     public void onMoleculesItemSelected(DatabaseObject molecule){}
     public void onMoleculesDownloadStarted(){}
     public void onMoleculesDownloadRequired(Pathway pathway){}

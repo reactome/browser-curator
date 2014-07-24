@@ -67,11 +67,29 @@ public class Result {
         this.phyEntityToRefEntitySet = phyEntityToRefEntitySet;
     }
 
-     /**
-     * Getter for sorted chemicals, molecules are sorted according to their highlighting status ans then there name.
+    /**
+     * Getter for sorted chemicals, molecules are sorted according to their highlighting status and then there name.
+     * @param propertyType defines which kind of molecules one wants to receive
      * @return ArrayList<Molecule> with sorted chemicals
      */
-    public ArrayList<Molecule> getSortedChemicals(){
+    public ArrayList<Molecule> getSorted(PropertyType propertyType){
+        switch (propertyType){
+            case CHEMICAL_COMPOUNDS:
+                return this.getSortedChemicals();
+            case PROTEINS:
+                return this.getSortedProteins();
+            case SEQUENCES:
+                return this.getSortedSequences();
+            default:
+                return this.getSortedOthers();
+        }
+    }
+
+     /**
+     * Getter for sorted chemicals, molecules are sorted according to their highlighting status and then there name.
+     * @return ArrayList<Molecule> with sorted chemicals
+     */
+    private ArrayList<Molecule> getSortedChemicals(){
         ArrayList<ArrayList<Molecule>> split = splitHighlighted(this.chemicals);
         ArrayList<Molecule> sortedColour = new ArrayList<Molecule>(split.get(0));
         Collections.sort(sortedColour);
@@ -82,10 +100,10 @@ public class Result {
     }
 
     /**
-     * Getter for sorted proteins, molecules are sorted according to their highlighting status ans then there name.
+     * Getter for sorted proteins, molecules are sorted according to their highlighting status and then there name.
      * @return ArrayList<Molecule> with sorted proteins
      */
-    public ArrayList<Molecule> getSortedProteins(){
+    private ArrayList<Molecule> getSortedProteins(){
         ArrayList<ArrayList<Molecule>> split = splitHighlighted(this.proteins);
         ArrayList<Molecule> sortedColour = new ArrayList<Molecule>(split.get(0));
         Collections.sort(sortedColour);
@@ -96,10 +114,10 @@ public class Result {
     }
 
     /**
-     * Getter for sorted sequences, molecules are sorted according to their highlighting status ans then there name.
+     * Getter for sorted sequences, molecules are sorted according to their highlighting status and then there name.
      * @return ArrayList<Molecule> with sorted sequences
      */
-    public ArrayList<Molecule> getSortedSequences(){
+    private ArrayList<Molecule> getSortedSequences(){
         ArrayList<ArrayList<Molecule>> split = splitHighlighted(this.sequences);
         ArrayList<Molecule> sortedColour = new ArrayList<Molecule>(split.get(0));
         Collections.sort(sortedColour);
@@ -110,10 +128,10 @@ public class Result {
     }
 
     /**
-     * Getter for sorted other molecules, molecules are sorted according to their highlighting status ans then there name.
+     * Getter for sorted other molecules, molecules are sorted according to their highlighting status and then there name.
      * @return ArrayList<Molecule> with sorted other molecules
      */
-    public ArrayList<Molecule> getSortedOthers(){
+    private ArrayList<Molecule> getSortedOthers(){
         ArrayList<ArrayList<Molecule>> split = splitHighlighted(this.others);
         ArrayList<Molecule> sortedColour = new ArrayList<Molecule>(split.get(0));
         Collections.sort(sortedColour);
