@@ -309,8 +309,7 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
                 onSelectSubpathway();
             }
         }else{ //CGB
-            String msg = "Sorry, this functionality is not yet available for Diagrams that contain entites\n" +
-                    "for Complexes, Sets, Proteins, Chemicals etc. AND entites for Subpathways at the same time.";
+            String msg = "Functionality not yet available for this Diagram";
             view.setLoadingMsg(msg);
 //            try{
 //                pathwaysForEntities();
