@@ -2,8 +2,6 @@ package org.reactome.web.elv.client.center.content.analysis.presenter;
 
 import org.reactome.web.elv.client.center.content.analysis.event.AnalysisCompletedEvent;
 import org.reactome.web.elv.client.center.content.analysis.event.AnalysisErrorEvent;
-import org.reactome.web.elv.client.center.content.analysis.handler.AnalysisCompletedEventHandler;
-import org.reactome.web.elv.client.center.content.analysis.handler.AnalysisErrorEventHandler;
 import org.reactome.web.elv.client.center.content.analysis.view.AnalysisView;
 import org.reactome.web.elv.client.common.Controller;
 import org.reactome.web.elv.client.common.EventBus;
@@ -38,6 +36,5 @@ public class AnalysisPresenter extends Controller implements AnalysisView.Presen
     @Override
     public void onDataManagerSpeciesListRetrieved(List<Species> speciesList) {
         this.view.setSpeciesList(speciesList);
-        this.eventBus.fireELVEvent(ELVEventType.TOPBAR_SPECIES_LOADED);
     }
 }

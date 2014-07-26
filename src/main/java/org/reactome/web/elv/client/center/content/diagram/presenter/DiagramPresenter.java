@@ -15,6 +15,7 @@ import org.reactome.web.elv.client.common.data.model.Figure;
 import org.reactome.web.elv.client.common.data.model.Pathway;
 import org.reactome.web.elv.client.common.events.ELVEventType;
 import org.reactome.web.elv.client.common.model.Pair;
+import org.reactome.web.elv.client.common.utils.Console;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -35,12 +36,13 @@ public class DiagramPresenter extends Controller implements DiagramView.Presente
         super(eventBus);
 		this.view = diagramView;
 		this.view.setPresenter(this);
-        this.loadedPathwayId = -1L;
-        this.entitySelected = -1L;
         this.selectAfterLoadingDiagram = null;
     }
 
     private void diagramEntitySelected(Long dbId){
+        //Avoid sending a useless event to the event bus :)
+        if(this.entitySelected!=null && this.entitySelected.equals(dbId)) return;
+
         this.entitySelected = dbId;
         Pair<Long, ELVEventType> tuple = new Pair<Long, ELVEventType>(dbId, ELVEventType.DIAGRAM_ENTITY_SELECTED);
         this.eventBus.fireELVEvent(ELVEventType.DATABASE_OBJECT_REQUIRED, tuple);
@@ -59,6 +61,7 @@ public class DiagramPresenter extends Controller implements DiagramView.Presente
 
     @Override
     public void entitySelected(Long dbId) {
+        Console.info("entitySelected: " + dbId);
         diagramEntitySelected(dbId);
     }
 
@@ -91,7 +94,7 @@ public class DiagramPresenter extends Controller implements DiagramView.Presente
     @Override
     public void onStateManagerDatabaseObjectsSelected(List<Event> path, Pathway pathway, DatabaseObject databaseObject) {
         this.view.setFigures(pathway, databaseObject);
-        if(this.loadedPathwayId!=null && !this.loadedPathwayId.equals(pathway.getDbId())){
+        if(this.loadedPathwayId==null || !this.loadedPathwayId.equals(pathway.getDbId())){
             if(pathway.getHasDiagram()){
                 this.loadedPathwayId = pathway.getDbId();
                 this.view.loadPathway(pathway);
@@ -100,7 +103,9 @@ public class DiagramPresenter extends Controller implements DiagramView.Presente
                     this.selectAfterLoadingDiagram = databaseObject;
                 }
             }else{
-                this.loadedPathwayId = -1L;
+                this.loadedPathwayId=null;
+                this.selectAfterLoadingDiagram=null;
+                this.entitySelected=null;
                 this.view.setInitialState();
                 Window.alert(pathway.getDisplayName() + " does NOT contain diagram!");
             }
@@ -115,50 +120,21 @@ public class DiagramPresenter extends Controller implements DiagramView.Presente
 
     @Override
     public void onStateManagerInstancesInitialStateReached() {
-        this.loadedPathwayId = -1L;
+        this.loadedPathwayId = null;
+        this.selectAfterLoadingDiagram = null;
+        this.entitySelected = null;
         this.view.setInitialState();
     }
-
-//    @Override
-//    public void onTourManagerTourCancelled() {
-//        this.view.tourFadeOut();
-//    }
-//
-//    @Override
-//    public void onTourManagerTourFinished() {
-//        this.view.tourFadeOut();
-//    }
-//
-//    @Override
-//    public void onTourManagerTourProgress(TourStage stage, Integer step) {
-//        if(stage==TourStage.SHOW_MODULES){
-//            if(step==3){
-//                this.view.tourFadeOut();
-//            }else{
-//                this.view.tourFadeIn();
-//            }
-//        }else  if(stage==TourStage.TEST_DIAGRAM){
-//            this.view.tourFadeOut();
-//        }else{
-//            this.view.tourFadeIn();
-//        }
-//    }
-//
-//    @Override
-//    public void onTourManagerTourStarted() {
-//        this.view.tourFadeIn();
-//    }
 
     //The diagram offers the option of "Go to Pathway" and there is not event other than
     //"PathwayChangeEvent". That throwns a "DIAGRAM_LOADED" which is catched here
     //and then the "DIAGRAM_ENTITY_SELECTED" is thrown to the bus to inform other modules
     @Override
     public void pathwayLoaded(Long dbId) {
-        if(!this.loadedPathwayId.equals(dbId)){
+        if(this.loadedPathwayId == null || !this.loadedPathwayId.equals(dbId)){
             this.loadedPathwayId = dbId;
             Pair<Long, ELVEventType> tuple = new Pair<Long, ELVEventType>(dbId, ELVEventType.DIAGRAM_LOADED);
             this.eventBus.fireELVEvent(ELVEventType.DATABASE_OBJECT_REQUIRED, tuple);
-            //eventBus.fireELVEvent(ELVEventType.DIAGRAM_LOADED, dbId);
         }
         if(this.selectAfterLoadingDiagram!=null){
             setSelection(this.selectAfterLoadingDiagram);
