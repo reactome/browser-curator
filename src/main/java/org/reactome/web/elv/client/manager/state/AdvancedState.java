@@ -218,7 +218,7 @@ public class AdvancedState implements StableIdentifierLoader.StableIdentifierLoa
 
     @SuppressWarnings("RedundantIfStatement")
     public boolean hasReachedInstancesState(AdvancedState state){
-        if (!Arrays.equals(path.toArray(), state.path.toArray()))
+        if (!Arrays.equals(getPrunedPath().toArray(), state.getPrunedPath().toArray()))
             return false;
         if (pathway != null ? !pathway.equals(state.pathway) : state.pathway != null)
             return false;
@@ -294,7 +294,7 @@ public class AdvancedState implements StableIdentifierLoader.StableIdentifierLoa
      *
      * @return the path until the loaded diagram (without including it)
      */
-    private List<Event> getPrunedPath() {
+    protected List<Event> getPrunedPath() {
         List<Event> prunedPath = new LinkedList<Event>();
         for (Event event : this.path) {
             if (event.equals(this.pathway)) {

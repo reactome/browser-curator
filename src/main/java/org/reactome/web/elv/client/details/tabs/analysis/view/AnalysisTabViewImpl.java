@@ -240,7 +240,7 @@ public class AnalysisTabViewImpl implements AnalysisTabView, ResourceChangedHand
 
     @Override
     public void onPathwaySelected(PathwaySelectedEvent event) {
-        this.presenter.onPathwaySelected(event.getSpecies(), event.getDiagram(), event.getPathway());
+        this.presenter.onPathwaySelected(event.getIdentifier());
     }
 
     @Override

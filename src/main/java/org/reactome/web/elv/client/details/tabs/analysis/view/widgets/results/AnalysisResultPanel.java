@@ -71,8 +71,8 @@ public class AnalysisResultPanel extends DockLayoutPanel implements SelectionCha
         PathwaySummary ps = this.table.getSelectedObject();
         if(ps!=null){
             candidateForSelection = ps.getDbId(); //Candidate always to be set here
-            selected = ps.getDbId();
-            fireEvent(new PathwaySelectedEvent(ps.getSpecies().getDbId(), ps.getDiagramDbId(), ps.getDbId()));
+            selected = ps.getDbId(); //Please DO NOT use the stable identifier here
+            fireEvent(new PathwaySelectedEvent(selected.toString()));
         }
     }
 

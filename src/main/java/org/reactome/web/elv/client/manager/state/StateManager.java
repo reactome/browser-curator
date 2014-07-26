@@ -220,9 +220,10 @@ public class StateManager extends Controller implements ValueChangeHandler<Strin
 
     @Override
     public void onHierarchyEventSelected(Path path, Pathway pathway, Event event) {
-        this.currentState.setPath(path.getPath());
-        setCurrentState(pathway, event);
         this.desiredState = new AdvancedState(this.currentState);
+        this.desiredState.setPathway(pathway);
+        this.desiredState.setInstance(event);
+        this.desiredState.setPath(path.getPath());
         this.desiredState.setCenterTool(CenterToolType.getDefault());
         History.newItem(this.desiredState.toString(), true);
     }
@@ -259,15 +260,15 @@ public class StateManager extends Controller implements ValueChangeHandler<Strin
         if( pathway==null ){
             this.selectedDiagram = null;
             this.currentState.setPathway(null);
+            this.currentState.setInstance(null);
         } else {
             this.selectedDiagram = pathway;
             this.currentState.setPathway(pathway);
-        }
-
-        if( databaseObject==null || databaseObject.equals(pathway) ){
-            this.currentState.setInstance(null);
-        } else {
-            this.currentState.setInstance(databaseObject);
+            if( databaseObject==null || databaseObject.equals(pathway) ){
+                this.currentState.setInstance(null);
+            } else {
+                this.currentState.setInstance(databaseObject);
+            }
         }
     }
 }
