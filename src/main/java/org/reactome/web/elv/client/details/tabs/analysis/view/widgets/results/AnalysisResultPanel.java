@@ -72,7 +72,7 @@ public class AnalysisResultPanel extends DockLayoutPanel implements SelectionCha
         if(ps!=null){
             candidateForSelection = ps.getDbId(); //Candidate always to be set here
             selected = ps.getDbId(); //Please DO NOT use the stable identifier here
-            fireEvent(new PathwaySelectedEvent(selected.toString()));
+            fireEvent(new PathwaySelectedEvent(selected));
         }
     }
 

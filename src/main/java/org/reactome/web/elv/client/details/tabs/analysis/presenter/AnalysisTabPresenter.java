@@ -64,7 +64,7 @@ public class AnalysisTabPresenter extends Controller implements AnalysisTabView.
     @Override
     public void onStateManagerAnalysisTokenReset() {
         this.token = null;
-        this.selected = null;
+//        this.selected = null;  //DO NOT SET this.selected TO NULL
         this.view.setInitialState();
     }
 
@@ -100,8 +100,10 @@ public class AnalysisTabPresenter extends Controller implements AnalysisTabView.
     }
 
     @Override
-    public void onPathwaySelected(String stId) {
-        new StableIdentifierLoader(stId, new StableIdentifierLoader.StableIdentifierLoadedHandler() {
+    public void onPathwaySelected(Long dbId) {
+        if(selected!=null && dbId.equals(selected.getDbId())) return;
+
+        new StableIdentifierLoader(dbId.toString(), new StableIdentifierLoader.StableIdentifierLoadedHandler() {
             @Override
             public void onStableIdentifierLoaded(AdvancedState advancedState) {
                 AnalysisTabPathwaySelected sel = new AnalysisTabPathwaySelected(
@@ -109,6 +111,7 @@ public class AnalysisTabPresenter extends Controller implements AnalysisTabView.
                         advancedState.getPathway(),
                         (Pathway) advancedState.getInstance()
                 );
+                selected = (sel.getPathway() != null)? sel.getPathway() : sel.getDiagram();
                 eventBus.fireELVEvent(ELVEventType.ANALYSIS_TAB_PATHWAY_SELECTED, sel);
             }
         });
