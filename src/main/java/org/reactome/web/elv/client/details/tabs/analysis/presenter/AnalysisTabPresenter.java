@@ -1,16 +1,12 @@
 package org.reactome.web.elv.client.details.tabs.analysis.presenter;
 
 import com.google.gwt.http.client.*;
-import com.google.gwt.json.client.JSONArray;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONParser;
 import org.reactome.web.elv.client.common.Controller;
 import org.reactome.web.elv.client.common.EventBus;
 import org.reactome.web.elv.client.common.analysis.factory.AnalysisModelException;
 import org.reactome.web.elv.client.common.analysis.factory.AnalysisModelFactory;
 import org.reactome.web.elv.client.common.analysis.helper.AnalysisHelper;
 import org.reactome.web.elv.client.common.analysis.model.AnalysisResult;
-import org.reactome.web.elv.client.common.data.factory.ModelFactory;
 import org.reactome.web.elv.client.common.data.model.DatabaseObject;
 import org.reactome.web.elv.client.common.data.model.Event;
 import org.reactome.web.elv.client.common.data.model.Pathway;
@@ -20,6 +16,8 @@ import org.reactome.web.elv.client.common.utils.Console;
 import org.reactome.web.elv.client.details.tabs.DetailsTabView;
 import org.reactome.web.elv.client.details.tabs.analysis.events.AnalysisTabPathwaySelected;
 import org.reactome.web.elv.client.details.tabs.analysis.view.AnalysisTabView;
+import org.reactome.web.elv.client.manager.state.AdvancedState;
+import org.reactome.web.elv.client.manager.state.StableIdentifierLoader;
 
 import java.util.HashMap;
 import java.util.List;
@@ -102,51 +100,18 @@ public class AnalysisTabPresenter extends Controller implements AnalysisTabView.
     }
 
     @Override
-    public void onPathwaySelected(final Long species, final Long diagram, final Long pathway) {
-        if(selected!=null && pathway.equals(selected.getDbId())) return;
-
-        String url = "/ReactomeRESTfulAPI/RESTfulWS/queryByIds/DatabaseObject";
-        RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.POST, url);
-        requestBuilder.setHeader("Content-Type", "text/plain");
-        requestBuilder.setHeader("Accept", "application/json");
-        try {
-            String post = "ID=" + species + "," + diagram;
-            if (!pathway.equals(diagram)) {
-                post += "," + pathway;
+    public void onPathwaySelected(String stId) {
+        new StableIdentifierLoader(stId, new StableIdentifierLoader.StableIdentifierLoadedHandler() {
+            @Override
+            public void onStableIdentifierLoaded(AdvancedState advancedState) {
+                AnalysisTabPathwaySelected sel = new AnalysisTabPathwaySelected(
+                        advancedState.getSpecies(),
+                        advancedState.getPathway(),
+                        (Pathway) advancedState.getInstance()
+                );
+                eventBus.fireELVEvent(ELVEventType.ANALYSIS_TAB_PATHWAY_SELECTED, sel);
             }
-            requestBuilder.sendRequest(post, new RequestCallback() {
-                @Override
-                public void onResponseReceived(Request request, Response response) {
-                    JSONArray list = JSONParser.parseStrict(response.getText()).isArray();
-
-                    Species s = null;
-                    Pathway d = null;
-                    Pathway p = null;
-
-                    for (int i = 0; i < list.size(); ++i) {
-                        JSONObject object = list.get(i).isObject();
-                        DatabaseObject aux = ModelFactory.getDatabaseObject(object);
-                        if (aux.getDbId().equals(species)) {
-                            s = (Species) aux;
-                        } else if (aux.getDbId().equals(diagram)) {
-                            d = (Pathway) aux;
-                        } else if (aux.getDbId().equals(pathway)) {
-                            p = (Pathway) aux;
-                        }
-                    }
-                    selected = (p != null)? p : d;
-                    AnalysisTabPathwaySelected sel = new AnalysisTabPathwaySelected(s, d, p);
-                    eventBus.fireELVEvent(ELVEventType.ANALYSIS_TAB_PATHWAY_SELECTED, sel);
-                }
-
-                @Override
-                public void onError(Request request, Throwable exception) {
-                    Console.error(exception.getMessage());
-                }
-            });
-        } catch (RequestException ex) {
-            Console.error(ex.getMessage());
-        }
+        });
     }
 
     @Override

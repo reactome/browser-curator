@@ -1,8 +1,6 @@
 package org.reactome.web.elv.client.details.tabs.analysis.view.widgets.results.events;
 
 import com.google.gwt.event.shared.GwtEvent;
-import org.reactome.web.elv.client.common.data.model.Pathway;
-import org.reactome.web.elv.client.common.data.model.Species;
 import org.reactome.web.elv.client.details.tabs.analysis.view.widgets.results.handlers.PathwaySelectedHandler;
 
 /**
@@ -11,26 +9,14 @@ import org.reactome.web.elv.client.details.tabs.analysis.view.widgets.results.ha
 public class PathwaySelectedEvent extends GwtEvent<PathwaySelectedHandler> {
     public static Type<PathwaySelectedHandler> TYPE = new GwtEvent.Type<PathwaySelectedHandler>();
 
-    private Long species;
-    private Long diagram;
-    private Long pathway;
+    private String identifier;
 
-    public PathwaySelectedEvent(Long species, Long diagram, Long pathway) {
-        this.species = species;
-        this.diagram = diagram;
-        this.pathway = pathway;
+    public PathwaySelectedEvent(String identifier) {
+        this.identifier = identifier;
     }
 
-    public Long getSpecies() {
-        return species;
-    }
-
-    public Long getDiagram() {
-        return diagram;
-    }
-
-    public Long getPathway() {
-        return pathway;
+    public String getIdentifier() {
+        return identifier;
     }
 
     @Override
