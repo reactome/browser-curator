@@ -482,8 +482,8 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
             Pair<Long, ELVEventType> tuple = new Pair<Long, ELVEventType>(cacheSubPathway.get(toHighlight).get(count), ELVEventType.DIAGRAM_ENTITY_SELECTED);
             eventBus.fireELVEvent(ELVEventType.DATABASE_OBJECT_REQUIRED, tuple);
             ++count;
-            view.clearLoadingMsg();
         }
+        view.clearLoadingMsg();
     }
 
     /**
