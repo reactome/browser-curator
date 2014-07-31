@@ -18,7 +18,7 @@ import java.util.Set;
 class MoleculesTable implements IsWidget  {
     private VerticalPanel vp;
     private final Result result;
-    private final HashMap<Long, Widget> display = new HashMap<Long, Widget>();
+    private final HashMap<Long, MoleculePanel> display = new HashMap<Long, MoleculePanel>();
 
     public MoleculesTable(Result result) {
         this.result = result;
@@ -35,12 +35,12 @@ class MoleculesTable implements IsWidget  {
         vp.setWidth("99%");
         for (Molecule molecule : molecules) {
             Set<PhysicalToReferenceEntityMap> phyEntities = getPhysicalEntities(molecule);
-            Widget widget = new MoleculePanel(molecule, phyEntities);
+            MoleculePanel moleculePanel = new MoleculePanel(molecule, phyEntities);
             if(!molecule.isToHighlight()){
-                widget.addStyleName("elv-Details-MoleculesRow-undoHighlight");
+                moleculePanel.addStyleName("elv-Details-MoleculesRow-undoHighlight");
             }
-            display.put(molecule.getDbId(), widget);
-            vp.add(widget);
+            display.put(molecule.getDbId(), moleculePanel);
+            vp.add(moleculePanel);
         }
         this.vp.clear();
         this.vp = vp;
@@ -54,14 +54,14 @@ class MoleculesTable implements IsWidget  {
         VerticalPanel vp = new VerticalPanel();
         vp.setWidth("99%");
         for (Molecule molecule : molecules) {
-            Widget widget = display.get(molecule.getDbId());
+            MoleculePanel moleculePanel = display.get(molecule.getDbId());
             if(!molecule.isToHighlight()){
-                widget.addStyleName("elv-Details-MoleculesRow-undoHighlight");
+                moleculePanel.addStyleName("elv-Details-MoleculesRow-undoHighlight");
             }else{
                 //remove undoHighlight but keep all the other style information
-                widget.removeStyleName("elv-Details-MoleculesRow-undoHighlight");
+                moleculePanel.removeStyleName("elv-Details-MoleculesRow-undoHighlight");
             }
-            vp.add(widget);
+            vp.add(moleculePanel);
         }
         this.vp.clear();
         this.vp = vp;
