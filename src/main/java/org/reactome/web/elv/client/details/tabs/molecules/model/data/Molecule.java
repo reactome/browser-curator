@@ -39,7 +39,6 @@ public class Molecule extends ReferenceEntity implements Comparable<Molecule>{
                 this.schemaClass = SchemaClass.getSchemaClass(SchemaClass.ENTITY_WITH_ACCESSIONED_SEQUENCE.schemaClass);
                 break;
             case REFERENCE_MOLECULE:
-            case SIMPLE_ENTITY:
                 this.schemaClass = SchemaClass.getSchemaClass(SchemaClass.SIMPLE_ENTITY.schemaClass);
                 break;
             default:

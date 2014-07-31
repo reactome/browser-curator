@@ -30,7 +30,6 @@ public class Result {
                     break;
                 case REFERENCE_RNA_SEQUENCE:
                 case REFERENCE_DNA_SEQUENCE:
-                case REFERENCE_SEQUENCE:
                     sequences.add(molecule);
                     break;
                 case SIMPLE_ENTITY:
