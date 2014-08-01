@@ -1,6 +1,7 @@
 package org.reactome.web.elv.client.details.tabs.molecules.presenter;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.http.client.*;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
@@ -311,6 +312,22 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
         }else{ //CGB
             String msg = "Functionality not yet available for this Diagram";
             view.setLoadingMsg(msg);
+
+            com.google.gwt.user.client.Timer timer = new com.google.gwt.user.client.Timer(){
+                @Override
+                public void run() {
+                    GWT.runAsync(new RunAsyncCallback() {
+                        public void onFailure(Throwable caught) {
+                            Console.warn("Ups, something went wrong in Molecules Tab. Take a look at MoleculesPresenter > moleculeSelected.");
+                        }
+
+                        public void onSuccess() {
+                            view.clearLoadingMsg();
+                        }
+                    });
+                }
+            };
+            timer.schedule(5000);
 //            try{
 //                pathwaysForEntities();
 //            }catch (Exception e){

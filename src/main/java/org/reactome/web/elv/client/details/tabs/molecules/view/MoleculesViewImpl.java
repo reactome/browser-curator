@@ -128,15 +128,7 @@ public class MoleculesViewImpl implements MoleculesView{
 
         presenter.getMoleculeNumbers(pathwayDiagram, toShow);
 
-//        if (this.getPathwayDetailsIfExist(pathway)) {
-////            presenter.getMoleculeNumbers(pathwayDiagram, toShow);
-//            return true;
-//        } else {
-////            this.refreshTitle(null, null);
-//            return false;
-//        }
         exists = this.getPathwayDetailsIfExist(pathway);
-        //return this.getPathwayDetailsIfExist(pathway);
         return exists; //because of override, otherwise not needed
     }
 
