@@ -7,13 +7,14 @@ import java.util.List;
  * @author Antonio Fabregat <fabregat@ebi.ac.uk>
  */
 public enum AdvancedStateKey {
-    SPECIES ("SPECIES" , "FOCUS_SPECIES_ID"),
-    DIAGRAM ("DIAGRAM", "FOCUS_PATHWAY_ID"),
-    INSTANCE ("ID"),
-    PATH ("PATH"),
+    REACT       ("REACT"),
+    SPECIES     ("SPECIES" , "FOCUS_SPECIES_ID"),
+    DIAGRAM     ("DIAGRAM", "FOCUS_PATHWAY_ID"),
+    INSTANCE    ("ID"),
+    PATH        ("PATH"),
     DETAILS_TAB ("DTAB", "DETAILS_TAB"),
-    TOOL("TOOL"),
-    ANALYSIS ("ANALYSIS", "ANALYSIS_ID");
+    TOOL        ("TOOL"),
+    ANALYSIS    ("ANALYSIS", "ANALYSIS_ID");
 
     List<String> keys;
 
