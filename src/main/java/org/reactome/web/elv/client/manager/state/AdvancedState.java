@@ -3,6 +3,7 @@ package org.reactome.web.elv.client.manager.state;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.Command;
 import org.reactome.web.elv.client.center.model.CenterToolType;
+import org.reactome.web.elv.client.common.LocationHelper;
 import org.reactome.web.elv.client.common.data.model.DatabaseObject;
 import org.reactome.web.elv.client.common.data.model.Event;
 import org.reactome.web.elv.client.common.data.model.Pathway;
@@ -72,25 +73,25 @@ public class AdvancedState implements StableIdentifierLoader.StableIdentifierLoa
         toLoad.put(AdvancedStateKey.SPECIES, String.valueOf(DEFAULT_SPECIES_ID));
 
         if(!token.isEmpty()){
-            if(token.matches("^REACT_\\d+(\\.\\d+)?$")){
-                token = token.contains(".")?token.split("\\.")[0]:token;
-                new StableIdentifierLoader(token, this);
-                return;
-            }else {
-                try{
-                    @SuppressWarnings("NonJREEmulationClassesInClientCode")
-                    String[] tokens = token.split(DELIMITER);
-                    for (String t : tokens) {
+            try{
+                @SuppressWarnings("NonJREEmulationClassesInClientCode")
+                String[] tokens = token.split(DELIMITER);
+                for (String t : tokens) {
+                    t = t.trim();
+                    if(isSingleIdentifier(t)){
+                        t = t.contains(".")?t.split("\\.")[0]:t;
+                        toLoad.put(AdvancedStateKey.REACT, t);
+                    }else {
                         @SuppressWarnings("NonJREEmulationClassesInClientCode")
-                        String[] ts = t.split("=",2);
+                        String[] ts = t.split("=", 2);
                         AdvancedStateKey key = AdvancedStateKey.getAdvancedStateKey(ts[0]);
-                        if(key!=null){
+                        if (key != null) {
                             toLoad.put(key, ts[1]);
                         }
                     }
-                }catch (Exception e){
-                    stateCorrect = false;
                 }
+            }catch (Exception e){
+                stateCorrect = false;
             }
         }
 
@@ -102,6 +103,9 @@ public class AdvancedState implements StableIdentifierLoader.StableIdentifierLoa
             for (AdvancedStateKey key : keys) {
                 String identifier = toLoad.get(key);
                 switch (key){
+                    case REACT:
+                        new StableIdentifierLoader(identifier, this);
+                        break;
                     case DETAILS_TAB:
                         this.setDetailsTab(DetailsTabType.getByCode(identifier));
                         break;
@@ -139,11 +143,10 @@ public class AdvancedState implements StableIdentifierLoader.StableIdentifierLoa
 
     @Override
     public void onStableIdentifierLoaded(final AdvancedState advancedState) {
-        Scheduler.get().scheduleDeferred(new Command() {
-            public void execute() {
-                handler.onAdvancedStateLoaded(advancedState);
-            }
-        });
+        this.species = advancedState.getSpecies();
+        this.pathway = advancedState.getPathway();
+        this.instance = advancedState.getInstance();
+        checkComplete(AdvancedStateKey.REACT);
     }
 
     public void resetInstancesState(){
@@ -303,6 +306,18 @@ public class AdvancedState implements StableIdentifierLoader.StableIdentifierLoa
             prunedPath.add(event);
         }
         return prunedPath;
+    }
+
+    private boolean isSingleIdentifier(String value){
+        boolean isSingleIdentifier = false;
+        switch (LocationHelper.getLocation()){
+            case LOCALHOST:
+            case CURATOR:
+                isSingleIdentifier = !value.contains("=");
+            default:
+                isSingleIdentifier |= value.matches("^REACT_\\d+(\\.\\d+)?$") ;
+        }
+        return isSingleIdentifier;
     }
 
     @Override

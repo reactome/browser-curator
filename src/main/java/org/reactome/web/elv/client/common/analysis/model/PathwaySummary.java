@@ -10,6 +10,8 @@ public interface PathwaySummary {
 
     String getName();
 
+    boolean getLlp(); //get whether this pathway is lower level pathway
+
     SpeciesSummary getSpecies();
 
     EntityStatistics getEntities();

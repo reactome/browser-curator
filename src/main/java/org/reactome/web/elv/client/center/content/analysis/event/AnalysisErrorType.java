@@ -8,7 +8,8 @@ import com.google.gwt.http.client.Response;
 public enum AnalysisErrorType {
 
     SERVICE_UNAVAILABLE ("The analysis service is temporarily unavailable. Please wait a moment and resubmit your data"),
-    PROCESSING_DATA ("The data format incorrect. Please check it and resubmit your data again"),
+    FILE_SIZE_ERROR("Maximum file size exceeded. Please send a file up to 10MB"),
+    PROCESSING_DATA ("The file format is incorrect. Please check it and resubmit your data again"),
     RESULT_FORMAT ("Error processing the result. Please get in touch with our help desk at help@reactome.org"),
     FILE_NOT_SELECTED ("Please select a file to analyse"),
     FROM_RESPONSE ("Unknown");

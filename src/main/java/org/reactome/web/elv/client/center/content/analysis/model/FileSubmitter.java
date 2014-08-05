@@ -124,7 +124,11 @@ public class FileSubmitter extends FlowPanel
             this.loading.setVisible(false);
         } catch (AnalysisModelException e) {
             this.loading.setVisible(false);
-            if(json.contains("500")){ //TODO: Find a better way to detect errors here
+            if(json.contains("413")) { //TODO: Find a better way to detect errors here
+                fireEvent(new AnalysisErrorEvent(AnalysisErrorType.FILE_SIZE_ERROR));
+            }else if(json.contains("415")){
+                fireEvent(new AnalysisErrorEvent(AnalysisErrorType.PROCESSING_DATA));
+            }else if(json.contains("500")) {
                 fireEvent(new AnalysisErrorEvent(AnalysisErrorType.SERVICE_UNAVAILABLE));
             }else{
                 fireEvent(new AnalysisErrorEvent(AnalysisErrorType.RESULT_FORMAT));
@@ -138,7 +142,7 @@ public class FileSubmitter extends FlowPanel
         form.setMethod(FormPanel.METHOD_POST);
         form.setEncoding(FormPanel.ENCODING_MULTIPART);
         this.fileUpload.setName("file");
-        this.fileUpload.getElement().setAttribute("accept", ".txt");
+//        this.fileUpload.getElement().setAttribute("accept", ".txt");
         this.fileUpload.setTitle("Select a file to analyse");
         form.add(this.fileUpload);
 

@@ -37,22 +37,20 @@ public abstract class LocationHelper {
 
     public static boolean isAnalysisAvailable(){
         switch (getLocation()){
-            case PRODUCTION:
-            case DEV:
-            case LOCALHOST:
-                return true;
+            case CURATOR:
+               return false;
             default:
-                return false;
+                return true;
         }
     }
 
     public static boolean isBeta(){
         switch (getLocation()){
-            case PRODUCTION:
-            case CURATOR:
-                return false;
-            default:
+            case DEV:
+            case LOCALHOST:
                 return true;
+            default:
+                return false;
         }
     }
 }
