@@ -149,7 +149,7 @@ public class MoleculePanel extends DetailsPanel implements OpenHandler<Disclosur
         }
 
         if(vp.getWidgetCount()==0){
-            vp.add(getErrorMessage("There is not more info available"));
+            vp.add(getErrorMessage("There is no more information available."));
         }
 
         this.disclosurePanel.setContent(vp);
