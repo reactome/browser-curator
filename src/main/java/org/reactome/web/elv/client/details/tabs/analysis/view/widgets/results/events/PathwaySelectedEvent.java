@@ -9,14 +9,14 @@ import org.reactome.web.elv.client.details.tabs.analysis.view.widgets.results.ha
 public class PathwaySelectedEvent extends GwtEvent<PathwaySelectedHandler> {
     public static Type<PathwaySelectedHandler> TYPE = new GwtEvent.Type<PathwaySelectedHandler>();
 
-    private String identifier;
+    private Long dbId;
 
-    public PathwaySelectedEvent(String identifier) {
-        this.identifier = identifier;
+    public PathwaySelectedEvent(Long dbId) {
+        this.dbId = dbId;
     }
 
-    public String getIdentifier() {
-        return identifier;
+    public Long getIdentifier() {
+        return dbId;
     }
 
     @Override

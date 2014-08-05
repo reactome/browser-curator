@@ -11,7 +11,7 @@ public interface AnalysisTabView extends DetailsTabView<AnalysisTabView.Presente
 
     public interface Presenter extends DetailsTabView.Presenter {
         void onResourceSelected(String resource);
-        void onPathwaySelected(String stId);
+        void onPathwaySelected(Long dbId);
     }
 
     void clearSelection();
