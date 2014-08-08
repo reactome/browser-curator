@@ -16,6 +16,8 @@ import org.reactome.web.elv.client.common.utils.Console;
 import org.reactome.web.elv.client.details.tabs.DetailsTabView;
 import org.reactome.web.elv.client.details.tabs.analysis.events.AnalysisTabPathwaySelected;
 import org.reactome.web.elv.client.details.tabs.analysis.view.AnalysisTabView;
+import org.reactome.web.elv.client.manager.messages.MessageObject;
+import org.reactome.web.elv.client.manager.messages.MessageType;
 import org.reactome.web.elv.client.manager.state.AdvancedState;
 import org.reactome.web.elv.client.manager.state.StableIdentifierLoader;
 
@@ -134,17 +136,33 @@ public class AnalysisTabPresenter extends Controller implements AnalysisTabView.
                         view.showResult(result, resource);
                         view.selectPathway(selected);
                     } catch (AnalysisModelException e) {
-                        Console.error(e.getMessage());
+                        MessageObject msgObj = new MessageObject("The received object for '" + resource
+                                + "' is empty or faulty and could not be parsed.\n" +
+                                "ERROR: " + e.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
+                        eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                        Console.error(getClass() + " ERROR: " + e.getMessage());
+                        view.setInitialState();
                     }
                 }
 
                 @Override
                 public void onError(Request request, Throwable exception) {
-                    Console.error(exception.getMessage());
+                    //TODO Check before commit - not yet tested
+                    MessageObject msgObj = new MessageObject("The request for '" + resource
+                            + "' received an error instead of a valid response.\n" +
+                            "ERROR: " + exception.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
+                    eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                    Console.error(getClass() + " ERROR: " + exception.getMessage());
+                    view.setInitialState();
                 }
             });
         }catch (RequestException ex) {
-            Console.error(ex.getMessage());
+            MessageObject msgObj = new MessageObject("The requested detailed data for '" + resource
+                    + "'\nin the Analysis could not be received.\n" +
+                    "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
+            eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+            Console.error(getClass() + " ERROR: " + ex.getMessage());
+            view.setInitialState();
         }
     }
 }

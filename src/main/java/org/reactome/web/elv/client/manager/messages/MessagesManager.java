@@ -1,12 +1,15 @@
 package org.reactome.web.elv.client.manager.messages;
 
+import com.google.gwt.user.client.ui.Image;
 import org.reactome.web.elv.client.center.content.analysis.event.AnalysisErrorEvent;
 import org.reactome.web.elv.client.common.Controller;
 import org.reactome.web.elv.client.common.EventBus;
+import org.reactome.web.elv.client.common.ReactomeImages;
 import org.reactome.web.elv.client.common.widgets.DialogBoxFactory;
 
 /**
  * @author Antonio Fabregat <fabregat@ebi.ac.uk>
+ * @author Kerstin Hausmann <khaus@ebi.ac.uk>
  */
 public class MessagesManager extends Controller {
 
@@ -22,5 +25,18 @@ public class MessagesManager extends Controller {
     @Override
     public void onAnalysisError(AnalysisErrorEvent event) {
         DialogBoxFactory.alert("Analysis", event.getErrorType().getMessage());
+    }
+
+    @Override
+    public void onInternalMessageSent(MessageObject msgObj){
+        switch (msgObj.getMsgType()){
+            case INTERNAL_ERROR:
+                DialogBoxFactory.alertMsg(msgObj.getClazz().getName(), msgObj.getMessage(), new Image(ReactomeImages.INSTANCE.exclamation()));
+                break;
+            case INTERNAL_WARNING:
+                DialogBoxFactory.alertMsg(msgObj.getClazz().getName(), msgObj.getMessage(), new Image(ReactomeImages.INSTANCE.information()));
+                break;
+//            default: INTERNAL_INFO:
+        }
     }
 }
