@@ -1,5 +1,6 @@
 package org.reactome.web.elv.client.details.presenter;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.*;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
@@ -14,11 +15,14 @@ import org.reactome.web.elv.client.common.data.model.Pathway;
 import org.reactome.web.elv.client.common.events.ELVEventType;
 import org.reactome.web.elv.client.common.model.Ancestors;
 import org.reactome.web.elv.client.common.model.Path;
+import org.reactome.web.elv.client.common.utils.Console;
 import org.reactome.web.elv.client.details.events.*;
 import org.reactome.web.elv.client.details.model.DetailsTabType;
 import org.reactome.web.elv.client.details.tabs.DetailsTabView;
 import org.reactome.web.elv.client.details.tabs.molecules.model.data.Molecule;
 import org.reactome.web.elv.client.details.view.DetailsView;
+import org.reactome.web.elv.client.manager.messages.MessageObject;
+import org.reactome.web.elv.client.manager.messages.MessageType;
 import org.reactome.web.elv.client.manager.tour.TourStage;
 
 import java.util.ArrayList;
@@ -142,7 +146,7 @@ public class DetailsPresenter extends Controller implements DetailsView.Presente
     }
 
     @Override
-    public void onDataRequired(DatabaseObject databaseObject) {
+    public void onDataRequired(final DatabaseObject databaseObject) {
         final long dbId = databaseObject.getDbId();
         String url = "/ReactomeRESTfulAPI/RESTfulWS/detailedView/DatabaseObject/" + dbId;
         RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, url);
@@ -151,25 +155,48 @@ public class DetailsPresenter extends Controller implements DetailsView.Presente
             requestBuilder.sendRequest(null, new RequestCallback() {
                 @Override
                 public void onResponseReceived(Request request, Response response) {
-                    JSONObject json = JSONParser.parseStrict(response.getText()).isObject();
-                    DatabaseObject databaseObject = ModelFactory.getDatabaseObject(json);
-                    DataRequiredListener.getDataRequiredListener().setRequiredData(dbId, databaseObject);
-                    eventBus.fireELVEvent(ELVEventType.DETAILED_VIEW_LOADED, databaseObject);
+                    try {
+                        JSONObject json = JSONParser.parseStrict(response.getText()).isObject();
+                        DatabaseObject databaseObject = ModelFactory.getDatabaseObject(json);
+                        DataRequiredListener.getDataRequiredListener().setRequiredData(dbId, databaseObject);
+                        eventBus.fireELVEvent(ELVEventType.DETAILED_VIEW_LOADED, databaseObject);
+                    }catch (Exception ex){
+                       //ModelFactoryException, NullPointerException, IllegalArgumentException, JSONException
+                       MessageObject msgObj = new MessageObject("The received object for 'DbId=" + databaseObject.getDbId()
+                                + "' is empty or faulty and could not be parsed.\n" +
+                                "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
+                        eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                        Console.error(getClass() + " ERROR: " + ex.getMessage());
+                    }
+
                 }
 
                 @Override
                 public void onError(Request request, Throwable exception) {
-                    //TODO
+                    if(!GWT.isScript()){
+                        Console.error(getClass() + " ERROR: " + exception.getMessage());
+                    }
+
+                    MessageObject msgObj = new MessageObject("The request for 'DbId=" + databaseObject.getDbId()
+                            + "' received an error instead of a valid response.\n" +
+                            "ERROR: " + exception.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
+                    eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
                 }
             });
         }
         catch (RequestException ex) {
-            //TODO
+            MessageObject msgObj = new MessageObject("The requested data for 'DbId=" + databaseObject.getDbId()
+                    + "' could not be received.\n" +
+                    "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
+            eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+            Console.error(getClass() + " ERROR: " + ex.getMessage());
         }
     }
 
     @Override
-    public void onPathRequired(Event event) {
+    public void onPathRequired(final Event event) {
+    /* TODO Testing
+    but never used because DataRequiredListener is used by DetailsPanel and there ancestorsRequired is unused */
         final long dbId = event.getDbId();
         String url = "/ReactomeRESTfulAPI/RESTfulWS/queryEventAncestors/" + dbId;
         RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, url);
@@ -178,47 +205,87 @@ public class DetailsPresenter extends Controller implements DetailsView.Presente
             requestBuilder.sendRequest(null, new RequestCallback() {
                 @Override
                 public void onResponseReceived(Request request, Response response) {
-                    JSONArray list = JSONParser.parseStrict(response.getText()).isArray();
-                    Ancestors ancestors = new Ancestors(list);
-                    DataRequiredListener.getDataRequiredListener().setRequiredAncestors(dbId, ancestors);
+                    try {
+                        JSONArray list = JSONParser.parseStrict(response.getText()).isArray();
+                        Ancestors ancestors = new Ancestors(list);
+                        DataRequiredListener.getDataRequiredListener().setRequiredAncestors(dbId, ancestors);
+                    }catch (Exception ex){
+                        //ModelFactoryException, NullPointerException, IllegalArgumentException, JSONException
+                        MessageObject msgObj = new MessageObject("The received object for 'DbId=" + event.getDbId()
+                                + "' is empty or faulty and could not be parsed into a path or hierarchy.\n" +
+                                "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
+                        eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                        Console.error(getClass() + " ERROR: " + ex.getMessage());
+                    }
+
                 }
 
                 @Override
                 public void onError(Request request, Throwable exception) {
-                    //TODO
+                    if(!GWT.isScript()){
+                        Console.error(getClass() + " ERROR: " + exception.getMessage());
+                    }
+
+                    MessageObject msgObj = new MessageObject("The PathRequired request for 'DbId=" + event.getDbId()
+                            + "' received an error instead of a valid response.\n" +
+                            "ERROR: " + exception.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
+                    eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
                 }
             });
-        } catch (RequestException e) {
-            //TODO
+        } catch (RequestException ex) {
+            MessageObject msgObj = new MessageObject("The requested data for 'DbId=" + event.getDbId()
+                    + "' could not be received.\n" +
+                    "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
+            eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+            Console.error(getClass() + " ERROR: " + ex.getMessage());
         }
     }
 
     @Override
-    public void onMoleculeDataRequired(Molecule molecule){
+    public void onMoleculeDataRequired(final Molecule molecule){
         String url = "/ReactomeRESTfulAPI/RESTfulWS/queryById/ReferenceEntity/" + molecule.getDbId();
         RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, url);
         requestBuilder.setHeader("Accept", "application/json");
         try {
-
             requestBuilder.sendRequest(null, new RequestCallback() {
                 @Override
                 public void onResponseReceived(Request request, Response response) {
-                    JSONObject json  = JSONParser.parseStrict(response.getText()).isObject();
-                    Molecule molecule = new Molecule(ModelFactory.getDatabaseObject(json).getSchemaClass(), json);
+                    try{
+                        JSONObject json  = JSONParser.parseStrict(response.getText()).isObject();
+                        Molecule molecule = new Molecule(ModelFactory.getDatabaseObject(json).getSchemaClass(), json);
 
-                    DataRequiredListener.getDataRequiredListener().setRequiredMoleculeData(molecule);
-
-                    //eventBus.fireELVEvent(ELVEventType.MOLECULES_VIEW_LOADED, databaseObject);
-                    //view.setMoleculesDetails(fullMolecules);
+                        DataRequiredListener.getDataRequiredListener().setRequiredMoleculeData(molecule);
+                    }catch (Exception ex){
+                        //ModelFactoryException, NullPointerException, IllegalArgumentException, JSONException
+                        MessageObject msgObj = new MessageObject("The received object for Molecule '" + molecule.getDisplayName()
+                                + "' is empty or faulty and could not be parsed.\n" +
+                                "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
+                        eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                        Console.error(getClass() + " ERROR: " + ex.getMessage());
+                        DataRequiredListener.getDataRequiredListener().setRequiredMoleculeData(molecule);
+                    }
                 }
 
                 @Override
                 public void onError(Request request, Throwable exception) {
-                    //TODO
+                    if(!GWT.isScript()){
+                        Console.error(getClass() + " ERROR: " + exception.getMessage());
+                    }
+
+                    MessageObject msgObj = new MessageObject("The request for Molecule '" + molecule.getDisplayName()
+                            + "' received an error instead of a valid response.\n" +
+                            "ERROR: " + exception.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
+                    eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                    DataRequiredListener.getDataRequiredListener().setRequiredMoleculeData(molecule);
                 }
             });
         }catch (RequestException ex) {
-            //TODO
+            MessageObject msgObj = new MessageObject("The requested detailed data for Molecule \n'" + molecule.getDisplayName()
+                    + "' could not be received.\n" +
+                    "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
+            eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+            Console.error(getClass() + " ERROR: " + ex.getMessage());
+            DataRequiredListener.getDataRequiredListener().setRequiredMoleculeData(molecule);
         }
     }
 
@@ -231,23 +298,46 @@ public class DetailsPresenter extends Controller implements DetailsView.Presente
             requestBuilder.sendRequest(null, new RequestCallback() {
                 @Override
                 public void onResponseReceived(Request request, Response response) {
-                    JSONArray list = JSONParser.parseStrict(response.getText()).isArray();
-                    List<LiteratureReference> references = new ArrayList<LiteratureReference>();
-                    for(int i=0; i<list.size(); ++i){
-                        JSONObject object = list.get(i).isObject();
-                        references.add((LiteratureReference) ModelFactory.getDatabaseObject(object));
+                    try{
+                        JSONArray list = JSONParser.parseStrict(response.getText()).isArray();
+                        List<LiteratureReference> references = new ArrayList<LiteratureReference>();
+                        for(int i=0; i<list.size(); ++i){
+                            JSONObject object = list.get(i).isObject();
+                            references.add((LiteratureReference) ModelFactory.getDatabaseObject(object));
+                        }
+                        DataRequiredListener.getDataRequiredListener().setRequiredReferences(dbId, references);
+                    }catch (Exception ex){
+                        //ModelFactoryException, NullPointerException, IllegalArgumentException, JSONException
+                        MessageObject msgObj = new MessageObject("The received References object for 'DbId=" + dbId
+                                + "' is empty or faulty and could not be parsed.\n" +
+                                "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
+                        eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                        Console.error(getClass() + " ERROR: " + ex.getMessage());
+                        DataRequiredListener.getDataRequiredListener().setRequiredReferences(dbId, new ArrayList<LiteratureReference>());
                     }
-                    DataRequiredListener.getDataRequiredListener().setRequiredReferences(dbId, references);
                 }
 
                 @Override
                 public void onError(Request request, Throwable exception) {
-                    //TODO
+                    if(!GWT.isScript()){
+                        Console.error(getClass() + " ERROR: " + exception.getMessage());
+                    }
+
+                    MessageObject msgObj = new MessageObject("The request for 'DbId=" + dbId
+                            + "' received an error instead of a valid response.\n" +
+                            "ERROR: " + exception.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
+                    eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                    DataRequiredListener.getDataRequiredListener().setRequiredReferences(dbId, new ArrayList<LiteratureReference>());
                 }
             });
         }
         catch (RequestException ex) {
-            //TODO
+            MessageObject msgObj = new MessageObject("The requested references data for 'DbId=" + dbId
+                    + "' could not be received.\n" +
+                    "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
+            eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+            Console.error(getClass() + " ERROR: " + ex.getMessage());
+            DataRequiredListener.getDataRequiredListener().setRequiredReferences(dbId, new ArrayList<LiteratureReference>());
         }
     }
 

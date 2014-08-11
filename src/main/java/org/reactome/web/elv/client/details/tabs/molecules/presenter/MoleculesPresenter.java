@@ -427,35 +427,46 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
 //
 //                @Override
 //                public void onResponseReceived(Request request, Response response) {
-//                    JSONArray list = JSONParser.parseStrict(response.getText()).isArray();
+//                    try{
+//                        JSONArray list = JSONParser.parseStrict(response.getText()).isArray();
 //
-//                    ArrayList<Pathway> pathways = new ArrayList<Pathway>();
-//                    for(int i=0; i<list.size(); ++i){
-//                        JSONObject object = list.get(i).isObject();
-//                        pathways.add(new Pathway(object));
+//                        ArrayList<Pathway> pathways = new ArrayList<Pathway>();
+//                        for(int i=0; i<list.size(); ++i){
+//                            JSONObject object = list.get(i).isObject();
+//                            pathways.add(new Pathway(object));
+//                        }
+//
+//                        //TODO: How about handling molecules that exist in gb as well as in currently displayed diagram?!
+//                        for (Pathway pathway : pathways) {
+//                            queryEventAncestors(pathway.getDbId());
+//                        }
+//                    }catch (Exception ex){
+//                        //ModelFactoryException, NullPointerException, IllegalArgumentException, JSONException
+//                        MessageObject msgObj = new MessageObject("The received object is empty or faulty and could not be parsed.\n" +
+//                                "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
+//                        eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+//                        Console.error(getClass() + " ERROR: " + ex.getMessage());
 //                    }
 //
-//                    //TODO: How about handling molecules that exist in gb as well as in currently displayed diagram?!
-//                    for (Pathway pathway : pathways) {
-//                        queryEventAncestors(pathway.getDbId());
-//                    }
 //                }
 //
 //                @Override
 //                public void onError(Request request, Throwable exception) {
-//                    //TODO
-//                    Console.error(PREFIX + "Sorry, pathwaysForEntities received an error instead of a response");
 //                    if(!GWT.isScript()){
-//                        Console.error(getClass() + exception.getMessage());
+//                        Console.error(getClass() + " ERROR: " + exception.getMessage());
 //                    }
+//
+//                    MessageObject msgObj = new MessageObject("The request received an error instead of a valid response.\n" +
+//                            "ERROR: " + exception.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
+//                    eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
 //                }
 //
 //            });
 //        } catch (RequestException ex) {
-//            //TODO
-//            eventBus.firePWBIntEvent(MessageType.INTERNAL_ERROR, "The required data could not be received.\n" +
-//                    "ERROR: " + ex.getMessage(), getClass());
-//            Console.error(PREFIX + "Sorry, pathwaysForEntities caught an error! " + ex.getMessage());
+//            MessageObject msgObj = new MessageObject("The required data could not be received.\n" +
+//                    "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
+//            eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+//            Console.warn("Something went wrong in Molecules Tab: " + ex.getMessage());
 //        }
 //    }
 //
@@ -473,54 +484,65 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
 //            requestBuilder.sendRequest(null, new RequestCallback() {
 //
 //                public void onResponseReceived(Request request, Response response) {
-//                    JSONArray list = JSONParser.parseStrict(response.getText()).isArray();
+//                    try{
+//                        JSONArray list = JSONParser.parseStrict(response.getText()).isArray();
 //
-//                    //Creating a list of pathways (that are above the one that contains all toHighlight)
-//                    ArrayList<Pathway> pathways = new ArrayList<Pathway>();
-//                    for(int i=0; i<list.size(); ++i){
-//                        JSONObject object = list.get(i).isObject();
-//                        JSONArray array = (JSONArray) object.get("databaseObject");
+//                        //Creating a list of pathways (that are above the one that contains all toHighlight)
+//                        ArrayList<Pathway> pathways = new ArrayList<Pathway>();
+//                        for(int i=0; i<list.size(); ++i){
+//                            JSONObject object = list.get(i).isObject();
+//                            JSONArray array = (JSONArray) object.get("databaseObject");
 //
-//                        for(int j=0; j<array.size(); ++j){
-//                            JSONObject pw = array.get(j).isObject();
-//                            pathways.add(new Pathway(pw));
-//                        }
-//                    }
-//
-////                    if(pathways.toString().contains(currentPathway.getDbId().toString())){
-//                    for(int i = 0; i < pathways.size(); i++){
-//                        if(currentPathway.getDbId().equals(pathways.get(i).getDbId())){
-//                            if(i+1 < pathways.size() && pathways.get(i+1).getHasDiagram()){
-//                                subPWtoHighlight.add(pathways.get(i + 1).getDbId());
-//                                cacheSubPathway.put(toHighlight, subPWtoHighlight);
-//                                try {
-//                                    onSelectSubpathway();
-//                                }catch (Exception e){
-//                                    selectEntity();
-//                                }
-//                            }else{
-//                                //Entity in CUGB diagram
-////                                selectEntity();
-////                                return;
+//                            for(int j=0; j<array.size(); ++j){
+//                                JSONObject pw = array.get(j).isObject();
+//                                pathways.add(new Pathway(pw));
 //                            }
 //                        }
+//
+////                    if(pathways.toString().contains(currentPathway.getDbId().toString())){
+//                        for(int i = 0; i < pathways.size(); i++){
+//                            if(currentPathway.getDbId().equals(pathways.get(i).getDbId())){
+//                                if(i+1 < pathways.size() && pathways.get(i+1).getHasDiagram()){
+//                                    subPWtoHighlight.add(pathways.get(i + 1).getDbId());
+//                                    cacheSubPathway.put(toHighlight, subPWtoHighlight);
+//                                    try {
+//                                        onSelectSubpathway();
+//                                    }catch (Exception e){
+//                                        selectEntity();
+//                                    }
+//                                }else{
+//                                    //Entity in CUGB diagram
+////                                selectEntity();
+////                                return;
+//                                }
+//                            }
+//                        }
+//                    }catch (Exception ex){
+//                        //ModelFactoryException, NullPointerException, IllegalArgumentException, JSONException
+//                        MessageObject msgObj = new MessageObject("The received object is empty or faulty and could not be parsed.\n" +
+//                                "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
+//                        eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+//                        Console.error(getClass() + " ERROR: " + ex.getMessage());
 //                    }
+//
 //                }
 //
 //                @Override
 //                public void onError(Request request, Throwable exception) {
-//                    //TODO
-//                    Console.error(PREFIX + "Sorry, queryEventAncestors received an error instead of a response");
 //                    if(!GWT.isScript()){
-//                        Console.error(getClass() + exception.getMessage());
+//                        Console.error(getClass() + " ERROR: " + exception.getMessage());
 //                    }
+//
+//                    MessageObject msgObj = new MessageObject("The request received an error instead of a valid response.\n" +
+//                            "ERROR: " + exception.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
+//                    eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
 //                }
 //            });
 //        } catch (RequestException ex) {
-//            //TODO
-//            eventBus.firePWBIntEvent(MessageType.INTERNAL_ERROR, "The required data could not be received.\n" +
-//                    "ERROR: " + ex.getMessage(), getClass());
-//            Console.error(PREFIX + "Sorry, queryEventAncestors caught an error! " + ex.getMessage());
+//            MessageObject msgObj = new MessageObject("The required data could not be received.\n" +
+//                    "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
+//            eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+//            Console.warn("Something went wrong in Molecules Tab: " + ex.getMessage());
 //        }
 //    }
 
