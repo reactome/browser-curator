@@ -6,6 +6,8 @@ import org.reactome.web.elv.client.common.data.model.*;
 import org.reactome.web.elv.client.common.events.ELVEventType;
 import org.reactome.web.elv.client.common.model.Path;
 import org.reactome.web.elv.client.common.utils.Console;
+import org.reactome.web.elv.client.manager.messages.MessageObject;
+import org.reactome.web.elv.client.manager.messages.MessageType;
 import org.reactome.web.elv.client.manager.state.AdvancedState;
 
 import java.util.*;
@@ -41,7 +43,7 @@ public class OrthologyManager extends Controller {
         this.detailedViewMap.put(databaseObject.getDbId(), databaseObject);
     }
 
-    private void ensureObjectForOrthologousFromOtherSpecies(Event event){
+    private void ensureObjectForOrthologousFromOtherSpecies(Event event) throws Exception{
         Event e = this.getInferredFrom(event);
         if (e!=null && !this.detailedViewMap.containsKey(e.getDbId())) {
             this.requiredDetailedObjects.add(e.getDbId());
@@ -49,7 +51,7 @@ public class OrthologyManager extends Controller {
         }
     }
 
-    private void ensureObjectForOrthologousFromOtherSpecies(PhysicalEntity physicalEntity){
+    private void ensureObjectForOrthologousFromOtherSpecies(PhysicalEntity physicalEntity) throws Exception{
         PhysicalEntity p = this.getInferredFrom(physicalEntity);
         if(p!=null && !this.detailedViewMap.containsKey(p.getDbId())) {
             this.requiredDetailedObjects.add(p.getDbId());
@@ -57,7 +59,7 @@ public class OrthologyManager extends Controller {
         }
     }
 
-    private void ensureObjectForOrthologousFromOtherSpecies(Species nextSpecies){
+    private void ensureObjectForOrthologousFromOtherSpecies(Species nextSpecies) throws Exception{
         for (Event e : this.path) {
             Event event = (Event) this.detailedViewMap.get(e.getDbId());
             if(event!=null){
@@ -127,7 +129,7 @@ public class OrthologyManager extends Controller {
         return desiredState;
     }
 
-    private AdvancedState getFromOtherSpeciesToHomoSapiens(Species nextSpecies){
+    private AdvancedState getFromOtherSpeciesToHomoSapiens(Species nextSpecies) throws Exception{
         AdvancedState desiredState = new AdvancedState();
         desiredState.setSpecies(nextSpecies);
 
@@ -173,7 +175,7 @@ public class OrthologyManager extends Controller {
         return pathOrth;
     }
 
-    private List<Event> getOrhtologousPathFromOtherSpeciesToHuman(List<Event> path){
+    private List<Event> getOrhtologousPathFromOtherSpeciesToHuman(List<Event> path) throws Exception{
         List<Event> pathInf = new LinkedList<Event>();
         for (Event e : path) {
             Event event = (Event) this.detailedViewMap.get(e.getDbId());
@@ -185,7 +187,7 @@ public class OrthologyManager extends Controller {
         return pathInf;
     }
 
-    private List<Event> getOrthologousPathFromOtherSpeciesToOtherSpecies(List<Event> path){
+    private List<Event> getOrthologousPathFromOtherSpeciesToOtherSpecies(List<Event> path) throws Exception{
         List<Event> pathAux = new LinkedList<Event>();
         for (Event e : path) {
             Event event = (Event) this.detailedViewMap.get(e.getDbId());
@@ -196,7 +198,7 @@ public class OrthologyManager extends Controller {
         return pathAux;
     }
 
-    private void goFromOtherSpeciesToOtherSpecies(Species nextSpecies){
+    private void goFromOtherSpeciesToOtherSpecies(Species nextSpecies) throws Exception{
         this.otherSpecies = null;
 
         this.path = getOrthologousPathFromOtherSpeciesToOtherSpecies(this.path);
@@ -221,24 +223,51 @@ public class OrthologyManager extends Controller {
         this.eventBus.fireELVEvent(ELVEventType.ORTHOLOGOUS_MANAGER_STATE_SELECTED, desiredState);
     }
 
-    private Event getInferredFrom(Event event){
+    private Event getInferredFrom(Event event) throws Exception{
         if(event.getInferredFrom().isEmpty()){
-            Console.error(getClass() + " -> there is not inferred from event");
-            return null;
+//            MessageObject msgObj = new MessageObject("Inferring from one species to another one caused a problem because" +
+//                    " there is no inferred from event.\n",
+//                    getClass(), MessageType.INTERNAL_ERROR);
+//            eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+            Console.error(getClass() + " -> there is no inferred from event");
+            throw new Exception("Error: Inferring from one species to another one caused a problem because" +
+                                " there is no inferred from event.\n");
+//            return null;
         }else{
             if(event.getInferredFrom().size()==1){
                 return event.getInferredFrom().get(0);
             }else{
+//                MessageObject msgObj = new MessageObject("Inferring from one species to another one caused a problem because" +
+//                        " there is no inferred from event.\n",
+//                        getClass(), MessageType.INTERNAL_ERROR);
+//                eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
                 Console.error(getClass() + " -> there is more than one inferred from event");
-                return null;
+                throw new Exception("Error: Inferring from one species to another one caused a problem because" +
+                        " there is no inferred from event.\n");
+//                return null;
             }
         }
     }
 
-    private PhysicalEntity getInferredFrom(PhysicalEntity physicalEntity){
-        if(physicalEntity.getInferredFrom().size()!=1){
+    private PhysicalEntity getInferredFrom(PhysicalEntity physicalEntity) throws Exception{
+        if(physicalEntity.getInferredFrom().size() > 1){
+//            MessageObject msgObj = new MessageObject("Inferring from one species to another one caused a problem because" +
+//                    " there is more than one inferred PhysicalEntity.\n",
+//                    getClass(), MessageType.INTERNAL_ERROR);
+//            eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
             Console.error(getClass() + " -> there is more than one inferred from PE");
-            return null;
+            throw new Exception("Error: Inferring from one species to another one caused a problem because" +
+                    " there is more than one inferred PhysicalEntity.\n");
+//            return null;
+        }else if(physicalEntity == null || physicalEntity.getInferredFrom().size() == 0){
+//                MessageObject msgObj = new MessageObject("Inferring from one species to another one caused a problem because" +
+//                        " there is no inferred PhysicalEntity.\n",
+//                        getClass(), MessageType.INTERNAL_ERROR);
+//                eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                Console.error(getClass() + " -> there is no inferred from PE");
+                throw new Exception("Error: Inferring from one species to another one caused a problem because" +
+                                    " there is no inferred PhysicalEntity.\n");
+//                return null;
         }else{
             return physicalEntity.getInferredFrom().get(0);
         }
@@ -266,7 +295,7 @@ public class OrthologyManager extends Controller {
         return null;
     }
 
-    private Species getSpecies(DatabaseObject databaseObject){
+    private Species getSpecies(DatabaseObject databaseObject) throws Exception{
         if(databaseObject instanceof Species){
             return (Species) databaseObject;
         }
@@ -281,11 +310,23 @@ public class OrthologyManager extends Controller {
             speciesList = p.getSpecies();
         }
         if(speciesList.isEmpty()){
+//            MessageObject msgObj = new MessageObject("The action could not be executed for "+ databaseObject +
+//                    ".\nSpecies is set to " + this.species.getDisplayName() + ".\n",
+//                    getClass(), MessageType.INTERNAL_ERROR);
+//            eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
             Console.error(getClass() + " -> unknown action for " + databaseObject + " >> species set to " + this.species.getDisplayName());
-            return this.species;
+            throw new Exception("Error: The action could not be executed for "+ databaseObject +
+                    ".\nSpecies is set to " + this.species.getDisplayName() + ".\n");
+            //return this.species;
         }else if(speciesList.size()!=1){
+//            MessageObject msgObj = new MessageObject("The action could not be executed for "+ databaseObject +
+//                ".\nSpecies is set to " + this.species.getDisplayName() + ".\n",
+//                getClass(), MessageType.INTERNAL_ERROR);
+//            eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
             Console.error(getClass() + " -> several species for " + databaseObject + " >> species set to " + this.species.getDisplayName());
-            return this.species;
+            throw new Exception("Error: The action could not be executed for "+ databaseObject +
+                ".\nSpecies is set to " + this.species.getDisplayName() + ".\n");
+//            return this.species;
         }else{
             return speciesList.get(0);
         }
@@ -296,7 +337,7 @@ public class OrthologyManager extends Controller {
     }
 
     //when called, databaseObject should be loaded using the detailed view RESTFul method
-    private void moveToDatabaseObject(DatabaseObject databaseObject){
+    private void moveToDatabaseObject(DatabaseObject databaseObject) throws Exception{
         Species species = this.getSpecies(databaseObject);
 
         List<Event> path;
@@ -330,7 +371,7 @@ public class OrthologyManager extends Controller {
         this.eventBus.fireELVEvent(ELVEventType.ORTHOLOGOUS_MANAGER_STATE_SELECTED, desiredState);
     }
 
-    private void moveToSpecies(Species species){
+    private void moveToSpecies(Species species) throws Exception{
         if(this.isHomoSapiens(this.species)){
             //FROM HomoSapiens to other species
             AdvancedState desiredState = this.getFromHomoSapiensToOtherSpecies(species);
@@ -347,23 +388,36 @@ public class OrthologyManager extends Controller {
 
     @Override
     public void onDataManagerObjectDetailedViewRetrieved(DatabaseObject databaseObject) {
-        this.cacheDetailedView(databaseObject);
+        try{
+            this.cacheDetailedView(databaseObject);
 
-        if(this.moveToDatabaseObject){
-            this.moveToDatabaseObject = false;
-            moveToDatabaseObject(databaseObject);
-            return;
-        }
-
-        //When this happens is because the manager is in its way from one Species (different to Homo Sapiens)
-        //to other Species (different to Homo Sapines as well).
-        if(this.otherSpecies!=null){
-            this.requiredDetailedObjects.remove(databaseObject.getDbId());
-            //When this happens means that all the needed data is available
-            if(this.requiredDetailedObjects.isEmpty()){
-                //NOTE: this.otherSpecies will be set to null into the method
-                this.goFromOtherSpeciesToOtherSpecies(this.otherSpecies);
+            if(this.moveToDatabaseObject){
+                this.moveToDatabaseObject = false;
+                moveToDatabaseObject(databaseObject);
+                return;
             }
+
+            //When this happens is because the manager is in its way from one Species (different to Homo Sapiens)
+            //to other Species (different to Homo Sapines as well).
+            if(this.otherSpecies!=null){
+                this.requiredDetailedObjects.remove(databaseObject.getDbId());
+                //When this happens means that all the needed data is available
+                if(this.requiredDetailedObjects.isEmpty()){
+                    //NOTE: this.otherSpecies will be set to null into the method
+                    this.goFromOtherSpeciesToOtherSpecies(this.otherSpecies);
+                }
+            }
+        }catch (Exception ex){
+            MessageObject msgObj = new MessageObject(ex.getMessage(),
+                    getClass(), MessageType.INTERNAL_ERROR);
+            eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+
+            //ToDo: Check before commit
+            AdvancedState desiredState = new AdvancedState();
+            desiredState.setSpecies(species);
+            desiredState.setPath(path);
+            desiredState.setInstance(databaseObject);
+            this.eventBus.fireELVEvent(ELVEventType.ORTHOLOGOUS_MANAGER_STATE_SELECTED, desiredState);
         }
     }
 
@@ -384,7 +438,7 @@ public class OrthologyManager extends Controller {
         return pathAux;
     }
 
-    private void goToDatabaseObject(DatabaseObject databaseObject){
+    private void goToDatabaseObject(DatabaseObject databaseObject) throws Exception{
         if(databaseObject instanceof PhysicalEntity){
             this.path = this.getPathUntilPathwayWithDiagram(this.path);
         }
@@ -406,12 +460,38 @@ public class OrthologyManager extends Controller {
 
     @Override
     public void onMoleculesItemSelected(DatabaseObject databaseObject) {
-        goToDatabaseObject(databaseObject);
+        try {
+            goToDatabaseObject(databaseObject);
+        } catch (Exception ex) {
+            MessageObject msgObj = new MessageObject(ex.getMessage(),
+                    getClass(), MessageType.INTERNAL_ERROR);
+            eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+
+            //ToDo: Check before commit
+            AdvancedState desiredState = new AdvancedState();
+            desiredState.setSpecies(species);
+            desiredState.setPath(path);
+            desiredState.setInstance(databaseObject);
+            this.eventBus.fireELVEvent(ELVEventType.ORTHOLOGOUS_MANAGER_STATE_SELECTED, desiredState);
+        }
     }
 
     @Override
     public void onDiagramEntitySelected(DatabaseObject databaseObject) {
-        goToDatabaseObject(databaseObject);
+        try {
+            goToDatabaseObject(databaseObject);
+        } catch (Exception ex) {
+            MessageObject msgObj = new MessageObject(ex.getMessage(),
+                    getClass(), MessageType.INTERNAL_ERROR);
+            eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+
+            //ToDo: Check before commit
+            AdvancedState desiredState = new AdvancedState();
+            desiredState.setSpecies(species);
+            desiredState.setPath(path);
+            desiredState.setInstance(databaseObject);
+            this.eventBus.fireELVEvent(ELVEventType.ORTHOLOGOUS_MANAGER_STATE_SELECTED, desiredState);
+        }
     }
 
     @Override
@@ -422,24 +502,41 @@ public class OrthologyManager extends Controller {
 
 //        this.path = path==null ? new LinkedList<Event>() : path.getPath();
 //        this.diagram = pathway;
-        goToDatabaseObject(event);
+        try {
+            goToDatabaseObject(event);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void onOverviewItemSelected(DatabaseObject databaseObject) {
-//        this.cacheDetailedView(databaseObject);
+        try {
+            //this.cacheDetailedView(databaseObject);
 
-        //Wen onOverviewEventSelected is back to work, please remove the following
-        if(databaseObject instanceof Event && this.databaseObject instanceof Event){
-            Event event = (Event) this.databaseObject;
-            Event aux = (Event) databaseObject;
-            if(!getSpecies(event).equals(getSpecies(aux))){
-                moveToSpecies(getSpecies(aux));
-                return;
+            //ToDo: When onOverviewEventSelected is back to work, please remove the following
+            if(databaseObject instanceof Event && this.databaseObject instanceof Event){
+                Event event = (Event) this.databaseObject;
+                Event aux = (Event) databaseObject;
+                if(!getSpecies(event).equals(getSpecies(aux))){
+                    moveToSpecies(getSpecies(aux));
+                    return;
+                }
             }
-        }
 
-        goToDatabaseObject(databaseObject);
+            goToDatabaseObject(databaseObject);
+        } catch (Exception ex) {
+            MessageObject msgObj = new MessageObject(ex.getMessage(),
+                    getClass(), MessageType.INTERNAL_ERROR);
+            eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+
+            //ToDo: Check before commit
+            AdvancedState desiredState = new AdvancedState();
+            desiredState.setSpecies(species);
+            desiredState.setPath(path);
+            desiredState.setInstance(databaseObject);
+            this.eventBus.fireELVEvent(ELVEventType.ORTHOLOGOUS_MANAGER_STATE_SELECTED, desiredState);
+        }
     }
 
     @Override
@@ -471,6 +568,19 @@ public class OrthologyManager extends Controller {
 
     @Override
     public void onTopBarSpeciesSelected(Species species) {
-        moveToSpecies(species);
+        try{
+            moveToSpecies(species);
+        } catch (Exception ex) {
+            MessageObject msgObj = new MessageObject(ex.getMessage(),
+                    getClass(), MessageType.INTERNAL_ERROR);
+            eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+
+            //ToDo: Check before commit
+            AdvancedState desiredState = new AdvancedState();
+            desiredState.setSpecies(species);
+            desiredState.setPath(path);
+            desiredState.setInstance(databaseObject);
+            this.eventBus.fireELVEvent(ELVEventType.ORTHOLOGOUS_MANAGER_STATE_SELECTED, desiredState);
+        }
     }
 }

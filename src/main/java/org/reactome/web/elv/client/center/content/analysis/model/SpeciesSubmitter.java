@@ -70,6 +70,7 @@ public class SpeciesSubmitter extends FlowPanel implements ClickHandler {
     public void onClick(ClickEvent event) {
         Long dbId = Long.valueOf(species.getValue(species.getSelectedIndex()));
         if(dbId==-1) {
+            //ToDo: Check for new Error Handling
             DialogBoxFactory.alert("Species comparison", "Please select a species to compare with");
             return;
         }
@@ -90,6 +91,7 @@ public class SpeciesSubmitter extends FlowPanel implements ClickHandler {
                             fireEvent(new AnalysisCompletedEvent(result));
                         } catch (AnalysisModelException e) {
                             fireEvent(new AnalysisErrorEvent(AnalysisErrorType.RESULT_FORMAT));
+                            //ToDo: Look into new Error Handling
                         }
                     }
                     loading.setVisible(false);
@@ -99,11 +101,13 @@ public class SpeciesSubmitter extends FlowPanel implements ClickHandler {
                 public void onError(Request request, Throwable exception) {
                     loading.setVisible(false);
                     fireEvent(new AnalysisErrorEvent(AnalysisErrorType.SERVICE_UNAVAILABLE));
+                    //ToDo: Look into new Error Handling
                 }
             });
         }catch (RequestException ex) {
             loading.setVisible(false);
             fireEvent(new AnalysisErrorEvent(AnalysisErrorType.SERVICE_UNAVAILABLE));
+            //ToDo: Look into new Error Handling
         }
     }
 

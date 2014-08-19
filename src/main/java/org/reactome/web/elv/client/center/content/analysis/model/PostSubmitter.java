@@ -93,6 +93,7 @@ public class PostSubmitter extends DockLayoutPanel implements ClickHandler {
     @Override
     public void onClick(ClickEvent event) {
         if(this.textArea.getText().isEmpty()) {
+            //ToDo: Check for new Error Handling
             DialogBoxFactory.alert("Analysis tool", "Please add the identifiers to analyse");
             return;
         }
@@ -115,6 +116,7 @@ public class PostSubmitter extends DockLayoutPanel implements ClickHandler {
                             fireEvent(new AnalysisCompletedEvent(result));
                         } catch (AnalysisModelException e) {
                             fireEvent(new AnalysisErrorEvent(AnalysisErrorType.RESULT_FORMAT));
+                            //ToDo: Look into new Error Handling
                         }
                         loading.setVisible(false);
                     }
@@ -124,11 +126,13 @@ public class PostSubmitter extends DockLayoutPanel implements ClickHandler {
                 public void onError(Request request, Throwable exception) {
                     loading.setVisible(false);
                     fireEvent(new AnalysisErrorEvent(AnalysisErrorType.SERVICE_UNAVAILABLE));
+                    //ToDo: Look into new Error Handling
                 }
             });
         }catch (RequestException ex) {
             loading.setVisible(false);
             fireEvent(new AnalysisErrorEvent(AnalysisErrorType.SERVICE_UNAVAILABLE));
+            //ToDo: Look into new Error Handling
         }
     }
 

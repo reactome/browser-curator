@@ -9,6 +9,7 @@ import org.reactome.web.elv.client.common.data.model.PhysicalEntity;
 import org.reactome.web.elv.client.common.data.model.Species;
 import org.reactome.web.elv.client.common.provider.InstanceTypeExplanation;
 import org.reactome.web.elv.client.common.provider.InstanceTypeIconProvider;
+import org.reactome.web.elv.client.common.utils.Console;
 import org.reactome.web.elv.client.details.tabs.overview.model.widgets.factory.OverviewTableFactory;
 import org.reactome.web.elv.client.popups.help.HelpPopupImage;
 
@@ -55,6 +56,8 @@ public class OverviewPanel extends DockLayoutPanel {
             titlePanel.add(new HelpPopupImage(img, helpTitle, helpContent));
         }catch (Exception e){
             e.printStackTrace();
+            Console.error(getClass() + ": " + e.getMessage());
+            //ToDo: Look into new Error Handling
         }
         HTMLPanel title = new HTMLPanel(databaseObject.getDisplayName());
         title.getElement().getStyle().setMarginLeft(10, Style.Unit.PX);

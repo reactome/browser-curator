@@ -54,6 +54,7 @@ public class ProcessesPanel extends DockLayoutPanel {
             HTMLPanel helpContent = new HTMLPanel(InstanceTypeExplanation.getExplanation(databaseObject.getSchemaClass()));
             titlePanel.add(new HelpPopupImage(img, helpTitle, helpContent));
         }catch (Exception e){
+            //ToDo: Look into new Error Handling
             e.printStackTrace();
         }
         HTMLPanel title = new HTMLPanel(databaseObject.getDisplayName());

@@ -88,17 +88,20 @@ public class AnalysisAsyncDataProvider extends AsyncDataProvider<PathwaySummary>
                                 pageLoadedHandler.onAnalysisAsyncDataProvider(page);
                             }
                         } catch (AnalysisModelException e) {
-                            System.err.println(e.getMessage());
+                            Console.error(e.getMessage());
+                            //ToDo: Look into new Error Handling
                         }
                     }
 
                     @Override
                     public void onError(Request request, Throwable exception) {
-                        System.err.println(exception.getMessage());
+                        Console.error(exception.getMessage());
+                        //ToDo: Look into new Error Handling
                     }
                 });
             }catch (RequestException ex) {
-                System.err.println(ex.getMessage());
+                Console.error(ex.getMessage());
+                //ToDo: Look into new Error Handling
             }
         }
     }
@@ -124,10 +127,12 @@ public class AnalysisAsyncDataProvider extends AsyncDataProvider<PathwaySummary>
                 @Override
                 public void onError(Request request, Throwable exception) {
                     Console.error(exception.getMessage());
+                    //ToDo: Check for new Error Handling
                 }
             });
         }catch (RequestException ex) {
             Console.error(ex.getMessage());
+            //ToDo: Check for new Error Handling
         }
     }
 }

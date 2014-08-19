@@ -11,6 +11,7 @@ import org.reactome.web.elv.client.common.data.model.PhysicalEntity;
 import org.reactome.web.elv.client.common.data.model.Species;
 import org.reactome.web.elv.client.common.provider.InstanceTypeExplanation;
 import org.reactome.web.elv.client.common.provider.InstanceTypeIconProvider;
+import org.reactome.web.elv.client.common.utils.Console;
 import org.reactome.web.elv.client.common.widgets.button.CustomButton;
 import org.reactome.web.elv.client.common.widgets.disclosure.DisclosureImages;
 import org.reactome.web.elv.client.details.tabs.molecules.model.data.Result;
@@ -126,7 +127,9 @@ public class MoleculesPanel extends DockLayoutPanel implements MouseOverHandler,
             HTMLPanel helpContent = new HTMLPanel(InstanceTypeExplanation.getExplanation(databaseObject.getSchemaClass()));
             titlePanel.add(new HelpPopupImage(img, helpTitle, helpContent));
         }catch (Exception e){
-            e.printStackTrace();
+//            e.printStackTrace();
+            Console.error(getClass() + ": " + e.getMessage());
+            //ToDo: Enough?
         }
         HTMLPanel title = new HTMLPanel(databaseObject.getDisplayName());
         title.getElement().getStyle().setMarginLeft(10, Style.Unit.PX);
@@ -191,7 +194,9 @@ public class MoleculesPanel extends DockLayoutPanel implements MouseOverHandler,
             infoPanel.addMouseOutHandler(this);
             infoPanel.getElement().getStyle().setProperty("cursor", "help");
         }catch (Exception e){
-            e.printStackTrace();
+//            e.printStackTrace();
+            Console.error(getClass() + ": " + e.getMessage());
+            //ToDo: Enough?
         }
         HTMLPanel title = new HTMLPanel("Info");
         title.getElement().getStyle().setMarginLeft(10, Style.Unit.PX);

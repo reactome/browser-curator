@@ -2,6 +2,7 @@ package org.reactome.web.elv.client.common.analysis.factory;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONException;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.web.bindery.autobean.shared.AutoBean;
@@ -43,7 +44,8 @@ public abstract class AnalysisModelFactory {
         }
     }
 
-    public static List<PathwaySummary> getPathwaySummaryList(String json) throws AnalysisModelException {
+    public static List<PathwaySummary> getPathwaySummaryList(String json)
+            throws AnalysisModelException, NullPointerException, IllegalArgumentException, JSONException {
         List<PathwaySummary> rtn = new LinkedList<PathwaySummary>();
         JSONArray array = JSONParser.parseStrict(json).isArray();
         for (int i = 0; i < array.size(); i++) {

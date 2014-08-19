@@ -41,12 +41,12 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
     private Pathway currentPathway;
     private final LRUCache<Pathway, Result> cachePathway = new LRUCache<Pathway, Result>(15);
     private final LRUCache<Long, HashSet<Molecule>> cacheDbObj= new LRUCache<Long, HashSet<Molecule>>(10);
-    private final LRUCache<List<PhysicalToReferenceEntityMap>, List<Long>> cacheSubPathway
-            = new LRUCache<List<PhysicalToReferenceEntityMap>, List<Long>>(15);
+//    private final LRUCache<List<PhysicalToReferenceEntityMap>, List<Long>> cacheSubPathway
+//            = new LRUCache<List<PhysicalToReferenceEntityMap>, List<Long>>(15);
 
     private int count = 0;
     private List<PhysicalToReferenceEntityMap> toHighlight = new ArrayList<PhysicalToReferenceEntityMap>();
-    private List<Long> subPWtoHighlight = new ArrayList<Long>();
+//    private List<Long> subPWtoHighlight = new ArrayList<Long>();
 
     public MoleculesPresenter(EventBus eventBus, MoleculesView view) {
         super(eventBus);
@@ -225,7 +225,8 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
 
                 @Override
                 public void onError(Request request, Throwable exception) {
-                    Console.error(PREFIX + "Sorry, getPathwayParticipants received an error instead of a response");
+                    Console.error(PREFIX + "The request for the object containing the Molecules for\n'" +
+                            currentPathway.getName() + "' received an error instead of a response");
                     if(!GWT.isScript()){
                         Console.error(getClass() + exception.getMessage());
                     }

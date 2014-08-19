@@ -1,10 +1,10 @@
 package org.reactome.web.elv.client.center.content.diagram.presenter;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.*;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
-import com.google.gwt.user.client.Window;
 import org.reactome.web.elv.client.center.content.diagram.view.DiagramView;
 import org.reactome.web.elv.client.common.Controller;
 import org.reactome.web.elv.client.common.EventBus;
@@ -16,6 +16,8 @@ import org.reactome.web.elv.client.common.data.model.Pathway;
 import org.reactome.web.elv.client.common.events.ELVEventType;
 import org.reactome.web.elv.client.common.model.Pair;
 import org.reactome.web.elv.client.common.utils.Console;
+import org.reactome.web.elv.client.manager.messages.MessageObject;
+import org.reactome.web.elv.client.manager.messages.MessageType;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -61,7 +63,6 @@ public class DiagramPresenter extends Controller implements DiagramView.Presente
 
     @Override
     public void entitySelected(Long dbId) {
-        Console.info("entitySelected: " + dbId);
         diagramEntitySelected(dbId);
     }
 
@@ -107,7 +108,12 @@ public class DiagramPresenter extends Controller implements DiagramView.Presente
                 this.selectAfterLoadingDiagram=null;
                 this.entitySelected=null;
                 this.view.setInitialState();
-                Window.alert(pathway.getDisplayName() + " does NOT contain diagram!");
+
+                MessageObject msgObj = new MessageObject(pathway.getDisplayName() + " does NOT contain diagram!\n" +
+                        "ERROR: " + pathway.getDisplayName() + " does NOT contain diagram!", getClass(), MessageType.INTERNAL_ERROR);
+                eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                if(!GWT.isProdMode() && GWT.isClient())
+                    Console.error(getClass() + pathway.getDisplayName() + " does NOT contain diagram!");
             }
         }else{
             if(databaseObject!=null){
@@ -149,6 +155,8 @@ public class DiagramPresenter extends Controller implements DiagramView.Presente
 
     @Override
     public void subpathwaySelected(final Long pathwayId, final Long subpathwayId) {
+        /* TODO How to test? Not used
+        Error Handling not yet tested because method doesn't seemed to be used, see also DiagramView */
         String url = "/ReactomeRESTfulAPI/RESTfulWS/queryByIds/DatabaseObject";
         RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.POST, url);
         requestBuilder.setHeader("Content-Type", "text/plain");
@@ -161,32 +169,53 @@ public class DiagramPresenter extends Controller implements DiagramView.Presente
             requestBuilder.sendRequest(post, new RequestCallback() {
                 @Override
                 public void onResponseReceived(Request request, Response response) {
-                    JSONArray list = JSONParser.parseStrict(response.getText()).isArray();
+                    try{
+                        JSONArray list = JSONParser.parseStrict(response.getText()).isArray();
 
-                    Pathway pathway = null;
-                    Pathway subpathway = null;
+                        Pathway pathway = null;
+                        Pathway subpathway = null;
 
-                    for(int i=0; i<list.size(); ++i){
-                        JSONObject object = list.get(i).isObject();
-                        DatabaseObject aux = ModelFactory.getDatabaseObject(object);
-                        if(aux.getDbId().equals(pathwayId)){
-                            pathway = (Pathway) aux;
-                        }else if(subpathwayId!=null && aux.getDbId().equals(subpathwayId)){
-                            subpathway = (Pathway) aux;
+                        for(int i=0; i<list.size(); ++i){
+                            JSONObject object = list.get(i).isObject();
+                            DatabaseObject aux = ModelFactory.getDatabaseObject(object);
+                            if(aux.getDbId().equals(pathwayId)){
+                                pathway = (Pathway) aux;
+                            }else if(subpathwayId!=null && aux.getDbId().equals(subpathwayId)){
+                                subpathway = (Pathway) aux;
+                            }
                         }
-                    }
 
-                    Pair<Pathway, Pathway> tuple = new Pair<Pathway, Pathway>(pathway, subpathway);
-                    eventBus.fireELVEvent(ELVEventType.DIAGRAM_SUBPATHWAY_SELECTED, tuple);
+                        Pair<Pathway, Pathway> tuple = new Pair<Pathway, Pathway>(pathway, subpathway);
+                        eventBus.fireELVEvent(ELVEventType.DIAGRAM_SUBPATHWAY_SELECTED, tuple);
+
+                    }catch (Exception ex){
+                        //ModelFactoryException, NullPointerException, IllegalArgumentException, JSONException
+                        MessageObject msgObj = new MessageObject("The received data for selected pathway "
+                                + pathwayId + " and subpathway " + subpathwayId + " is empty or faulty and could not be parsed.\n" +
+                                "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
+                        eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                        if(!GWT.isProdMode() && GWT.isClient())
+                            Console.error(getClass() + " ERROR: " + ex.getMessage());
+                    }
                 }
 
                 @Override
                 public void onError(Request request, Throwable exception) {
-                    //TODO
+                    MessageObject msgObj = new MessageObject("The request for data for selected pathway "
+                            + pathwayId + " and subpathway " + subpathwayId + " received an error instead of a valid response.\n" +
+                            "ERROR: " + exception.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
+                    eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                    if(!GWT.isProdMode() && GWT.isClient())
+                        Console.error(getClass() + " ERROR: " + exception.getMessage());
                 }
             });
         } catch (RequestException ex) {
-            //TODO
+            MessageObject msgObj = new MessageObject("The request for selected pathway "
+                    + pathwayId + " and subpathway " + subpathwayId + " could not be received.\n" +
+                    "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
+            eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+            if(!GWT.isProdMode() && GWT.isClient())
+                Console.error(getClass() + " ERROR: " + ex.getMessage());
         }
     }
 
@@ -214,27 +243,46 @@ public class DiagramPresenter extends Controller implements DiagramView.Presente
             requestBuilder.sendRequest(null, new RequestCallback() {
                 @Override
                 public void onResponseReceived(Request request, Response response) {
-                    String[] values = response.getText().split(",");
-                    List<Long> list = new LinkedList<Long>();
+                    try{
+                        String[] values = response.getText().split(",");
+                        List<Long> list = new LinkedList<Long>();
 
-                    //THIS IS A HACK: Used for gk_central when there are inconsistencies
-                    list.add(pathway.getDbId()); //Will be removed in view.setSelectionIds if not needed there
+                        //THIS IS A HACK: Used for gk_central when there are inconsistencies
+                        list.add(pathway.getDbId()); //Will be removed in view.setSelectionIds if not needed there
 
-                    for (String value : values) {
-                        list.add(Long.valueOf(value));
-                    }
-                    if(!list.isEmpty()){
-                        view.setSelectionIds(list);
+                        for (String value : values) {
+                            list.add(Long.valueOf(value));
+                        }
+                        if(!list.isEmpty()){
+                            view.setSelectionIds(list);
+                        }
+                    }catch (Exception ex){
+                        MessageObject msgObj = new MessageObject("The received data for selected subpathway " + pathway
+                                + "\nis empty or faulty and could not be parsed. Thus no entity can be selected in the Diagram.\n" +
+                                "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
+                        eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                        if(!GWT.isProdMode() && GWT.isClient())
+                            Console.error(getClass() + " ERROR: " + ex.getMessage());
                     }
                 }
 
                 @Override
                 public void onError(Request request, Throwable exception) {
-                    //TODO
+                    MessageObject msgObj = new MessageObject("The request for data for selected subpathway " + pathway
+                            + "\nreceived an error instead of a valid response. Thus no entity can be selected in the Diagram.\n" +
+                            "ERROR: " + exception.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
+                    eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                    if(!GWT.isProdMode() && GWT.isClient())
+                        Console.error(getClass() + " ERROR: " + exception.getMessage());
                 }
             });
         } catch (RequestException ex) {
-            //TODO
+            MessageObject msgObj = new MessageObject("The request for selected subpathway " + pathway +
+                    "\ncould not be received. Thus no entity can be selected in the Diagram.\n" +
+                    "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
+            eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+            if(!GWT.isProdMode() && GWT.isClient())
+                Console.error(getClass() + " ERROR: " + ex.getMessage());
         }
     }
 

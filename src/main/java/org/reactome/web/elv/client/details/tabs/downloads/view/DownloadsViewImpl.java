@@ -9,6 +9,7 @@ import org.reactome.web.elv.client.common.data.model.DatabaseObject;
 import org.reactome.web.elv.client.common.data.model.Pathway;
 import org.reactome.web.elv.client.common.provider.InstanceTypeExplanation;
 import org.reactome.web.elv.client.common.provider.InstanceTypeIconProvider;
+import org.reactome.web.elv.client.common.utils.Console;
 import org.reactome.web.elv.client.details.model.DetailsTabType;
 import org.reactome.web.elv.client.details.tabs.downloads.model.DownloadMolecule;
 import org.reactome.web.elv.client.details.tabs.downloads.model.DownloadPanel;
@@ -124,7 +125,9 @@ public class DownloadsViewImpl implements DownloadsView {
             HTMLPanel helpContent = new HTMLPanel(InstanceTypeExplanation.getExplanation(databaseObject.getSchemaClass()));
             titlePanel.add(new HelpPopupImage(img, helpTitle, helpContent));
         }catch (Exception e){
+            Console.error(e.getMessage());
             e.printStackTrace();
+            //ToDo: Look into new Error Handling
         }
         HTMLPanel title = new HTMLPanel(databaseObject.getDisplayName());
         title.getElement().getStyle().setMarginLeft(10, Style.Unit.PX);

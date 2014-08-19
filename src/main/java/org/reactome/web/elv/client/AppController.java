@@ -2,7 +2,6 @@ package org.reactome.web.elv.client;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HasWidgets;
 import org.reactome.web.elv.client.center.content.analysis.presenter.AnalysisPresenter;
 import org.reactome.web.elv.client.center.content.analysis.view.AnalysisView;
@@ -13,6 +12,7 @@ import org.reactome.web.elv.client.center.view.CenterViewImpl;
 import org.reactome.web.elv.client.common.Controller;
 import org.reactome.web.elv.client.common.EventBus;
 import org.reactome.web.elv.client.common.events.ELVEventType;
+import org.reactome.web.elv.client.common.utils.Console;
 import org.reactome.web.elv.client.details.presenter.DetailsPresenter;
 import org.reactome.web.elv.client.details.view.DetailsView;
 import org.reactome.web.elv.client.details.view.DetailsViewImpl;
@@ -26,6 +26,8 @@ import org.reactome.web.elv.client.main.presenter.MainPresenter;
 import org.reactome.web.elv.client.main.view.MainViewImpl;
 import org.reactome.web.elv.client.manager.data.DataManager;
 import org.reactome.web.elv.client.manager.ga.GAManager;
+import org.reactome.web.elv.client.manager.messages.MessageObject;
+import org.reactome.web.elv.client.manager.messages.MessageType;
 import org.reactome.web.elv.client.manager.messages.MessagesManager;
 import org.reactome.web.elv.client.manager.orthology.OrthologyManager;
 import org.reactome.web.elv.client.manager.state.StateManager;
@@ -57,7 +59,10 @@ public class AppController extends Controller {
 
             @Override
             public void onFailure(Throwable caught) {
-                Window.alert("Error: " + caught.getMessage());
+                MessageObject msgObj = new MessageObject("Running the web application failed.\n" +
+                        "ERROR: " + caught.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
+                eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                if(!GWT.isProdMode() && GWT.isClient()) Console.error(getClass() + caught.getMessage());
             }
 
             @SuppressWarnings("unchecked")

@@ -1,12 +1,12 @@
 package org.reactome.web.elv.client.hierarchy.presenter;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.*;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import org.reactome.web.elv.client.common.Controller;
 import org.reactome.web.elv.client.common.EventBus;
-import org.reactome.web.elv.client.common.analysis.factory.AnalysisModelException;
 import org.reactome.web.elv.client.common.analysis.factory.AnalysisModelFactory;
 import org.reactome.web.elv.client.common.analysis.helper.AnalysisHelper;
 import org.reactome.web.elv.client.common.analysis.model.PathwaySummary;
@@ -18,6 +18,8 @@ import org.reactome.web.elv.client.common.model.Path;
 import org.reactome.web.elv.client.common.utils.Console;
 import org.reactome.web.elv.client.hierarchy.model.HierarchySelection;
 import org.reactome.web.elv.client.hierarchy.view.HierarchyView;
+import org.reactome.web.elv.client.manager.messages.MessageObject;
+import org.reactome.web.elv.client.manager.messages.MessageType;
 import org.reactome.web.elv.client.manager.tour.TourStage;
 
 import java.util.ArrayList;
@@ -69,34 +71,53 @@ public class HierarchyPresenter extends Controller implements HierarchyView.Pres
             requestBuilder.sendRequest(null, new RequestCallback() {
                 @Override
                 public void onResponseReceived(Request request, Response response) {
-                    JSONObject json = JSONParser.parseStrict(response.getText()).isObject();
-                    Pathway pathway = new Pathway(json);
-                    List<Event> children = pathway.getHasEvent();
-                    view.loadItemChildren(currentSpecies, path, pathway, children);
-                    //Next bit is to load analysis details in the hierarchy items by demand
-                    Set<Long> dbIds = new HashSet<Long>();
-                    Set<Long> aux = new HashSet<Long>();
-                    for (Event child : children) {
-                        if(child instanceof ReactionLikeEvent){
-                            aux.add(event.getDbId());
-                        }else{
-                            dbIds.add(child.getDbId());
+                    try{
+                        JSONObject json = JSONParser.parseStrict(response.getText()).isObject();
+                        Pathway pathway = new Pathway(json);
+                        List<Event> children = pathway.getHasEvent();
+                        view.loadItemChildren(currentSpecies, path, pathway, children);
+                        //Next bit is to load analysis details in the hierarchy items by demand
+                        Set<Long> dbIds = new HashSet<Long>();
+                        Set<Long> aux = new HashSet<Long>();
+                        for (Event child : children) {
+                            if(child instanceof ReactionLikeEvent){
+                                aux.add(event.getDbId());
+                            }else{
+                                dbIds.add(child.getDbId());
+                            }
                         }
+                        getAnalysisData(dbIds, aux);
+                    }catch (Exception ex){
+                        //ModelFactoryException, NullPointerException, IllegalArgumentException, JSONException
+                        MessageObject msgObj = new MessageObject("The received data about the children of '" + event.getDisplayName()
+                                + "'\nis empty or faulty and could not be parsed.\n" +
+                                "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
+                        Console.error(getClass() + " ERROR: The received data is empty or faulty and could not be parsed.");
+                        errorMsg(msgObj);
                     }
-                    getAnalysisData(dbIds, aux);
                 }
 
                 @Override
                 public void onError(Request request, Throwable exception) {
-                    //eventBus.fireELVEvent(ELVEventType.HIERARCHY_CHILDREN_LOAD_ERROR, exception.getMessage());
+                    if(!GWT.isScript()){
+                        Console.error(getClass() + " received an error instead of a response.");
+                    }
+                    MessageObject msgObj = new MessageObject("The request for data about the children of '" + event.getDisplayName()
+                            + "'\nreceived an error instead of a valid response.\n" +
+                            "ERROR: " + exception.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
+                    errorMsg(msgObj);
                 }
             });
         } catch (RequestException ex) {
-            //eventBus.fireELVEvent(ELVEventType.HIERARCHY_CHILDREN_LOAD_ERROR, exception.getMessage());
+            MessageObject msgObj = new MessageObject("The date about the children of '" + event.getDisplayName() +
+                    "' could not be received.\n" +
+                    "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
+            Console.error(getClass() + ex.getMessage());
+            errorMsg(msgObj);
         }
     }
 
-    private void expandPath(){
+    private void expandPath() throws Exception {
         if(this.openingPath<this.pathToExpand.size()-1){
             DatabaseObject next = this.pathToExpand.get(this.openingPath);
             Path path = this.pathToExpand.getSubPath(this.openingPath);
@@ -111,7 +132,7 @@ public class HierarchyPresenter extends Controller implements HierarchyView.Pres
         }
     }
 
-    private void finishedExpandingPath(Pathway pathway, DatabaseObject databaseObject){
+    private void finishedExpandingPath(Pathway pathway, DatabaseObject databaseObject) throws Exception {
         this.openingPath = -1;
         if(databaseObject instanceof Event){
             this.view.highlightPath(this.pathToExpand, pathway, (Event) databaseObject);
@@ -121,7 +142,7 @@ public class HierarchyPresenter extends Controller implements HierarchyView.Pres
     }
 
     @Override
-    public void frontPageItemsRequired(Species species) {
+    public void frontPageItemsRequired(final Species species) {
         String speciesName = species.getDisplayName().replaceAll(" ", "+");
         String url = "/ReactomeRESTfulAPI/RESTfulWS/frontPageItems/" + speciesName;
         RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, url);
@@ -130,23 +151,54 @@ public class HierarchyPresenter extends Controller implements HierarchyView.Pres
             requestBuilder.sendRequest(null, new RequestCallback() {
                 @Override
                 public void onResponseReceived(Request request, Response response) {
-                    JSONArray list = JSONParser.parseStrict(response.getText()).isArray();
-                    List<Event> children = new ArrayList<Event>();
-                    for(int i=0; i<list.size(); ++i){
-                        Event child = (Event) ModelFactory.getDatabaseObject(list.get(i).isObject());
-                        children.add(child);
+                    try{
+                        JSONArray list = JSONParser.parseStrict(response.getText()).isArray();
+                        List<Event> children = new ArrayList<Event>();
+                        for(int i=0; i<list.size(); ++i){
+                            Event child = (Event) ModelFactory.getDatabaseObject(list.get(i).isObject());
+                            children.add(child);
+                        }
+                        view.loadItemChildren(currentSpecies, null, null, children);
+                        hierarchyReady();
+                    }catch (Exception ex){
+                        //ModelFactoryException, NullPointerException, IllegalArgumentException, JSONException
+                        MessageObject msgObj = new MessageObject("The received data for the front page items of '"
+                                + species.getDisplayName() + "'\nis empty or faulty and could not be parsed.\n" +
+                                "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
+                        Console.error(getClass() + " ERROR: The received data for the front page items " +
+                                "is empty or faulty and could not be parsed");
+                        errorMsg(msgObj);
                     }
-                    view.loadItemChildren(currentSpecies, null, null, children);
-                    hierarchyReady();
                 }
 
                 @Override
                 public void onError(Request request, Throwable exception) {
+                    /* ToDo: Check before submit
+                       Method for DATA_MANANGER_LOAD_ERROR in Controller is not implemented
                     eventBus.fireELVEvent(ELVEventType.DATA_MANAGER_LOAD_ERROR, exception.getMessage());
+                    */
+                    if(!GWT.isScript()){
+                        Console.error(getClass() + " received an error instead of a response. "
+                                + exception.getMessage());
+                    }
+
+                    MessageObject msgObj = new MessageObject("The front-page-items-request for '" + species.getDisplayName() +
+                            "' received an error instead of a valid response.\n" +
+                            "ERROR: " + exception.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
+                    errorMsg(msgObj);
+                    Console.error(getClass() + " The front-page-items-request received an error instead of a valid response");
                 }
             });
         } catch (RequestException ex) {
+            /* ToDo: Check before submit
+               Method for DATA_MANANGER_LOAD_ERROR in Controller is not implemented
             eventBus.fireELVEvent(ELVEventType.DATA_MANAGER_LOAD_ERROR, ex.getMessage());
+            */
+            MessageObject msgObj = new MessageObject("The front page items for '" + species.getDisplayName() +
+                    "' could not be received.\n" +
+                    "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
+            errorMsg(msgObj);
+            Console.error(getClass() + " The front page items could not be received.");
         }
     }
 
@@ -178,19 +230,38 @@ public class HierarchyPresenter extends Controller implements HierarchyView.Pres
                     try {
                         List<PathwaySummary> result = AnalysisModelFactory.getPathwaySummaryList(response.getText());
                         view.showAnalysisResult(result);
-                    } catch (AnalysisModelException e) {
-                        Console.error(e.getMessage());
+                    } catch (Exception ex) {
+                        //AnalysisModelFactory, NullPointerException, IllegalArgumentException, JSONException
+                        MessageObject msgObj = new MessageObject("The received object for token=" + analysisToken
+                                + "\nand resource=" + resource + " is empty or faulty and could not be parsed.\n"
+                                + "The analysis values for pathways cannot be set.\n" +
+                                "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
+                        eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                        Console.error(getClass() + " ERROR: " + ex.getMessage());
                     }
                 }
 
                 @Override
                 public void onError(Request request, Throwable exception) {
-                    Console.error(exception.getMessage());
+                    if(!GWT.isProdMode() && GWT.isClient()){
+                        Console.error(getClass() + " ERROR: " + exception.getMessage());
+                    }
+
+                    MessageObject msgObj = new MessageObject("The request for token=" + analysisToken +
+                            "\nand resource=" + resource + " received an error instead of a valid response.\n"
+                            + "The analysis values for pathways cannot be set.\n" +
+                            "ERROR: " + exception.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
+                    eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
                 }
             });
 
         }catch (RequestException ex) {
-            Console.error(ex.getMessage());
+            MessageObject msgObj = new MessageObject("The requested analysis data for token=" + analysisToken +
+                    "\nand resource=" + resource + " could not be received.\n"
+                    + "The analysis values for pathways cannot be set.\n" +
+                    "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
+            eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+            Console.error(getClass() + " ERROR: " + ex.getMessage());
         }
     }
 
@@ -208,26 +279,50 @@ public class HierarchyPresenter extends Controller implements HierarchyView.Pres
             requestBuilder.sendRequest(post.toString(), new RequestCallback() {
                 @Override
                 public void onResponseReceived(Request request, Response response) {
-                    JSONArray res = JSONParser.parseStrict(response.getText()).isArray();
-                    Set<Long> hitReactions = new HashSet<Long>();
-                    for (int i = 0; i < res.size(); i++) {
-                        hitReactions.add(Long.valueOf(res.get(i).toString()));
+                    try{
+                        JSONArray res = JSONParser.parseStrict(response.getText()).isArray();
+                        Set<Long> hitReactions = new HashSet<Long>();
+                        for (int i = 0; i < res.size(); i++) {
+                            hitReactions.add(Long.valueOf(res.get(i).toString()));
+                        }
+                        view.highlightHitReactions(hitReactions);
+                    }catch (Exception ex){
+                        //AnalysisModelFactory, NullPointerException, IllegalArgumentException, JSONException
+                        MessageObject msgObj = new MessageObject("The received object for token=" + analysisToken
+                                + "\nand resource=" + resource + " is empty or faulty and could not be parsed.\n"
+                                + "The analysis values for reactions cannot be set.\n" +
+                                "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
+                        eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                        Console.error(getClass() + " ERROR: " + ex.getMessage());
                     }
-                    view.highlightHitReactions(hitReactions);
+
                 }
 
                 @Override
                 public void onError(Request request, Throwable exception) {
-                    Console.error(exception.getMessage());
+                    if(!GWT.isProdMode() && GWT.isClient()){
+                        Console.error(getClass() + " ERROR: " + exception.getMessage());
+                    }
+
+                    MessageObject msgObj = new MessageObject("The request for token=" + analysisToken +
+                            "\nand resource=" + resource + " received an error instead of a valid response.\n"
+                            + "The analysis values for reactions cannot be set.\n" +
+                            "ERROR: " + exception.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
+                    eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
                 }
             });
 
         }catch (RequestException ex) {
-            Console.error(ex.getMessage());
+            MessageObject msgObj = new MessageObject("The requested analysis data for token=" + analysisToken +
+                    "\nand resource=" + resource + " could not be received.\n"
+                    + "The analysis values for reactions cannot be set.\n" +
+                    "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
+            eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+            Console.error(getClass() + " ERROR: " + ex.getMessage());
         }
     }
 
-    private void getInstanceAncestors(final List<Event> path, Long dbId) {
+    private void getInstanceAncestors(final List<Event> path, final Long dbId) {
         String url = "/ReactomeRESTfulAPI/RESTfulWS/queryEventAncestors/" + dbId;
         RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, url);
         requestBuilder.setHeader("Accept", "application/json");
@@ -235,19 +330,37 @@ public class HierarchyPresenter extends Controller implements HierarchyView.Pres
             requestBuilder.sendRequest(null, new RequestCallback() {
                 @Override
                 public void onResponseReceived(Request request, Response response) {
-                    JSONArray list = JSONParser.parseStrict(response.getText()).isArray();
-                    Ancestors ancestors = new Ancestors(list);
-                    setAncestorsListToExpand(path, ancestors);
+                    try {
+                        JSONArray list = JSONParser.parseStrict(response.getText()).isArray();
+                        Ancestors ancestors = new Ancestors(list);
+                        setAncestorsListToExpand(path, ancestors);
+                    } catch (Exception ex){
+                        //ModelFactoryException, NullPointerException, IllegalArgumentException, JSONException
+                        MessageObject msgObj = new MessageObject("The received data to expand the path down to 'dbId="
+                                + dbId +"' is empty or faulty and could not be parsed.\n" +
+                                "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
+                        errorMsg(msgObj);
+                        Console.error(getClass() + " The received data is empty or faulty and could not be parsed.");
+                    }
                 }
 
                 @Override
                 public void onError(Request request, Throwable exception) {
                     //eventBus.fireELVEvent(ELVEventType.HIERARCHY_INSTANCE_LOAD_ERROR, exception.getMessage());
+                    MessageObject msgObj = new MessageObject("The request to expand the path down to 'dbId=" + dbId +
+                            "' received an error instead of a valid response.\n" +
+                            "ERROR: " + exception.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
+                    errorMsg(msgObj);
+                    Console.error(getClass() +
+                            " The request to expand the path received an error instead of a valid response.");
                 }
             });
-        }
-        catch (RequestException ex) {
-            //eventBus.fireELVEvent(ELVEventType.HIERARCHY_INSTANCE_LOAD_ERROR, exception.getMessage());
+        }catch (RequestException ex) {
+            MessageObject msgObj = new MessageObject("The path down to 'dbId=" + dbId +
+                    "' could not be expanded.\n" +
+                    "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
+            errorMsg(msgObj);
+            Console.error(getClass() +" The path could not be expanded.");
         }
     }
 
@@ -334,13 +447,27 @@ public class HierarchyPresenter extends Controller implements HierarchyView.Pres
 
     @Override
     public void pathwayExpanded(Pathway pathway) {
-        if(pathway!=null && this.openingPath!=-1){
-            //Next method will do something just if there are ancestors to expand yet
-            this.expandPath();
+        try{
+            if(pathway!=null && this.openingPath!=-1){
+                //Next method will do something just if there are ancestors to expand yet
+                this.expandPath();
+            }
+        }catch (Exception ex){
+            MessageObject msgObj = new MessageObject("The path for pathway '" + pathway.getDisplayName() +
+                    "' could not be expanded.\n" +
+                    "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
+            Console.error(getClass() + ex.getMessage());
+            errorMsg(msgObj);
         }
+
     }
 
-    protected void setAncestorsListToExpand(List<Event> path, Ancestors ancestors) {
+    @Override
+    public void errorMsg(MessageObject msgObj) {
+        eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+    }
+
+    protected void setAncestorsListToExpand(List<Event> path, Ancestors ancestors) throws Exception {
         List<Path> candidatePaths;
         if(path.isEmpty()){
             candidatePaths = ancestors.getPathsContaining(this.loadedDiagram);
@@ -358,8 +485,12 @@ public class HierarchyPresenter extends Controller implements HierarchyView.Pres
             this.openingPath = 0;
             this.expandPath();
         }else{
-            this.finishedExpandingPath(this.loadedDiagram, this.selectedDatabaseObject);
-            Console.error(getClass() + " no ancestors path found through the loaded diagram");
+            try{
+                this.finishedExpandingPath(this.loadedDiagram, this.selectedDatabaseObject);
+            }catch (Exception ex){
+                Console.error(getClass() + ": No ancestors path found through the loaded diagram.");
+                throw new Exception(getClass() + ": No ancestors path found through the loaded diagram", ex);
+            }
         }
     }
 

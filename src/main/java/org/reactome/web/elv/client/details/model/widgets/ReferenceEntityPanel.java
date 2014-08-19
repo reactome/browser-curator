@@ -101,6 +101,7 @@ public class ReferenceEntityPanel extends DetailsPanel implements OpenHandler<Di
         try{
             names.delete(names.length()-2, names.length()-1);
         }catch (StringIndexOutOfBoundsException e){
+            //ToDo: Look into new Error Handling
             Console.error(getClass() + e.getMessage());
         }
         hp.add(new Label(names.toString()));

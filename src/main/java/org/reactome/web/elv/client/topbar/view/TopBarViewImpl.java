@@ -6,6 +6,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import org.reactome.web.elv.client.common.data.model.Species;
+import org.reactome.web.elv.client.common.utils.Console;
 import org.reactome.web.elv.client.common.widgets.glass.GlassPanel;
 import org.reactome.web.elv.client.topbar.model.*;
 
@@ -55,9 +56,14 @@ public class TopBarViewImpl implements TopBarView {
     }
 
     @Override
-    public void selectSpecies(Species species) {
+    public void selectSpecies(Species species) throws Exception {
         this.topBar.setSpeciesSelectorStyle(this.speciesSelectorPanel, species);
-        this.speciesSelectorPanel.selectSpecies(species);
+        try{
+            this.speciesSelectorPanel.selectSpecies(species);
+        }catch (Exception ex){
+            Console.error(getClass() + "Error selecting species: No species found.");
+            throw ex;
+        }
     }
 
     @Override

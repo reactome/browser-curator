@@ -6,6 +6,9 @@ import org.reactome.web.elv.client.common.Controller;
 import org.reactome.web.elv.client.common.EventBus;
 import org.reactome.web.elv.client.common.data.model.Species;
 import org.reactome.web.elv.client.common.events.ELVEventType;
+import org.reactome.web.elv.client.common.utils.Console;
+import org.reactome.web.elv.client.manager.messages.MessageObject;
+import org.reactome.web.elv.client.manager.messages.MessageType;
 import org.reactome.web.elv.client.manager.tour.TourStage;
 import org.reactome.web.elv.client.topbar.view.TopBarView;
 
@@ -80,7 +83,15 @@ public class TopBarPresenter extends Controller implements TopBarView.Presenter 
 
     @Override
     public void onStateManagerSpeciesSelected(Species species) {
-        view.selectSpecies(species);
+        try{
+            view.selectSpecies(species);
+        }catch (Exception ex){
+            MessageObject msgObj = new MessageObject("The species '" + species.getDisplayName() +
+                    "' could not be selected.\n" +
+                    "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
+            eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+            Console.error(getClass() + ex.getMessage());
+        }
     }
 
     @Override

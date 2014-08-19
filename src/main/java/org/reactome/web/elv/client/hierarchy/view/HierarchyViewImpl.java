@@ -12,12 +12,13 @@ import org.reactome.web.elv.client.common.data.model.Pathway;
 import org.reactome.web.elv.client.common.data.model.Species;
 import org.reactome.web.elv.client.common.model.Path;
 import org.reactome.web.elv.client.common.utils.Console;
-import org.reactome.web.elv.client.common.widgets.DialogBoxFactory;
 import org.reactome.web.elv.client.common.widgets.glass.GlassPanel;
 import org.reactome.web.elv.client.hierarchy.events.HierarchyTreeSpeciesNotFoundException;
 import org.reactome.web.elv.client.hierarchy.model.HierarchyContainerPanel;
 import org.reactome.web.elv.client.hierarchy.model.HierarchyItem;
 import org.reactome.web.elv.client.hierarchy.model.HierarchyTree;
+import org.reactome.web.elv.client.manager.messages.MessageObject;
+import org.reactome.web.elv.client.manager.messages.MessageType;
 
 import java.util.HashSet;
 import java.util.List;
@@ -80,7 +81,7 @@ public class HierarchyViewImpl implements IsWidget, HierarchyView, OpenHandler<T
     }
 
     @Override
-    public void expandPathway(Path path, Pathway pathway) {
+    public void expandPathway(Path path, Pathway pathway) throws Exception {
         if(this.hierarchyTree==null) return;
         HierarchyItem treeItem = this.hierarchyTree.getHierarchyItemByDatabaseObject(path.getPathDbIds(), pathway);
         if(treeItem!=null){
@@ -88,6 +89,7 @@ public class HierarchyViewImpl implements IsWidget, HierarchyView, OpenHandler<T
             this.onOpen(treeItem);
         }else{
             Console.error(getClass() + " could not find the node for " + pathway);
+            throw new Exception(getClass() + " could not find the node for " + pathway);
         }
     }
 
@@ -105,7 +107,7 @@ public class HierarchyViewImpl implements IsWidget, HierarchyView, OpenHandler<T
 
 
     @Override
-    public void highlightPath(Path path, Pathway pathway, Event event) {
+    public void highlightPath(Path path, Pathway pathway, Event event) throws Exception {
         clearHighlightedPath();
 
         if(event==null){
@@ -135,6 +137,7 @@ public class HierarchyViewImpl implements IsWidget, HierarchyView, OpenHandler<T
             this.selectedItem.highlightPath();
         }else{
             Console.error(getClass() + " highlightPath -> selected item: UNEXPECTED NULL");
+            throw new NullPointerException(getClass() + " highlightPath -> selected item: UNEXPECTED NULL");
         }
     }
 
@@ -146,7 +149,7 @@ public class HierarchyViewImpl implements IsWidget, HierarchyView, OpenHandler<T
     }
 
     @Override
-    public void loadItemChildren(Species species, Path path, Pathway pathway, List<Event> children) {
+    public void loadItemChildren(Species species, Path path, Pathway pathway, List<Event> children) throws Exception{
         if(pathway==null){
             this.hierarchyTree = new HierarchyTree(species);
             this.hierarchyTree.setScrollOnSelectEnabled(true);
@@ -193,7 +196,10 @@ public class HierarchyViewImpl implements IsWidget, HierarchyView, OpenHandler<T
             Event event = item.getEvent();
             this.presenter.eventSelected(path, pathway, event);
         }else{
-            DialogBoxFactory.alert("Events hierarchy", "Not pathway with diagram found in the path");
+            MessageObject msgObj = new MessageObject("No pathway with diagram found in the path",
+                                            getClass(), MessageType.INTERNAL_ERROR);
+            presenter.errorMsg(msgObj);
+            Console.error(getClass() + "Events hierarchy: No pathway with diagram found in the path.");
         }
     }
 

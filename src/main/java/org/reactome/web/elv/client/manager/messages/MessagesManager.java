@@ -19,11 +19,13 @@ public class MessagesManager extends Controller {
 
     @Override
     public void onStateManagerWrongStateReached(String token) {
+        //ToDo: Check if still in use?
         DialogBoxFactory.alert("URL Token error", token + " is not build properly. Please check it complies with the format");
     }
 
     @Override
     public void onAnalysisError(AnalysisErrorEvent event) {
+        //ToDo: Check if still in use?
         DialogBoxFactory.alert("Analysis", event.getErrorType().getMessage());
     }
 

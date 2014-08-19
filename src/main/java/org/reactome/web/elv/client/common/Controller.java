@@ -166,9 +166,9 @@ public abstract class Controller implements ELVEventHandler {
                 break;
 
                     /* DATA MANAGER EVENTS*/
-            case DATA_MANAGER_LOAD_ERROR:
-                onDataManagerLoadError((String) obj);
-                break;
+//            case DATA_MANAGER_LOAD_ERROR://ToDo: No longer in use
+//                onDataManagerLoadError((String) obj);//Nowhere implemented
+//                break;
             case DATA_MANAGER_OBJECT_DETAILED_VIEW_RETRIEVED:
                 onDataManagerObjectDetailedViewRetrieved((DatabaseObject) obj);
                 break;
@@ -203,9 +203,9 @@ public abstract class Controller implements ELVEventHandler {
             case STATE_MANAGER_DETAILS_TAB_SELECTED:
                 onStateManagerDetailsTabSelected((DetailsTabType) obj);
                 break;
-            case STATE_MANAGER_ERROR:
-                onStateManagerError((String) obj);
-                break;
+//            case STATE_MANAGER_ERROR: //ToDo: No longer in use
+//                onStateManagerError((String) obj);
+//                break;
             case STATE_MANAGER_INSTANCES_INITIAL_STATE:
                 onStateManagerInstancesInitialStateReached();
                 break;
@@ -305,7 +305,7 @@ public abstract class Controller implements ELVEventHandler {
     public void onOverviewItemSelected(DatabaseObject databaseObject){}
 
     /* DATA MANAGER EVENTS*/
-    public void onDataManagerLoadError(String message){}
+//    public void onDataManagerLoadError(String message){}
     public void onDataManagerObjectDetailedViewRetrieved(DatabaseObject databaseObject){}
     public void onDataManagerObjectTupleRetrieved(Pathway pathway, DatabaseObject databaseObject){}
     public void onDataManagerSpeciesListRetrieved(List<Species> speciesList){}
