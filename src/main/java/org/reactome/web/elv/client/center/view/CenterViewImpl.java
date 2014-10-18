@@ -6,7 +6,7 @@ import com.google.gwt.user.client.ui.TabLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 import org.reactome.web.elv.client.center.content.analysis.view.AnalysisView;
 import org.reactome.web.elv.client.center.content.diagram.view.DiagramView;
-import org.reactome.web.elv.client.center.content.welcome.WelcomeMessage;
+import org.reactome.web.elv.client.center.content.fireworks.view.FireworksView;
 import org.reactome.web.elv.client.common.widgets.glass.GlassPanel;
 
 /**
@@ -21,7 +21,7 @@ public class CenterViewImpl implements CenterView {
      */
     private GlassPanel glass = null;
 
-    public CenterViewImpl(DiagramView diagramView, AnalysisView analysisView) {
+    public CenterViewImpl(DiagramView diagramView, FireworksView fireworksView, AnalysisView analysisView) {
         this.container = new TabLayoutPanel(0, Style.Unit.PX){
             @Override
             public void onResize() {
@@ -34,8 +34,9 @@ public class CenterViewImpl implements CenterView {
         this.container.setAnimationDuration(500);
         this.container.addStyleName("elv-Diagram-Container");
 
-        WelcomeMessage welcomeMessage = new WelcomeMessage();
-        this.container.add(welcomeMessage, "Welcome");
+//        WelcomeMessage welcomeMessage = new WelcomeMessage();
+//        this.container.add(welcomeMessage, "Welcome");
+        this.container.add(fireworksView.asWidget());
 
         this.container.add(diagramView.asWidget());
 

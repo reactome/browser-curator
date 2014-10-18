@@ -7,6 +7,12 @@ import com.google.gwt.user.client.ui.HasWidgets;
 import org.reactome.web.elv.client.center.content.analysis.presenter.AnalysisPresenter;
 import org.reactome.web.elv.client.center.content.analysis.view.AnalysisView;
 import org.reactome.web.elv.client.center.content.analysis.view.AnalysisViewImpl;
+import org.reactome.web.elv.client.center.content.diagram.presenter.DiagramPresenter;
+import org.reactome.web.elv.client.center.content.diagram.view.DiagramView;
+import org.reactome.web.elv.client.center.content.diagram.view.DiagramViewImpl;
+import org.reactome.web.elv.client.center.content.fireworks.presenter.FireworksPresenter;
+import org.reactome.web.elv.client.center.content.fireworks.view.FireworksView;
+import org.reactome.web.elv.client.center.content.fireworks.view.FireworksViewImpl;
 import org.reactome.web.elv.client.center.presenter.CenterPresenter;
 import org.reactome.web.elv.client.center.view.CenterView;
 import org.reactome.web.elv.client.center.view.CenterViewImpl;
@@ -16,9 +22,6 @@ import org.reactome.web.elv.client.common.events.ELVEventType;
 import org.reactome.web.elv.client.details.presenter.DetailsPresenter;
 import org.reactome.web.elv.client.details.view.DetailsView;
 import org.reactome.web.elv.client.details.view.DetailsViewImpl;
-import org.reactome.web.elv.client.center.content.diagram.presenter.DiagramPresenter;
-import org.reactome.web.elv.client.center.content.diagram.view.DiagramView;
-import org.reactome.web.elv.client.center.content.diagram.view.DiagramViewImpl;
 import org.reactome.web.elv.client.hierarchy.presenter.HierarchyPresenter;
 import org.reactome.web.elv.client.hierarchy.view.HierarchyView;
 import org.reactome.web.elv.client.hierarchy.view.HierarchyViewImpl;
@@ -81,7 +84,10 @@ public class AppController extends Controller {
                     AnalysisView analysisView = new AnalysisViewImpl();
                     new AnalysisPresenter(eventBus, analysisView);
 
-                    CenterView centerView = new CenterViewImpl(diagramView, analysisView);
+                    FireworksView fireworksView = new FireworksViewImpl();
+                    new FireworksPresenter(eventBus, fireworksView);
+
+                    CenterView centerView = new CenterViewImpl(diagramView, fireworksView, analysisView);
                     new CenterPresenter(eventBus, centerView);
                     //############ /CENTER CONTENT ###############
 
