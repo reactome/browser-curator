@@ -2,7 +2,6 @@ package org.reactome.web.elv.client.main.view;
 
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.Cookies;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.SplitLayoutPanel;
@@ -11,6 +10,8 @@ import org.reactome.web.elv.client.center.view.CenterView;
 import org.reactome.web.elv.client.common.utils.Console;
 import org.reactome.web.elv.client.details.view.DetailsView;
 import org.reactome.web.elv.client.hierarchy.view.HierarchyView;
+import org.reactome.web.elv.client.manager.messages.MessageObject;
+import org.reactome.web.elv.client.manager.messages.MessageType;
 import org.reactome.web.elv.client.topbar.view.TopBarView;
 
 /**
@@ -66,6 +67,7 @@ public class MainViewImpl implements IsWidget, MainView {
                 }catch (AssertionError error){
                     Console.error(getClass().getName() + " -> force layout failed");
                     error.printStackTrace();
+                    errorMessage("Changing the layout of the PathwayBrowser failed. ERROR: " + error.getMessage());
                 }
 
                 //Checking if the hierarchy panel has been resized
@@ -122,7 +124,11 @@ public class MainViewImpl implements IsWidget, MainView {
 
     @Override
     public void errorMessage(String message) {
-        Window.alert(message);
+        MessageObject msgObj = new MessageObject(message + "\n" +
+                "in ", getClass(), MessageType.INTERNAL_ERROR);
+        Console.error(getClass() + message);
+        this.presenter.errorMsg(msgObj);
+        //Window.alert(message);
     }
 
     private Integer getCookieValue(String cookie, Integer defaultValue){

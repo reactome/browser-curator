@@ -1,5 +1,6 @@
 package org.reactome.web.elv.client.common.analysis.helper;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.*;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
@@ -47,7 +48,8 @@ public abstract class AnalysisHelper {
                                 resourceSummaryMap.put(token, result.getResourceSummary());
                                 handler.onTokenAvailabilityChecked(true, null);
                             } catch (AnalysisModelException e) {
-                                Console.error(e.getMessage());
+                                //ToDo: Look into new Error Handling
+                                if(!GWT.isProdMode() && GWT.isClient()) Console.error(e.getMessage());
                             }
                             break;
                         case Response.SC_GONE:
@@ -61,11 +63,13 @@ public abstract class AnalysisHelper {
 
                 @Override
                 public void onError(Request request, Throwable exception) {
-                    Console.error(exception.getMessage());
+                    //ToDo: Look into new Error Handling
+                    if(!GWT.isProdMode() && GWT.isClient()) Console.error(exception.getMessage());
                 }
             });
         }catch (RequestException ex) {
-            Console.error(ex.getMessage());
+            //ToDo: Look into new Error Handling
+            if(!GWT.isProdMode() && GWT.isClient()) Console.error(ex.getMessage());
         }
     }
 
@@ -94,25 +98,30 @@ public abstract class AnalysisHelper {
                                 resourceSummaryMap.put(token, list);
                                 chooseResource(list, handler);
                             } catch (AnalysisModelException e) {
-                                Console.error(e.getMessage());
+                                //ToDo: Look into new Error Handling
+                                if(!GWT.isProdMode() && GWT.isClient()) Console.error(e.getMessage());
                             }
                             break;
                         case Response.SC_GONE:
-                            Console.error("Your result may have been deleted due to a new content release. " +
-                                          "Please submit your data again to obtain results for the latest version of our database");
+                            if(!GWT.isProdMode() && GWT.isClient()){
+                                Console.error("Your result may have been deleted due to a new content release. " +
+                                            "Please submit your data again to obtain results for the latest version of our database");
+                            }
                             break;
                         default:
-                            Console.error(response.getStatusText());
+                            if(!GWT.isProdMode() && GWT.isClient()) Console.error(response.getStatusText());
                     }
                 }
 
                 @Override
                 public void onError(Request request, Throwable exception) {
-                    Console.error(exception.getMessage());
+                    if(!GWT.isProdMode() && GWT.isClient()) Console.error(exception.getMessage());
+                    //ToDo: Look into new Error Handling
                 }
             });
         }catch (RequestException ex) {
-            Console.error(ex.getMessage());
+            if(!GWT.isProdMode() && GWT.isClient()) Console.error(ex.getMessage());
+            //ToDo: Look into new Error Handling
         }
     }
 

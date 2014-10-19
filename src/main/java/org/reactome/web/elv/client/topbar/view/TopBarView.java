@@ -21,7 +21,7 @@ public interface TopBarView {
 
     Widget asWidget();
     void allowBannerRedirection(boolean allow);
-    void selectSpecies(Species species);
+    void selectSpecies(Species species) throws Exception;
     void setButtonPressed(String btn, boolean pressed);
     void setPresenter(Presenter presenter);
     void setSpeciesList(List<Species> speciesList);

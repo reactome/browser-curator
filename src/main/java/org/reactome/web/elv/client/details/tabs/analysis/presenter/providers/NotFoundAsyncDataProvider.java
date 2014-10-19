@@ -11,6 +11,7 @@ import org.reactome.web.elv.client.common.analysis.factory.AnalysisModelExceptio
 import org.reactome.web.elv.client.common.analysis.factory.AnalysisModelFactory;
 import org.reactome.web.elv.client.common.analysis.helper.AnalysisHelper;
 import org.reactome.web.elv.client.common.analysis.model.IdentifierSummary;
+import org.reactome.web.elv.client.common.utils.Console;
 import org.reactome.web.elv.client.details.tabs.analysis.view.widgets.common.CustomPager;
 import org.reactome.web.elv.client.details.tabs.analysis.view.widgets.notfound.NotFoundTable;
 
@@ -53,17 +54,20 @@ public class NotFoundAsyncDataProvider extends AsyncDataProvider<IdentifierSumma
                         }
                         table.setRowData(pager.getPageStart(), notFound);
                     } catch (AnalysisModelException e) {
-                        System.err.println(e.getMessage());
+                        Console.error(e.getMessage());
+                        //ToDo: Look into new Error Handling
                     }
                 }
 
                 @Override
                 public void onError(Request request, Throwable exception) {
-                    System.err.println(exception.getMessage());
+                    Console.error(exception.getMessage());
+                    //ToDo: Look into new Error Handling
                 }
             });
         }catch (RequestException ex) {
-            System.err.println(ex.getMessage());
+            Console.error(ex.getMessage());
+            //ToDo: Look into new Error Handling
         }
     }
 

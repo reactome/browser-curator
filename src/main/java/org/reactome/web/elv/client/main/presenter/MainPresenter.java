@@ -6,6 +6,7 @@ import org.reactome.web.elv.client.common.Controller;
 import org.reactome.web.elv.client.common.EventBus;
 import org.reactome.web.elv.client.common.events.ELVEventType;
 import org.reactome.web.elv.client.main.view.MainView;
+import org.reactome.web.elv.client.manager.messages.MessageObject;
 
 /**
  * @author Antonio Fabregat <fabregat@ebi.ac.uk>
@@ -30,10 +31,11 @@ public class MainPresenter extends Controller implements MainView.Presenter {
 //    }
 
 
-    @Override
-    public void onStateManagerError(String message) {
-        this.view.errorMessage(message);
-    }
+//    @Override
+//    public void onStateManagerError(String message) {
+//        ToDo: Probably never used, see Controller
+//        this.view.errorMessage(message);
+//    }
 
     @Override
     public void onTopBarDetailsButtonToggled(ToggleButton btn) {
@@ -56,5 +58,10 @@ public class MainPresenter extends Controller implements MainView.Presenter {
             type = ELVEventType.DETAILS_PANEL_RESIZED;
         }
         this.eventBus.fireELVEvent(type, size);
+    }
+
+    @Override
+    public void errorMsg(MessageObject msgObj){
+        this.eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
     }
 }

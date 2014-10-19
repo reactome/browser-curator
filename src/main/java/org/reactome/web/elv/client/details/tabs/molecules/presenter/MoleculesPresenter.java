@@ -14,6 +14,7 @@ import org.reactome.web.elv.client.common.data.model.DatabaseObject;
 import org.reactome.web.elv.client.common.data.model.Event;
 import org.reactome.web.elv.client.common.data.model.Pathway;
 import org.reactome.web.elv.client.common.events.ELVEventType;
+import org.reactome.web.elv.client.manager.messages.MessageType;
 import org.reactome.web.elv.client.common.model.Pair;
 import org.reactome.web.elv.client.common.utils.Console;
 import org.reactome.web.elv.client.common.utils.MapSet;
@@ -25,6 +26,7 @@ import org.reactome.web.elv.client.details.tabs.molecules.model.data.PhysicalToR
 import org.reactome.web.elv.client.details.tabs.molecules.model.data.Result;
 import org.reactome.web.elv.client.details.tabs.molecules.model.type.PathwayType;
 import org.reactome.web.elv.client.details.tabs.molecules.view.MoleculesView;
+import org.reactome.web.elv.client.manager.messages.MessageObject;
 
 import java.util.*;
 
@@ -39,12 +41,12 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
     private Pathway currentPathway;
     private final LRUCache<Pathway, Result> cachePathway = new LRUCache<Pathway, Result>(15);
     private final LRUCache<Long, HashSet<Molecule>> cacheDbObj= new LRUCache<Long, HashSet<Molecule>>(10);
-    private final LRUCache<List<PhysicalToReferenceEntityMap>, List<Long>> cacheSubPathway
-            = new LRUCache<List<PhysicalToReferenceEntityMap>, List<Long>>(15);
+//    private final LRUCache<List<PhysicalToReferenceEntityMap>, List<Long>> cacheSubPathway
+//            = new LRUCache<List<PhysicalToReferenceEntityMap>, List<Long>>(15);
 
     private int count = 0;
     private List<PhysicalToReferenceEntityMap> toHighlight = new ArrayList<PhysicalToReferenceEntityMap>();
-    private List<Long> subPWtoHighlight = new ArrayList<Long>();
+//    private List<Long> subPWtoHighlight = new ArrayList<Long>();
 
     public MoleculesPresenter(EventBus eventBus, MoleculesView view) {
         super(eventBus);
@@ -153,76 +155,95 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
             requestBuilder.sendRequest(null, new RequestCallback() {
                 @Override
                 public void onResponseReceived(Request request, Response response) {
-                    JSONArray jsonArray = JSONParser.parseStrict(response.getText()).isArray();
-                    for(int i=0; i< jsonArray.size(); ++i){
-                        //Splitting necessary to get the set of referenceEntities that map to specific peID.
-                        String[] split = jsonArray.get(i).toString().split("\"refEntities\":");
+                    try {
+                        JSONArray jsonArray = JSONParser.parseStrict(response.getText()).isArray();
+                        for(int i=0; i< jsonArray.size(); ++i){
+                            //Splitting necessary to get the set of referenceEntities that map to specific peID.
+                            String[] split = jsonArray.get(i).toString().split("\"refEntities\":");
 
-                        //Getting the key.
-                        String subKey = split[0];
-                        subKey = subKey.substring(0, subKey.length()-2) + "}";
-                        JSONObject keyObj = JSONParser.parseStrict(subKey).isObject();
-                        PhysicalToReferenceEntityMap physicalEntity = new PhysicalToReferenceEntityMap(keyObj);
+                            //Getting the key.
+                            String subKey = split[0];
+                            subKey = subKey.substring(0, subKey.length()-2) + "}";
+                            JSONObject keyObj = JSONParser.parseStrict(subKey).isObject();
+                            PhysicalToReferenceEntityMap physicalEntity = new PhysicalToReferenceEntityMap(keyObj);
 
-                        //Getting the set of referenceEntities.
-                        String subSet = split[split.length - 1].subSequence(0, split[split.length - 1].length()-1).toString();
-                        JSONArray jsonArray2 = JSONParser.parseStrict(subSet).isArray();
-                        ArrayList<Molecule> refEntitySet = new ArrayList<Molecule>();
-                        for(int j = 0; j < jsonArray2.size(); ++j){
-                            JSONObject object = jsonArray2.get(j).isObject();
-                            refEntitySet.add(new Molecule(ModelFactory.getDatabaseObject(object).getSchemaClass(), object));
+                            //Getting the set of referenceEntities.
+                            String subSet = split[split.length - 1].subSequence(0, split[split.length - 1].length()-1).toString();
+                            JSONArray jsonArray2 = JSONParser.parseStrict(subSet).isArray();
+                            ArrayList<Molecule> refEntitySet = new ArrayList<Molecule>();
+                            for(int j = 0; j < jsonArray2.size(); ++j){
+                                JSONObject object = jsonArray2.get(j).isObject();
+                                refEntitySet.add(new Molecule(ModelFactory.getDatabaseObject(object).getSchemaClass(), object));
+                            }
+                            resultList.addAll(refEntitySet);
+                            mapSet.add(physicalEntity, refEntitySet);
                         }
-                        resultList.addAll(refEntitySet);
-                        mapSet.add(physicalEntity, refEntitySet);
-                    }
 
-                    //Counting the occurrences of each molecule.
-                    HashMap<Molecule, Integer> count = new HashMap<Molecule, Integer>();
-                    for(Molecule m : resultList){
-                        int value = 1;
-                        if(count.containsKey(m)){
-                            value = count.get(m) + 1;
+                        //Counting the occurrences of each molecule.
+                        HashMap<Molecule, Integer> count = new HashMap<Molecule, Integer>();
+                        for(Molecule m : resultList){
+                            int value = 1;
+                            if(count.containsKey(m)){
+                                value = count.get(m) + 1;
+                            }
+                            count.put(m, value);
                         }
-                        count.put(m, value);
-                    }
 
-                    resultList.clear();
+                        resultList.clear();
 
-                    //Storing the occurrence-information in attribute of molecule.
-                    for (Map.Entry<Molecule, Integer> entry : count.entrySet()) {
-                        Molecule key = entry.getKey();
-                        Integer value = entry.getValue();
-                        key.setOccurrenceInPathway(value);
-                        resultList.add(key);
-                    }
+                        //Storing the occurrence-information in attribute of molecule.
+                        for (Map.Entry<Molecule, Integer> entry : count.entrySet()) {
+                            Molecule key = entry.getKey();
+                            Integer value = entry.getValue();
+                            key.setOccurrenceInPathway(value);
+                            resultList.add(key);
+                        }
 
-                    Result result = new Result(resultList); //resultList is now duplicate-free.
-                    result.setPhyEntityToRefEntitySet(mapSet);
-                    cachePathway.put(currentPathway, result);
-                    if(currentPathway.getDbId().equals(currentDatabaseObject.getDbId())){
-                        result.highlight();
-                        view.setMoleculesData(result);
-                    }else{
-                        if(cacheDbObj.containsKey(currentDatabaseObject.getDbId())){
-                            useExistingReactionParticipants(result, false);
+                        Result result = new Result(resultList); //resultList is now duplicate-free.
+                        result.setPhyEntityToRefEntitySet(mapSet);
+                        cachePathway.put(currentPathway, result);
+                        if(currentPathway.getDbId().equals(currentDatabaseObject.getDbId())){
+                            result.highlight();
+                            view.setMoleculesData(result);
                         }else{
-                            getReactionParticipants(result, urlReaction, false, false);
+                            if(cacheDbObj.containsKey(currentDatabaseObject.getDbId())){
+                                useExistingReactionParticipants(result, false);
+                            }else{
+                                getReactionParticipants(result, urlReaction, false, false);
+                            }
                         }
+                    }catch (Exception ex){
+                        //ModelFactoryException, NullPointerException, IllegalArgumentException, JSONException
+                        MessageObject msgObj = new MessageObject("The received object containing the Molecules for " +
+                                currentPathway.getName() + "\nis empty or faulty and could not be parsed.\n" +
+                                "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
+                        eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                        Console.error(getClass() + " ERROR: " + ex.getMessage());
+                        view.setInitialState();
                     }
                 }
 
                 @Override
                 public void onError(Request request, Throwable exception) {
-                    //TODO
-                    Console.error(PREFIX + "Sorry, getPathwayParticipants received an error instead of a response");
+                    Console.error(PREFIX + "The request for the object containing the Molecules for\n'" +
+                            currentPathway.getName() + "' received an error instead of a response");
                     if(!GWT.isScript()){
                         Console.error(getClass() + exception.getMessage());
                     }
+
+                    MessageObject msgObj = new MessageObject("The required data could not be received.\n" +
+                            "ERROR: " + exception.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
+                    eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                    view.setInitialState();
                 }
             });
         } catch (RequestException ex) {
-            //TODO
-            Console.error(PREFIX + "Sorry, getPathwayParticipants caught an error!" );
+            MessageObject msgObj = new MessageObject("The received object containing the Molecules for " +
+                    currentPathway.getName() + "\nis empty or faulty and could not be parsed.\n" +
+                    "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
+            eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+            Console.error(PREFIX + " getPathwayParticipants caught an error! " + ex.getMessage());
+            view.setInitialState();
         }
     }
 
@@ -240,40 +261,63 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
             requestBuilder.sendRequest(null, new RequestCallback() {
 
                 public void onResponseReceived(Request request, Response response) {
-                    // Parsing the result text to a JSONArray because a reaction can contain many elements.
-                    JSONArray jsonArray = JSONParser.parseStrict(response.getText()).isArray();
+                    try {
+                        // Parsing the result text to a JSONArray because a reaction can contain many elements.
+                        JSONArray jsonArray = JSONParser.parseStrict(response.getText()).isArray();
 
-                    Molecule molecule;
-                    HashSet<Molecule> molecules = new HashSet<Molecule>();
-                    for(int i=0; i<jsonArray.size(); ++i){
-                        JSONObject object = jsonArray.get(i).isObject();
-                        molecule = new Molecule(ModelFactory.getDatabaseObject(object).getSchemaClass(), object);
-                        result.highlight(molecule);
-                        molecules.add(molecule);
-                    }
-                    cacheDbObj.put(currentDatabaseObject.getDbId(), molecules);
+                        Molecule molecule;
+                        HashSet<Molecule> molecules = new HashSet<Molecule>();
+                        for(int i=0; i<jsonArray.size(); ++i){
+                            JSONObject object = jsonArray.get(i).isObject();
+                            molecule = new Molecule(ModelFactory.getDatabaseObject(object).getSchemaClass(), object);
+                            result.highlight(molecule);
+                            molecules.add(molecule);
+                        }
+                        cacheDbObj.put(currentDatabaseObject.getDbId(), molecules);
 
-                    if(update){
-                        view.updateMoleculesData(result);
-                    }else if(refreshTitle){
-                        view.refreshTitle(result.getNumberOfHighlightedMolecules(), result.getNumberOfMolecules());
-                    }else {
+                        if(update){
+                            view.updateMoleculesData(result);
+                        }else if(refreshTitle){
+                            view.refreshTitle(result.getNumberOfHighlightedMolecules(), result.getNumberOfMolecules());
+                        }else {
+                            view.setMoleculesData(result);
+                        }
+
+                    }catch (Exception ex){
+                        //ModelFactoryException, NullPointerException, IllegalArgumentException, JSONException
+                        MessageObject msgObj = new MessageObject("The received object is empty or faulty " +
+                                "and the Molecules for\n'" + currentDatabaseObject.getDisplayName() + "' could not be parsed.\n" +
+                                "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
+                        eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                        Console.error(getClass() + " ERROR: " + ex.getMessage());
+                        result.highlight();
                         view.setMoleculesData(result);
                     }
+
                 }
 
                 @Override
                 public void onError(Request request, Throwable exception) {
-                    //TODO
-                    Console.error(PREFIX + "Sorry, getReactionParticipants received an error instead of a response");
                     if(!GWT.isScript()){
-                        Console.error(getClass() + exception.getMessage());
+                        Console.error(getClass() + " " + PREFIX + "getPathwayParticipants received an error instead of a response. "
+                                + exception.getMessage());
                     }
+
+                    MessageObject msgObj = new MessageObject("The request received an error instead of a valid response.\n" +
+                            "ERROR: " + exception.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
+                    eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                    result.highlight();
+                    view.setMoleculesData(result);
                 }
             });
         } catch (RequestException ex) {
-            //TODO
-            Console.error(PREFIX + "Sorry, getReactionParticipants caught an error!" );
+            MessageObject msgObj = new MessageObject("The Molecules for '" + currentDatabaseObject.getDisplayName() +
+                    "' could not be received.\n" +
+                    "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
+            eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+            Console.error(PREFIX + " getPathwayParticipants caught an error! " + ex.getMessage());
+            result.highlight();
+            view.setMoleculesData(result);
         }
     }
 
@@ -303,12 +347,12 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
         PathwayType type = determineType();
         if(type.equals(PathwayType.NGB)){
             selectEntity();
-        }else if (type.equals(PathwayType.OGB)){
-            if(!cacheSubPathway.containsKey(toHighlight)){
-                pathwaysForEntities();
-            }else{
-                onSelectSubpathway();
-            }
+//        }else if (type.equals(PathwayType.OGB)){
+//            if(!cacheSubPathway.containsKey(toHighlight)){
+//                pathwaysForEntities();
+//            }else{
+//                onSelectSubpathway();
+//            }
         }else{ //CGB
             String msg = "Functionality not yet available for this Diagram";
             view.setLoadingMsg(msg);
@@ -317,8 +361,11 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
                 @Override
                 public void run() {
                     GWT.runAsync(new RunAsyncCallback() {
-                        public void onFailure(Throwable caught) {
-                            Console.warn("Ups, something went wrong in Molecules Tab. Take a look at MoleculesPresenter > moleculeSelected.");
+                        public void onFailure(Throwable exception) {
+                            MessageObject msgObj = new MessageObject("Error while trying to run AsyncCallback and clear loading Msg.\n" +
+                                    "ERROR: " + exception.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
+                            eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                            Console.warn("Something went wrong in Molecules Tab. Take a look at MoleculesPresenter > moleculeSelected.");
                         }
 
                         public void onSuccess() {
@@ -363,116 +410,142 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
         return pt;
     }
 
-    /**
-     * Post all pDbIds from toHighlight to get a list of pathways that contain all elements.
-     */
-    private void pathwaysForEntities() {
-        String url = "/ReactomeRESTfulAPI/RESTfulWS/pathwaysForEntities/";
-        RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.POST, url);
-        requestBuilder.setHeader("Content-Type", "text/plain");
-        requestBuilder.setHeader("Accept", "application/json");
-
-        try {
-            String post = "ID=";
-            for(PhysicalToReferenceEntityMap entity : toHighlight){
-                post += entity.getPeDbId() + ",";
-            }
-            requestBuilder.sendRequest(post, new RequestCallback() {
-
-                @Override
-                public void onResponseReceived(Request request, Response response) {
-                    JSONArray list = JSONParser.parseStrict(response.getText()).isArray();
-
-                    ArrayList<Pathway> pathways = new ArrayList<Pathway>();
-                    for(int i=0; i<list.size(); ++i){
-                        JSONObject object = list.get(i).isObject();
-                        pathways.add(new Pathway(object));
-                    }
-
-//                    TODO: How about handling molecules that exist in gb as well as in currently displayed diagram?!
-                    for (Pathway pathway : pathways) {
-                        queryEventAncestors(pathway.getDbId());
-                    }
-                }
-
-                @Override
-                public void onError(Request request, Throwable exception) {
-                    //TODO
-                    Console.error(PREFIX + "Sorry, pathwaysForEntities received an error instead of a response");
-                    if(!GWT.isScript()){
-                        Console.error(getClass() + exception.getMessage());
-                    }
-                }
-
-            });
-        } catch (RequestException ex) {
-            //TODO
-            Console.error(PREFIX + "Sorry, pathwaysForEntities received an error instead of a response");
-        }
-    }
-
-    /**
-     * Get a partial hierachry for a specific (sub)pathway. If a (sub)pathway in hierarchy that is one level
-     * below the currently displayed one exists than highlight it in the Diagram. If it does not exist the
-     * toHighlight elements should be found in the currently displayed Diagram.
-     * @param dbId pDbId of subpathway
-     */
-    private void queryEventAncestors(Long dbId) {
-        RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, "/ReactomeRESTfulAPI/RESTfulWS/queryEventAncestors/" + dbId);
-        requestBuilder.setHeader("Accept", "application/json");
-
-        try {
-            requestBuilder.sendRequest(null, new RequestCallback() {
-
-                public void onResponseReceived(Request request, Response response) {
-                    JSONArray list = JSONParser.parseStrict(response.getText()).isArray();
-
-                    //Creating a list of pathways (that are above the one that contains all toHighlight)
-                    ArrayList<Pathway> pathways = new ArrayList<Pathway>();
-                    for(int i=0; i<list.size(); ++i){
-                        JSONObject object = list.get(i).isObject();
-                        JSONArray array = (JSONArray) object.get("databaseObject");
-
-                        for(int j=0; j<array.size(); ++j){
-                            JSONObject pw = array.get(j).isObject();
-                            pathways.add(new Pathway(pw));
-                        }
-                    }
-
-//                    if(pathways.toString().contains(currentPathway.getDbId().toString())){
-                    for(int i = 0; i < pathways.size(); i++){
-                        if(currentPathway.getDbId().equals(pathways.get(i).getDbId())){
-                            if(i+1 < pathways.size() && pathways.get(i+1).getHasDiagram()){
-                                subPWtoHighlight.add(pathways.get(i + 1).getDbId());
-                                cacheSubPathway.put(toHighlight, subPWtoHighlight);
-                                try {
-                                    onSelectSubpathway();
-                                }catch (Exception e){
-                                    selectEntity();
-                                }
-                            }else{
-                                //Entity in CUGB diagram
-                                selectEntity();
-//                                return;
-                            }
-                        }
-                    }
-                }
-
-                @Override
-                public void onError(Request request, Throwable exception) {
-                    //TODO
-                    Console.error(PREFIX + "Sorry, queryEventAncestors received an error instead of a response");
-                    if(!GWT.isScript()){
-                        Console.error(getClass() + exception.getMessage());
-                    }
-                }
-            });
-        } catch (RequestException ex) {
-            //TODO
-            Console.error(PREFIX + "Sorry, queryEventAncestors caught an error!" );
-        }
-    }
+//    /**
+//     * Post all pDbIds from toHighlight to get a list of pathways that contain all elements.
+//     */
+//    private void pathwaysForEntities() {
+//        String url = "/ReactomeRESTfulAPI/RESTfulWS/pathwaysForEntities/";
+//        RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.POST, url);
+//        requestBuilder.setHeader("Content-Type", "text/plain");
+//        requestBuilder.setHeader("Accept", "application/json");
+//
+//        try {
+//            String post = "ID=";
+//            for(PhysicalToReferenceEntityMap entity : toHighlight){
+//                post += entity.getPeDbId() + ",";
+//            }
+//            requestBuilder.sendRequest(post, new RequestCallback() {
+//
+//                @Override
+//                public void onResponseReceived(Request request, Response response) {
+//                    try{
+//                        JSONArray list = JSONParser.parseStrict(response.getText()).isArray();
+//
+//                        ArrayList<Pathway> pathways = new ArrayList<Pathway>();
+//                        for(int i=0; i<list.size(); ++i){
+//                            JSONObject object = list.get(i).isObject();
+//                            pathways.add(new Pathway(object));
+//                        }
+//
+//                        //TODO: How about handling molecules that exist in gb as well as in currently displayed diagram?!
+//                        for (Pathway pathway : pathways) {
+//                            queryEventAncestors(pathway.getDbId());
+//                        }
+//                    }catch (Exception ex){
+//                        //ModelFactoryException, NullPointerException, IllegalArgumentException, JSONException
+//                        MessageObject msgObj = new MessageObject("The received object is empty or faulty and could not be parsed.\n" +
+//                                "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
+//                        eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+//                        Console.error(getClass() + " ERROR: " + ex.getMessage());
+//                    }
+//
+//                }
+//
+//                @Override
+//                public void onError(Request request, Throwable exception) {
+//                    if(!GWT.isScript()){
+//                        Console.error(getClass() + " ERROR: " + exception.getMessage());
+//                    }
+//
+//                    MessageObject msgObj = new MessageObject("The request received an error instead of a valid response.\n" +
+//                            "ERROR: " + exception.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
+//                    eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+//                }
+//
+//            });
+//        } catch (RequestException ex) {
+//            MessageObject msgObj = new MessageObject("The required data could not be received.\n" +
+//                    "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
+//            eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+//            Console.warn("Something went wrong in Molecules Tab: " + ex.getMessage());
+//        }
+//    }
+//
+//    /**
+//     * Get a partial hierachry for a specific (sub)pathway. If a (sub)pathway in hierarchy that is one level
+//     * below the currently displayed one exists than highlight it in the Diagram. If it does not exist the
+//     * toHighlight elements should be found in the currently displayed Diagram.
+//     * @param dbId pDbId of subpathway
+//     */
+//    private void queryEventAncestors(Long dbId) {
+//        RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, "/ReactomeRESTfulAPI/RESTfulWS/queryEventAncestors/" + dbId);
+//        requestBuilder.setHeader("Accept", "application/json");
+//
+//        try {
+//            requestBuilder.sendRequest(null, new RequestCallback() {
+//
+//                public void onResponseReceived(Request request, Response response) {
+//                    try{
+//                        JSONArray list = JSONParser.parseStrict(response.getText()).isArray();
+//
+//                        //Creating a list of pathways (that are above the one that contains all toHighlight)
+//                        ArrayList<Pathway> pathways = new ArrayList<Pathway>();
+//                        for(int i=0; i<list.size(); ++i){
+//                            JSONObject object = list.get(i).isObject();
+//                            JSONArray array = (JSONArray) object.get("databaseObject");
+//
+//                            for(int j=0; j<array.size(); ++j){
+//                                JSONObject pw = array.get(j).isObject();
+//                                pathways.add(new Pathway(pw));
+//                            }
+//                        }
+//
+////                    if(pathways.toString().contains(currentPathway.getDbId().toString())){
+//                        for(int i = 0; i < pathways.size(); i++){
+//                            if(currentPathway.getDbId().equals(pathways.get(i).getDbId())){
+//                                if(i+1 < pathways.size() && pathways.get(i+1).getHasDiagram()){
+//                                    subPWtoHighlight.add(pathways.get(i + 1).getDbId());
+//                                    cacheSubPathway.put(toHighlight, subPWtoHighlight);
+//                                    try {
+//                                        onSelectSubpathway();
+//                                    }catch (Exception e){
+//                                        selectEntity();
+//                                    }
+//                                }else{
+//                                    //Entity in CUGB diagram
+////                                selectEntity();
+////                                return;
+//                                }
+//                            }
+//                        }
+//                    }catch (Exception ex){
+//                        //ModelFactoryException, NullPointerException, IllegalArgumentException, JSONException
+//                        MessageObject msgObj = new MessageObject("The received object is empty or faulty and could not be parsed.\n" +
+//                                "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
+//                        eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+//                        Console.error(getClass() + " ERROR: " + ex.getMessage());
+//                    }
+//
+//                }
+//
+//                @Override
+//                public void onError(Request request, Throwable exception) {
+//                    if(!GWT.isScript()){
+//                        Console.error(getClass() + " ERROR: " + exception.getMessage());
+//                    }
+//
+//                    MessageObject msgObj = new MessageObject("The request received an error instead of a valid response.\n" +
+//                            "ERROR: " + exception.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
+//                    eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+//                }
+//            });
+//        } catch (RequestException ex) {
+//            MessageObject msgObj = new MessageObject("The required data could not be received.\n" +
+//                    "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
+//            eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+//            Console.warn("Something went wrong in Molecules Tab: " + ex.getMessage());
+//        }
+//    }
 
     /**
      * Select a specific entity (identified by its peDbId) in the Diagram.
@@ -490,18 +563,18 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
         view.clearLoadingMsg();
     }
 
-    /**
-     * Select a specific subpathway (which contains all toHighlight) in the Diagram.
-     */
-    private void onSelectSubpathway() {
-        //After all queryEventAncestors have been found => highlightSubPW();
-        if(cacheSubPathway.containsKey(toHighlight) && cacheSubPathway.get(toHighlight).size() > count){
-            Pair<Long, ELVEventType> tuple = new Pair<Long, ELVEventType>(cacheSubPathway.get(toHighlight).get(count), ELVEventType.DIAGRAM_ENTITY_SELECTED);
-            eventBus.fireELVEvent(ELVEventType.DATABASE_OBJECT_REQUIRED, tuple);
-            ++count;
-        }
-        view.clearLoadingMsg();
-    }
+//    /**
+//     * Select a specific subpathway (which contains all toHighlight) in the Diagram.
+//     */
+//    private void onSelectSubpathway() {
+//        //After all queryEventAncestors have been found => highlightSubPW();
+//        if(cacheSubPathway.containsKey(toHighlight) && cacheSubPathway.get(toHighlight).size() > count){
+//            Pair<Long, ELVEventType> tuple = new Pair<Long, ELVEventType>(cacheSubPathway.get(toHighlight).get(count), ELVEventType.DIAGRAM_ENTITY_SELECTED);
+//            eventBus.fireELVEvent(ELVEventType.DATABASE_OBJECT_REQUIRED, tuple);
+//            ++count;
+//        }
+//        view.clearLoadingMsg();
+//    }
 
     /**
      * Enables tracking the frequency users use available download.

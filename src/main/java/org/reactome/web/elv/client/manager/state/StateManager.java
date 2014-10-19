@@ -15,9 +15,10 @@ import org.reactome.web.elv.client.common.data.model.Pathway;
 import org.reactome.web.elv.client.common.data.model.Species;
 import org.reactome.web.elv.client.common.events.ELVEventType;
 import org.reactome.web.elv.client.common.model.Path;
-import org.reactome.web.elv.client.common.widgets.DialogBoxFactory;
 import org.reactome.web.elv.client.details.model.DetailsTabType;
 import org.reactome.web.elv.client.details.tabs.analysis.events.AnalysisTabPathwaySelected;
+import org.reactome.web.elv.client.manager.messages.MessageObject;
+import org.reactome.web.elv.client.manager.messages.MessageType;
 
 import java.util.LinkedList;
 
@@ -63,7 +64,12 @@ public class StateManager extends Controller implements ValueChangeHandler<Strin
     }
 
     private void goToWrongState(String token){
-        this.eventBus.fireELVEvent(ELVEventType.STATE_MANAGER_WRONG_STATE, token);
+        //ToDo: Replacement okay?
+        //replaced this.eventBus.fireELVEvent(ELVEventType.STATE_MANAGER_WRONG_STATE, token);
+        //with message from implementation of onStateManagerWrongStateReached in MsgManager
+        MessageObject msgObj = new MessageObject("URL Token error: " + token + " is not build properly.\n" +
+                "Please check it complies with the format.", getClass(), MessageType.INTERNAL_ERROR);
+        this.eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
         History.newItem("");
     }
 
@@ -135,7 +141,9 @@ public class StateManager extends Controller implements ValueChangeHandler<Strin
                             eventBus.fireELVEvent(ELVEventType.STATE_MANAGER_ANALYSIS_TOKEN_SELECTED, token);
                         }else{
                             eventBus.fireELVEvent(ELVEventType.STATE_MANAGER_ANALYSIS_TOKEN_RESET);
-                            DialogBoxFactory.alert("Analysis", message);
+                            MessageObject msgObj = new MessageObject("Analysis: " + message, getClass(), MessageType.INTERNAL_ERROR);
+                            eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                            //DialogBoxFactory.alert("Analysis", message);
                         }
                     }
                 });

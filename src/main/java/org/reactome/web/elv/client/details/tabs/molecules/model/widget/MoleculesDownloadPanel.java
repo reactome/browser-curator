@@ -3,15 +3,15 @@ package org.reactome.web.elv.client.details.tabs.molecules.model.widget;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
 import org.reactome.web.elv.client.common.ReactomeImages;
+import org.reactome.web.elv.client.common.widgets.DialogBoxFactory;
+import org.reactome.web.elv.client.common.widgets.button.CustomButton;
 import org.reactome.web.elv.client.details.model.widgets.TextPanel;
 import org.reactome.web.elv.client.details.tabs.molecules.model.data.Molecule;
 import org.reactome.web.elv.client.details.tabs.molecules.model.data.Result;
 import org.reactome.web.elv.client.details.tabs.molecules.model.type.PropertyType;
 import org.reactome.web.elv.client.details.tabs.molecules.view.MoleculesView;
-import org.reactome.web.elv.client.common.widgets.button.CustomButton;
 
 import java.util.HashSet;
 
@@ -146,7 +146,7 @@ public class MoleculesDownloadPanel extends DockLayoutPanel {
                         && (typeTB.getValue() || nameTB.getValue() || identifierTB.getValue())){
                     alertDownload(textArea.getText());
                 }else{
-                    Window.alert("You are trying to download an empty file.\n" +
+                    DialogBoxFactory.alert("Molecules Download", "You are trying to download an empty file.\n" +
                             "Please select at least one type of molecules AND one field for the download.");
                 }
                 presenter.moleculeDownloadStarted();

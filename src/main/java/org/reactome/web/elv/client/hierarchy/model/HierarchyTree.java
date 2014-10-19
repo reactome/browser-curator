@@ -57,7 +57,7 @@ public class HierarchyTree extends CustomTree {
         }
     }
 
-    public HierarchyItem getHierarchyItemByDatabaseObject(List<Long> path, DatabaseObject databaseObject){
+    public HierarchyItem getHierarchyItemByDatabaseObject(List<Long> path, DatabaseObject databaseObject) throws Exception{
         // path CAN be null IMPORTANT!
         if(path==null){
             path = new LinkedList<Long>();
@@ -74,6 +74,7 @@ public class HierarchyTree extends CustomTree {
         }
         if(item==null){
             Console.error(getClass() + " -> " + databaseObject + " not found in " + path);
+            throw new NullPointerException(getClass() + " could not find " + databaseObject + " in " + path);
         }
         return item;
     }
@@ -102,7 +103,7 @@ public class HierarchyTree extends CustomTree {
         return rtn;
     }
 
-    public void loadPathwayChildren(List<Long> path, DatabaseObject databaseObject, List<Event> children){
+    public void loadPathwayChildren(List<Long> path, DatabaseObject databaseObject, List<Event> children) throws Exception{
         HierarchyItem item=null;
         if(databaseObject!=null){
             item = getHierarchyItemByDatabaseObject(path, databaseObject);

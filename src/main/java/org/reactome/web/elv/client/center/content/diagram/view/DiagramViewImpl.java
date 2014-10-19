@@ -177,6 +177,7 @@ public class DiagramViewImpl implements DiagramView, SelectionEventHandler, Path
 
     @Override
     public void onSubpathwaySelection(SubpathwaySelectionEvent e) {
+        //ToDo: Not used => remove?
         this.presenter.subpathwaySelected(e.getDiagramPathwayId(), e.getSubpathwayId());
     }
 

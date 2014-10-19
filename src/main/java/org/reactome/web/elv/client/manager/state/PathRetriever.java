@@ -43,20 +43,24 @@ public abstract class PathRetriever {
             requestBuilder.sendRequest(null, new RequestCallback() {
                 @Override
                 public void onResponseReceived(Request request, Response response) {
-                    JSONArray list = JSONParser.parseStrict(response.getText()).isArray();
-                    Ancestors ancestors = new Ancestors(list);
-                    List<Path> paths = getPathsWithoutOrphanPathways(ancestors.getPathsContaining(event));
-                    handler.onPathsRetrieved(paths);
+                    try {
+                        JSONArray list = JSONParser.parseStrict(response.getText()).isArray();
+                        Ancestors ancestors = new Ancestors(list);
+                        List<Path> paths = getPathsWithoutOrphanPathways(ancestors.getPathsContaining(event));
+                        handler.onPathsRetrieved(paths);
+                    }catch (Exception ex){
+                        //ToDo: Look into new Error Handling
+                    }
                 }
 
                 @Override
                 public void onError(Request request, Throwable exception) {
-                    //ToDo
+                    //ToDo: Look into new Error Handling
                 }
             });
         }
         catch (RequestException ex) {
-            //ToDo
+            //ToDo: Look into new Error Handling
         }
     }
 }

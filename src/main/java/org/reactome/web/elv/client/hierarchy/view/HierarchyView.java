@@ -6,6 +6,7 @@ import org.reactome.web.elv.client.common.data.model.Event;
 import org.reactome.web.elv.client.common.data.model.Pathway;
 import org.reactome.web.elv.client.common.data.model.Species;
 import org.reactome.web.elv.client.common.model.Path;
+import org.reactome.web.elv.client.manager.messages.MessageObject;
 
 import java.util.List;
 import java.util.Set;
@@ -19,16 +20,17 @@ public interface HierarchyView {
         void getAnalysisData(Set<Long> eventIds, Set<Long> pathwaysWithReactions);
         void hierarchyReady();
         void pathwayExpanded(Pathway pathway);
+        void errorMsg(MessageObject msgObj);
 	}
 
     Widget asWidget();
     void clearAnalysisResult();
-    void expandPathway(Path path, Pathway pathway);
+    void expandPathway(Path path, Pathway pathway) throws Exception;
     Set<Long> getContainedEventIds();
     Set<Long> getHierarchyPathwaysWithReactionsLoaded();
-    void highlightPath(Path path, Pathway pathway, Event event);
+    void highlightPath(Path path, Pathway pathway, Event event) throws Exception;
     void highlightHitReactions(Set<Long> reactionsHit);
-    void loadItemChildren(Species species, Path path, Pathway pathway, List<Event> children);
+    void loadItemChildren(Species species, Path path, Pathway pathway, List<Event> children) throws Exception;
     void showHierarchyForSpecies(Species species);
     void showAnalysisResult(List<PathwaySummary> pathwaySummaries);
     void setInitialState();

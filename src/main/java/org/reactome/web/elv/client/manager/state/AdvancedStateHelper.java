@@ -64,19 +64,23 @@ public class AdvancedStateHelper {
                 requestBuilder.sendRequest(null, new RequestCallback() {
                     @Override
                     public void onResponseReceived(Request request, Response response) {
-                        String text = response.getText();
-                        JSONObject json = JSONParser.parseStrict(text).isObject();
-                        DatabaseObject databaseObject = ModelFactory.getDatabaseObject(json);
-                        setDatabaseObject(key, databaseObject);
+                        try{
+                            String text = response.getText();
+                            JSONObject json = JSONParser.parseStrict(text).isObject();
+                            DatabaseObject databaseObject = ModelFactory.getDatabaseObject(json);
+                            setDatabaseObject(key, databaseObject);
+                        }catch (Exception ex){
+                            //ToDo: Look into new Error Handling
+                        }
                     }
 
                     @Override
                     public void onError(Request request, Throwable exception) {
-                        //TODO
+                        //ToDo: Look into new Error Handling
                     }
                 });
             } catch (RequestException ex) {
-                //TODO
+                //ToDo: Look into new Error Handling
             }
         }
     }
@@ -111,20 +115,25 @@ public class AdvancedStateHelper {
                     public void onResponseReceived(Request request, Response response) {
                         JSONArray list = JSONParser.parseStrict(response.getText()).isArray();
                         for (int i = 0; i < list.size(); ++i) {
-                            JSONObject object = list.get(i).isObject();
-                            DatabaseObject aux = ModelFactory.getDatabaseObject(object);
-                            cache(aux);
+                            try {
+                                JSONObject object = list.get(i).isObject();
+                                DatabaseObject aux = ModelFactory.getDatabaseObject(object);
+                                cache(aux);
+                            }catch (Exception ex){
+                                //ToDo: Look into new Error Handling
+                            }
+
                         }
                         state.setPath(getPathFromCache(identifiers));
                     }
 
                     @Override
                     public void onError(Request request, Throwable exception) {
-                        //TODO
+                        //ToDo: Look into new Error Handling
                     }
                 });
             } catch (RequestException ex) {
-                //TODO
+                //ToDo: Look into new Error Handling
             }
         }
     }

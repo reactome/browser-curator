@@ -6,9 +6,12 @@ import org.reactome.web.elv.client.common.EventBus;
 import org.reactome.web.elv.client.common.data.model.DatabaseObject;
 import org.reactome.web.elv.client.common.data.model.Pathway;
 import org.reactome.web.elv.client.common.events.ELVEventType;
+import org.reactome.web.elv.client.common.utils.Console;
 import org.reactome.web.elv.client.details.model.DetailsTabType;
 import org.reactome.web.elv.client.details.tabs.DetailsTabView;
 import org.reactome.web.elv.client.details.tabs.downloads.view.DownloadsView;
+import org.reactome.web.elv.client.manager.messages.MessageObject;
+import org.reactome.web.elv.client.manager.messages.MessageType;
 
 /**
  * @author Antonio Fabregat <fabregat@ebi.ac.uk>
@@ -17,7 +20,7 @@ public class DownloadsPresenter extends Controller implements DownloadsView.Pres
 
     private DownloadsView view;
 
-    public DownloadsPresenter(EventBus eventBus, final DownloadsView view) {
+    public DownloadsPresenter(final EventBus eventBus, final DownloadsView view) {
         super(eventBus);
         this.view = view;
         this.view.setPresenter(this);
@@ -35,11 +38,23 @@ public class DownloadsPresenter extends Controller implements DownloadsView.Pres
                 @Override
                 public void onError(Request request, Throwable exception) {
                     view.setDbName("NO_DB_RETRIEVED");
+                    MessageObject msgObj = new MessageObject("The required data about the used DB could not be received.\n" +
+                            "There might be problems if a download is started.\n" +
+                            "ERROR: " + exception.getMessage(), getClass(), MessageType.INTERNAL_WARNING);
+                    eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                    Console.error(getClass() + " ERROR: " + exception.getMessage());
+                    view.setInitialState();
                 }
             });
         }
         catch (RequestException ex) {
             view.setDbName("NO_DB_RETRIEVED");
+            MessageObject msgObj = new MessageObject("The required data about the used DB could not be received.\n" +
+                    "There might be problems if a download is started.\n" +
+                    "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_WARNING);
+            eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+            Console.error(getClass() + " ERROR: " + ex.getMessage());
+            view.setInitialState();
         }
     }
 

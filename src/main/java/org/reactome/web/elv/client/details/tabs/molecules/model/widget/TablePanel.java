@@ -70,7 +70,7 @@ class TablePanel extends Composite implements OpenHandler<DisclosurePanel>, Clos
             public void run() {
                 GWT.runAsync(new RunAsyncCallback() {
                     public void onFailure(Throwable caught) {
-                        Console.warn("Ups, something went wrong in Molecules Tab. Take a look at TablePanel > onOpen.");
+                        Console.warn(getClass() + ": The data for the moleculesTable could not be set or updated");
                     }
 
                     public void onSuccess() {

@@ -32,21 +32,25 @@ public class StableIdentifierLoader implements PathRetriever.PathHandler {
             requestBuilder.sendRequest(null, new RequestCallback() {
                 @Override
                 public void onResponseReceived(Request request, Response response) {
-                    String text = response.getText();
-                    JSONObject json = JSONParser.parseStrict(text).isObject();
-                    DatabaseObject databaseObject = ModelFactory.getDatabaseObject(json);
-                    if(databaseObject instanceof Event){
-                        loadData((Event) databaseObject);
+                    try{
+                        String text = response.getText();
+                        JSONObject json = JSONParser.parseStrict(text).isObject();
+                        DatabaseObject databaseObject = ModelFactory.getDatabaseObject(json);
+                        if(databaseObject instanceof Event){
+                            loadData((Event) databaseObject);
+                        }
+                    }catch (Exception ex){
+                        //ToDo: Look into new Error Handling
                     }
                 }
 
                 @Override
                 public void onError(Request request, Throwable exception) {
-                    //TODO
+                    //ToDo: Look into new Error Handling
                 }
             });
         } catch (RequestException ex) {
-            //TODO
+            //ToDo: Look into new Error Handling
         }
     }
 

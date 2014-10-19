@@ -57,7 +57,7 @@ public class SpeciesSelectorPanel extends HorizontalPanel {
         }
     }
 
-    public void selectSpecies(Species species) {
+    public void selectSpecies(Species species) throws Exception {
         Long speciesId = species.getDbId();
         int index = -1;
         for(int i=0; i<this.speciesList.size(); i++){
@@ -70,6 +70,7 @@ public class SpeciesSelectorPanel extends HorizontalPanel {
             this.species.setSelectedIndex(index);
         }else{
             Console.error(getClass() + " selectSpecies >> index == -1");
+            throw new Exception(getClass() + " No species found, index for selectSpecies == -1");
         }
     }
 }

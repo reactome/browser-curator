@@ -5,15 +5,14 @@ import org.reactome.web.elv.client.center.content.analysis.event.AnalysisComplet
 import org.reactome.web.elv.client.center.content.analysis.event.AnalysisErrorEvent;
 import org.reactome.web.elv.client.center.model.CenterToolType;
 import org.reactome.web.elv.client.common.data.model.*;
-import org.reactome.web.elv.client.common.events.ELVEvent;
-import org.reactome.web.elv.client.common.events.ELVEventHandler;
-import org.reactome.web.elv.client.common.events.ELVEventType;
+import org.reactome.web.elv.client.common.events.*;
 import org.reactome.web.elv.client.common.model.Pair;
 import org.reactome.web.elv.client.common.model.Path;
 import org.reactome.web.elv.client.details.events.DetailsSelection;
 import org.reactome.web.elv.client.details.model.DetailsTabType;
 import org.reactome.web.elv.client.details.tabs.analysis.events.AnalysisTabPathwaySelected;
 import org.reactome.web.elv.client.hierarchy.model.HierarchySelection;
+import org.reactome.web.elv.client.manager.messages.MessageObject;
 import org.reactome.web.elv.client.manager.state.AdvancedState;
 import org.reactome.web.elv.client.manager.state.StateSelection;
 import org.reactome.web.elv.client.manager.tour.TourStage;
@@ -167,9 +166,9 @@ public abstract class Controller implements ELVEventHandler {
                 break;
 
                     /* DATA MANAGER EVENTS*/
-            case DATA_MANAGER_LOAD_ERROR:
-                onDataManagerLoadError((String) obj);
-                break;
+//            case DATA_MANAGER_LOAD_ERROR://ToDo: No longer in use
+//                onDataManagerLoadError((String) obj);//Nowhere implemented
+//                break;
             case DATA_MANAGER_OBJECT_DETAILED_VIEW_RETRIEVED:
                 onDataManagerObjectDetailedViewRetrieved((DatabaseObject) obj);
                 break;
@@ -204,9 +203,9 @@ public abstract class Controller implements ELVEventHandler {
             case STATE_MANAGER_DETAILS_TAB_SELECTED:
                 onStateManagerDetailsTabSelected((DetailsTabType) obj);
                 break;
-            case STATE_MANAGER_ERROR:
-                onStateManagerError((String) obj);
-                break;
+//            case STATE_MANAGER_ERROR: //ToDo: No longer in use
+//                onStateManagerError((String) obj);
+//                break;
             case STATE_MANAGER_INSTANCES_INITIAL_STATE:
                 onStateManagerInstancesInitialStateReached();
                 break;
@@ -241,6 +240,11 @@ public abstract class Controller implements ELVEventHandler {
                 onTourManagerTourStarted();
                 break;
 
+                    /* ERROR HANDLING */
+            case INTERANL_MESSAGE:
+                MessageObject msgObj = (MessageObject) obj;
+                onInternalMessageSent(msgObj);
+                break;
         }
     }
 
@@ -301,7 +305,7 @@ public abstract class Controller implements ELVEventHandler {
     public void onOverviewItemSelected(DatabaseObject databaseObject){}
 
     /* DATA MANAGER EVENTS*/
-    public void onDataManagerLoadError(String message){}
+//    public void onDataManagerLoadError(String message){}
     public void onDataManagerObjectDetailedViewRetrieved(DatabaseObject databaseObject){}
     public void onDataManagerObjectTupleRetrieved(Pathway pathway, DatabaseObject databaseObject){}
     public void onDataManagerSpeciesListRetrieved(List<Species> speciesList){}
@@ -328,4 +332,7 @@ public abstract class Controller implements ELVEventHandler {
     public void onTourManagerTourFinished(){}
     public void onTourManagerTourProgress(TourStage stage, Integer step){}
     public void onTourManagerTourStarted(){}
+
+    /* ERROR HANDLING */
+    public void onInternalMessageSent(MessageObject msgObj){}
 }

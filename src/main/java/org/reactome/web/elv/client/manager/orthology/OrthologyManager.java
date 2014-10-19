@@ -429,7 +429,7 @@ public class OrthologyManager extends Controller {
     public void onOverviewItemSelected(DatabaseObject databaseObject) {
 //        this.cacheDetailedView(databaseObject);
 
-        //Wen onOverviewEventSelected is back to work, please remove the following
+            //ToDo: When onOverviewEventSelected is back to work, please remove the following
         if(databaseObject instanceof Event && this.databaseObject instanceof Event){
             Event event = (Event) this.databaseObject;
             Event aux = (Event) databaseObject;
