@@ -111,7 +111,7 @@ public class DiagramPresenter extends Controller implements DiagramView.Presente
 
                 MessageObject msgObj = new MessageObject(pathway.getDisplayName() + " does NOT contain diagram!\n" +
                         "ERROR: " + pathway.getDisplayName() + " does NOT contain diagram!", getClass(), MessageType.INTERNAL_ERROR);
-                eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
                 if(!GWT.isProdMode() && GWT.isClient())
                     Console.error(getClass() + pathway.getDisplayName() + " does NOT contain diagram!");
             }
@@ -193,7 +193,7 @@ public class DiagramPresenter extends Controller implements DiagramView.Presente
                         MessageObject msgObj = new MessageObject("The received data for selected pathway "
                                 + pathwayId + " and subpathway " + subpathwayId + " is empty or faulty and could not be parsed.\n" +
                                 "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-                        eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                        eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
                         if(!GWT.isProdMode() && GWT.isClient())
                             Console.error(getClass() + " ERROR: " + ex.getMessage());
                     }
@@ -204,7 +204,7 @@ public class DiagramPresenter extends Controller implements DiagramView.Presente
                     MessageObject msgObj = new MessageObject("The request for data for selected pathway "
                             + pathwayId + " and subpathway " + subpathwayId + " received an error instead of a valid response.\n" +
                             "ERROR: " + exception.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-                    eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                    eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
                     if(!GWT.isProdMode() && GWT.isClient())
                         Console.error(getClass() + " ERROR: " + exception.getMessage());
                 }
@@ -213,7 +213,7 @@ public class DiagramPresenter extends Controller implements DiagramView.Presente
             MessageObject msgObj = new MessageObject("The request for selected pathway "
                     + pathwayId + " and subpathway " + subpathwayId + " could not be received.\n" +
                     "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-            eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+            eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
             if(!GWT.isProdMode() && GWT.isClient())
                 Console.error(getClass() + " ERROR: " + ex.getMessage());
         }
@@ -260,7 +260,7 @@ public class DiagramPresenter extends Controller implements DiagramView.Presente
                         MessageObject msgObj = new MessageObject("The received data for selected subpathway " + pathway
                                 + "\nis empty or faulty and could not be parsed. Thus no entity can be selected in the Diagram.\n" +
                                 "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-                        eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                        eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
                         if(!GWT.isProdMode() && GWT.isClient())
                             Console.error(getClass() + " ERROR: " + ex.getMessage());
                     }
@@ -271,7 +271,7 @@ public class DiagramPresenter extends Controller implements DiagramView.Presente
                     MessageObject msgObj = new MessageObject("The request for data for selected subpathway " + pathway
                             + "\nreceived an error instead of a valid response. Thus no entity can be selected in the Diagram.\n" +
                             "ERROR: " + exception.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-                    eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                    eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
                     if(!GWT.isProdMode() && GWT.isClient())
                         Console.error(getClass() + " ERROR: " + exception.getMessage());
                 }
@@ -280,7 +280,7 @@ public class DiagramPresenter extends Controller implements DiagramView.Presente
             MessageObject msgObj = new MessageObject("The request for selected subpathway " + pathway +
                     "\ncould not be received. Thus no entity can be selected in the Diagram.\n" +
                     "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-            eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+            eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
             if(!GWT.isProdMode() && GWT.isClient())
                 Console.error(getClass() + " ERROR: " + ex.getMessage());
         }

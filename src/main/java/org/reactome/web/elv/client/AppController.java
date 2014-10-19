@@ -64,7 +64,7 @@ public class AppController extends Controller {
             public void onFailure(Throwable caught) {
                 MessageObject msgObj = new MessageObject("Running the web application failed.\n" +
                         "ERROR: " + caught.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-                eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
                 if(!GWT.isProdMode() && GWT.isClient()) Console.error(getClass() + caught.getMessage());
             }
 

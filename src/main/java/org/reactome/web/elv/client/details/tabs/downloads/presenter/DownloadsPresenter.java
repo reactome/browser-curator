@@ -41,7 +41,7 @@ public class DownloadsPresenter extends Controller implements DownloadsView.Pres
                     MessageObject msgObj = new MessageObject("The required data about the used DB could not be received.\n" +
                             "There might be problems if a download is started.\n" +
                             "ERROR: " + exception.getMessage(), getClass(), MessageType.INTERNAL_WARNING);
-                    eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                    eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
                     Console.error(getClass() + " ERROR: " + exception.getMessage());
                     view.setInitialState();
                 }
@@ -52,7 +52,7 @@ public class DownloadsPresenter extends Controller implements DownloadsView.Pres
             MessageObject msgObj = new MessageObject("The required data about the used DB could not be received.\n" +
                     "There might be problems if a download is started.\n" +
                     "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_WARNING);
-            eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+            eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
             Console.error(getClass() + " ERROR: " + ex.getMessage());
             view.setInitialState();
         }

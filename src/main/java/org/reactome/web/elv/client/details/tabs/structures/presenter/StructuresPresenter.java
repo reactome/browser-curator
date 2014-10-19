@@ -66,7 +66,7 @@ public class StructuresPresenter extends Controller implements StructuresView.Pr
                                 "Structure of \n'" + physicalEntity.getDisplayName() + "' is empty or faulty and could" +
                                 " not be parsed.\n" +
                                 "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-                        eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                        eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
                         Console.error(getClass() + " ERROR: " + ex.getMessage());
                         view.setProteinAccessions(new LinkedList<ReferenceSequence>(), respId);
                     }
@@ -81,7 +81,7 @@ public class StructuresPresenter extends Controller implements StructuresView.Pr
                     MessageObject msgObj = new MessageObject("The request for '" + physicalEntity.getDisplayName() +
                                     "' in the Structure Tab received an error instead of a valid response.\n" +
                                     "ERROR: " + exception.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-                    eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                    eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
                     view.setProteinAccessions(new LinkedList<ReferenceSequence>(), respId);
                 }
             });
@@ -90,7 +90,7 @@ public class StructuresPresenter extends Controller implements StructuresView.Pr
             MessageObject msgObj = new MessageObject("The required data for the Structure of\n'" +
                     physicalEntity.getDisplayName() + "' could not be received.\n" +
                     "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-            eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+            eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
             Console.error(getClass() + " ERROR: " + ex.getMessage());
         }
     }
@@ -121,7 +121,7 @@ public class StructuresPresenter extends Controller implements StructuresView.Pr
                         MessageObject msgObj = new MessageObject("The received object containing data for the Structure" +
                                 " Tab is empty or faulty and could not be parsed.\n" +
                                 "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-                        eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                        eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
                         Console.error(getClass() + " ERROR: " + ex.getMessage());
                         view.setProteinAccessions(new LinkedList<ReferenceSequence>(), respId);
                     }
@@ -135,7 +135,7 @@ public class StructuresPresenter extends Controller implements StructuresView.Pr
 
                     MessageObject msgObj = new MessageObject("The request received an error instead of a valid response.\n" +
                             "ERROR: " + exception.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-                    eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                    eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
                     view.setProteinAccessions(new LinkedList<ReferenceSequence>(), respId);
                 }
             });
@@ -144,7 +144,7 @@ public class StructuresPresenter extends Controller implements StructuresView.Pr
             MessageObject msgObj = new MessageObject("The required data for the Structure Tab" +
                     " could not be received.\n" +
                     "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-            eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+            eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
             Console.error(getClass() + " ERROR: " + ex.getMessage());
         }
     }

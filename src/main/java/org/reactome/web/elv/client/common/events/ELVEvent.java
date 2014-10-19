@@ -1,6 +1,7 @@
 package org.reactome.web.elv.client.common.events;
 
 import com.google.gwt.event.shared.GwtEvent;
+import org.reactome.web.elv.client.common.handlers.ELVEventHandler;
 
 /**
  * @author Antonio Fabregat <fabregat@ebi.ac.uk>
@@ -26,7 +27,7 @@ public class ELVEvent<T> extends GwtEvent<ELVEventHandler> {
     @SuppressWarnings("unchecked")
     @Override
     protected void dispatch(ELVEventHandler elvEventHandler) {
-        elvEventHandler.onEventThrown(this);
+        elvEventHandler.onEventFired(this);
     }
 
     public T getEventAttachedObject(){

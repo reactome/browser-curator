@@ -52,7 +52,7 @@ public class ExpressionPresenter extends Controller implements ExpressionView.Pr
                         MessageObject msgObj = new MessageObject("The received object containing data for the Expression of \n'"
                                 + databaseObject.getDisplayName() + "' is empty or faulty and could not be parsed.\n" +
                                 "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-                        eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                        eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
                         Console.error(getClass() + " ERROR: " + ex.getMessage());
                         view.setProteinAccessions(new LinkedList<ReferenceSequence>(), respId);
                     }
@@ -67,7 +67,7 @@ public class ExpressionPresenter extends Controller implements ExpressionView.Pr
                     MessageObject msgObj = new MessageObject("The request for '" + databaseObject.getDisplayName() +
                             "' in the Expression Tab received an error instead of a valid response.\n" +
                             "ERROR: " + exception.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-                    eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                    eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
                     view.setProteinAccessions(new LinkedList<ReferenceSequence>(), respId);
                 }
             });
@@ -76,7 +76,7 @@ public class ExpressionPresenter extends Controller implements ExpressionView.Pr
             MessageObject msgObj = new MessageObject("The required data for the Expression of\n'" +
                      databaseObject.getDisplayName() + "' could not be received.\n" +
                     "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-            eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+            eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
             Console.error(getClass() + " ERROR: " + ex.getMessage());
         }
     }
@@ -112,7 +112,7 @@ public class ExpressionPresenter extends Controller implements ExpressionView.Pr
                         MessageObject msgObj = new MessageObject("The received object containing data for the Expression of \n'"
                                 + databaseObject.getDisplayName() + "' is empty or faulty and could not be parsed.\n" +
                                 "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-                        eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                        eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
                         Console.error(getClass() + " ERROR: " + ex.getMessage());
                         view.setProteinAccessions(new LinkedList<ReferenceSequence>(), respId);
                     }
@@ -126,7 +126,7 @@ public class ExpressionPresenter extends Controller implements ExpressionView.Pr
                     MessageObject msgObj = new MessageObject("The request for '" + databaseObject.getDisplayName() +
                             "' in the Expression Tab received an error instead of a valid response.\n" +
                             "ERROR: " + exception.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-                    eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                    eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
                     view.setProteinAccessions(new LinkedList<ReferenceSequence>(), respId);
                 }
             });
@@ -135,7 +135,7 @@ public class ExpressionPresenter extends Controller implements ExpressionView.Pr
             MessageObject msgObj = new MessageObject("The required data for the Expression of\n'" +
                     databaseObject.getDisplayName() + "' could not be received.\n" +
                     "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-            eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+            eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
             Console.error(getClass() + " ERROR: " + ex.getMessage());
         }
     }
@@ -166,7 +166,7 @@ public class ExpressionPresenter extends Controller implements ExpressionView.Pr
                         MessageObject msgObj = new MessageObject("The received object containing data for the Expression" +
                                 " Tab is empty or faulty and could not be parsed.\n" +
                                 "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-                        eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                        eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
                         Console.error(getClass() + " ERROR: " + ex.getMessage());
                         view.setProteinAccessions(new LinkedList<ReferenceSequence>(), respId);
                     }
@@ -180,7 +180,7 @@ public class ExpressionPresenter extends Controller implements ExpressionView.Pr
 
                     MessageObject msgObj = new MessageObject("The request received an error instead of a valid response.\n" +
                             "ERROR: " + exception.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-                    eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                    eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
                     view.setProteinAccessions(new LinkedList<ReferenceSequence>(), respId);
                 }
             });
@@ -188,7 +188,7 @@ public class ExpressionPresenter extends Controller implements ExpressionView.Pr
             view.setProteinAccessions(new LinkedList<ReferenceSequence>(), respId);
             MessageObject msgObj = new MessageObject("The required data for the Expression could not be received.\n" +
                     "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-            eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+            eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
             Console.error(getClass() + " ERROR: " + ex.getMessage());
         }
     }

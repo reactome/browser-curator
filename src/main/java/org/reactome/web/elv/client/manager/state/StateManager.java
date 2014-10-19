@@ -27,8 +27,8 @@ import java.util.LinkedList;
  *
  * While the user is enjoying the web application xDD, this class is keeping track of
  * the instances selection and details tab changing and quietly modifies the URL.
- * Moreover, when the user play with the browser back and forward buttons, the manager
- * throws the convenient events for placing the app in the right state.
+ * Moreover, when the user plays with the browser back and forward buttons, the manager
+ * fires the convenient events for placing the app in the right state.
  *
  * @author Antonio Fabregat <fabregat@ebi.ac.uk>
  */
@@ -69,7 +69,7 @@ public class StateManager extends Controller implements ValueChangeHandler<Strin
         //with message from implementation of onStateManagerWrongStateReached in MsgManager
         MessageObject msgObj = new MessageObject("URL Token error: " + token + " is not build properly.\n" +
                 "Please check it complies with the format.", getClass(), MessageType.INTERNAL_ERROR);
-        this.eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+        this.eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
         History.newItem("");
     }
 
@@ -142,7 +142,7 @@ public class StateManager extends Controller implements ValueChangeHandler<Strin
                         }else{
                             eventBus.fireELVEvent(ELVEventType.STATE_MANAGER_ANALYSIS_TOKEN_RESET);
                             MessageObject msgObj = new MessageObject("Analysis: " + message, getClass(), MessageType.INTERNAL_ERROR);
-                            eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                            eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
                             //DialogBoxFactory.alert("Analysis", message);
                         }
                     }

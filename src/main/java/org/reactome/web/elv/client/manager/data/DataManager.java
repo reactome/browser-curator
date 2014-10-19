@@ -63,7 +63,7 @@ public class DataManager extends Controller {
                         MessageObject msgObj = new MessageObject("The received object for the required detailed view" +
                                 "\n'DbId=" + dbId + "' is empty or faulty and could not be parsed.\n" +
                                 "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-                        eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                        eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
                         Console.error(getClass() + " ERROR: " + ex.getMessage());
                     }
                 }
@@ -73,7 +73,7 @@ public class DataManager extends Controller {
                     MessageObject msgObj = new MessageObject("The detailed view request for 'DbId=" + dbId + "'\n" +
                             "received an error instead of a valid response.\n" +
                             "ERROR: " + exception.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-                    eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                    eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
                     Console.error(getClass() + " ERROR: " + exception.getMessage());
                 }
             });
@@ -82,7 +82,7 @@ public class DataManager extends Controller {
             MessageObject msgObj = new MessageObject("The requested detailed view for 'DbId=" + dbId
                     + "' could not be received.\n" +
                     "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-            eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+            eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
             Console.error(getClass() + " ERROR: " + ex.getMessage());
         }
     }
@@ -115,7 +115,7 @@ public class DataManager extends Controller {
                         MessageObject msgObj = new MessageObject("The received object containing data for DatabaseObject " +
                                 dbId + " is empty or faulty and could not be parsed.\n" +
                                 "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-                        eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                        eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
                         Console.error(getClass() + " ERROR: " + ex.getMessage());
                     }
                 }
@@ -130,14 +130,14 @@ public class DataManager extends Controller {
                     MessageObject msgObj = new MessageObject("The request for database object " + dbId +
                             " received an error instead of a valid response.\n" +
                             "ERROR: " + exception.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-                    eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                    eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
                 }
             });
         } catch (RequestException ex) {
             /*replaced: eventBus.fireELVEvent(ELVEventType.DATA_MANAGER_LOAD_ERROR, ex.getMessage());*/
             MessageObject msgObj = new MessageObject("The requested database object " + dbId + " could not be received.\n" +
                     "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-            eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+            eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
             Console.error(getClass() + " ERROR: " + ex.getMessage());
         }
     }
@@ -200,7 +200,7 @@ public class DataManager extends Controller {
                         MessageObject msgObj = new MessageObject("The received object containing data for database objects" +
                                 finalPost + " is empty or faulty and could not be parsed.\n" +
                                 "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-                        eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                        eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
                         Console.error(getClass() + " ERROR: " + ex.getMessage());
                     }
                 }
@@ -214,14 +214,14 @@ public class DataManager extends Controller {
                     MessageObject msgObj = new MessageObject("The request for database objects" +
                             " received an error instead of a valid response.\n" +
                             "ERROR: " + exception.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-                    eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                    eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
                 }
             });
         } catch (RequestException ex) {
             /*replaced: eventBus.fireELVEvent(ELVEventType.DATA_MANAGER_LOAD_ERROR, ex.getMessage());*/
             MessageObject msgObj = new MessageObject("The requested database objects could not be received.\n" +
                     "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-            eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+            eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
             Console.error(getClass() + " ERROR: " + ex.getMessage());
         }
     }
@@ -252,7 +252,7 @@ public class DataManager extends Controller {
                     MessageObject msgObj = new MessageObject("The received object containing data for speciesList" +
                             " is empty or faulty and could not be parsed.\n" +
                             "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-                    eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                    eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
                     if(!GWT.isProdMode() && GWT.isClient())
                         Console.error(getClass() + " ERROR: " + ex.getMessage());
                 }
@@ -266,7 +266,7 @@ public class DataManager extends Controller {
 
                 MessageObject msgObj = new MessageObject("The request for speciesList received an error instead of a valid response.\n" +
                         "ERROR: " + exception.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-                eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
             }
         };
         try {
@@ -275,7 +275,7 @@ public class DataManager extends Controller {
             /*replaced: eventBus.fireELVEvent(ELVEventType.DATA_MANAGER_LOAD_ERROR, ex.getMessage());*/
             MessageObject msgObj = new MessageObject("The requested speciesList could not be received.\n" +
                     "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-            eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+            eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
             Console.error(getClass() + " ERROR: " + ex.getMessage());
         }
     }

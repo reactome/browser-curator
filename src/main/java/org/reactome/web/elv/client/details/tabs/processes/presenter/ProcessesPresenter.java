@@ -78,7 +78,7 @@ public class ProcessesPresenter extends Controller implements ProcessesView.Pres
                                 physicalEntity.getDisplayName() + "'\nfor Processes Tab is empty or faulty " +
                                 "and could not be parsed.\n" +
                                 "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-                        eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                        eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
                         Console.error(getClass() + " ERROR: " + ex.getMessage());
                         view.setComplexesForPhysicalEntity(physicalEntity, new ArrayList<Complex>());
                     }
@@ -89,7 +89,7 @@ public class ProcessesPresenter extends Controller implements ProcessesView.Pres
                     MessageObject msgObj = new MessageObject("The request for '" + physicalEntity.getDisplayName() +
                             "' in the Processes Tab received an error instead of a valid response.\n" +
                             "ERROR: " + exception.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-                    eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                    eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
                     Console.error(getClass() + " ERROR: " + exception.getMessage());
                     view.setComplexesForPhysicalEntity(physicalEntity, new ArrayList<Complex>());
                 }
@@ -99,7 +99,7 @@ public class ProcessesPresenter extends Controller implements ProcessesView.Pres
             MessageObject msgObj = new MessageObject("The required data for the Processes of\n'" +
                     physicalEntity.getDisplayName() + "' could not be received.\n" +
                     "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-            eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+            eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
             Console.error(getClass() + " ERROR: " + ex.getMessage());
             view.setComplexesForPhysicalEntity(physicalEntity, new ArrayList<Complex>());
         }
@@ -125,7 +125,7 @@ public class ProcessesPresenter extends Controller implements ProcessesView.Pres
                                 databaseObject.getDisplayName() + "'\nfor Processes Tab is empty or faulty " +
                                 "and could not be parsed.\n" +
                                 "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-                        eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                        eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
                         Console.error(getClass() + " ERROR: " + ex.getMessage());
                         view.setDetailedData(databaseObject);
                     }
@@ -138,7 +138,7 @@ public class ProcessesPresenter extends Controller implements ProcessesView.Pres
                         MessageObject msgObj = new MessageObject("The request for '" + databaseObject.getDisplayName() +
                                 "' in the Processes Tab received an error instead of a valid response.\n" +
                                 "ERROR: " + exception.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-                        eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                        eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
                         Console.error(getClass() + " ERROR: " + exception.getMessage());
                     }
                     view.setDetailedData(databaseObject);
@@ -148,7 +148,7 @@ public class ProcessesPresenter extends Controller implements ProcessesView.Pres
             MessageObject msgObj = new MessageObject("The required data for the Processes of\n'" +
                     databaseObject.getDisplayName() + "' could not be received.\n" +
                     "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-            eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+            eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
             Console.error(getClass() + " ERROR: " + ex.getMessage());
             view.setDetailedData(databaseObject);
         }
@@ -178,7 +178,7 @@ public class ProcessesPresenter extends Controller implements ProcessesView.Pres
                                 physicalEntity.getDisplayName() + "'\nfor Processes Tab is empty or faulty " +
                                 "and could not be parsed.\n" +
                                 "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-                        eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                        eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
                         Console.error(getClass() + " ERROR: " + ex.getMessage());
                         view.setEntitySetsForPhysicalEntity(physicalEntity, new ArrayList<EntitySet>());
                     }
@@ -189,7 +189,7 @@ public class ProcessesPresenter extends Controller implements ProcessesView.Pres
                     MessageObject msgObj = new MessageObject("The request for '" + physicalEntity.getDisplayName() +
                             "' in the Processes Tab received an error instead of a valid response.\n" +
                             "ERROR: " + exception.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-                    eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                    eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
                     Console.error(getClass() + " ERROR: " + exception.getMessage());
                     view.setEntitySetsForPhysicalEntity(physicalEntity, new ArrayList<EntitySet>());
                 }
@@ -199,7 +199,7 @@ public class ProcessesPresenter extends Controller implements ProcessesView.Pres
             MessageObject msgObj = new MessageObject("The required data for the Processes of\n'" +
                     physicalEntity.getDisplayName() + "' could not be received.\n" +
                     "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-            eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+            eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
             Console.error(getClass() + " ERROR: " + ex.getMessage());
             view.setEntitySetsForPhysicalEntity(physicalEntity, new ArrayList<EntitySet>());
         }
@@ -229,7 +229,7 @@ public class ProcessesPresenter extends Controller implements ProcessesView.Pres
                                 physicalEntity.getDisplayName() + "'\nfor Processes Tab is empty or faulty " +
                                 "and could not be parsed.\n" +
                                 "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-                        eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                        eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
                         Console.error(getClass() + " ERROR: " + ex.getMessage());
                         view.setPathwayForPhysicalEntity(physicalEntity, new ArrayList<Pathway>());
                     }
@@ -240,7 +240,7 @@ public class ProcessesPresenter extends Controller implements ProcessesView.Pres
                     MessageObject msgObj = new MessageObject("The request for '" + physicalEntity.getDisplayName() +
                             "' in the Processes Tab received an error instead of a valid response.\n" +
                             "ERROR: " + exception.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-                    eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                    eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
                     Console.error(getClass() + " ERROR: " + exception.getMessage());
                     view.setPathwayForPhysicalEntity(physicalEntity, new ArrayList<Pathway>());
                 }
@@ -250,7 +250,7 @@ public class ProcessesPresenter extends Controller implements ProcessesView.Pres
             MessageObject msgObj = new MessageObject("The required data for the Processes of\n'" +
                     physicalEntity.getDisplayName() + "' could not be received.\n" +
                     "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-            eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+            eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
             Console.error(getClass() + " ERROR: " + ex.getMessage());
             view.setPathwayForPhysicalEntity(physicalEntity, new ArrayList<Pathway>());
         }
@@ -275,7 +275,7 @@ public class ProcessesPresenter extends Controller implements ProcessesView.Pres
                                 event.getDisplayName() + "'\nfor Processes Tab is empty or faulty " +
                                 "and could not be parsed.\n" +
                                 "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-                        eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                        eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
                         Console.error(getClass() + " ERROR: " + ex.getMessage());
                         view.setPathwayForEvent(event, new LinkedList<Pathway>());
                     }
@@ -286,7 +286,7 @@ public class ProcessesPresenter extends Controller implements ProcessesView.Pres
                     MessageObject msgObj = new MessageObject("The request for '" + event.getDisplayName() +
                             "' in the Processes Tab received an error instead of a valid response.\n" +
                             "ERROR: " + exception.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-                    eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                    eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
                     Console.error(getClass() + " ERROR: " + exception.getMessage());
                     view.setPathwayForEvent(event, new LinkedList<Pathway>());
                 }
@@ -296,7 +296,7 @@ public class ProcessesPresenter extends Controller implements ProcessesView.Pres
             MessageObject msgObj = new MessageObject("The required data for the Processes of\n'" +
                     event.getDisplayName() + "' could not be received.\n" +
                     "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-            eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+            eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
             Console.error(getClass() + " ERROR: " + ex.getMessage());
             view.setPathwayForEvent(event, new LinkedList<Pathway>());
         }
@@ -326,7 +326,7 @@ public class ProcessesPresenter extends Controller implements ProcessesView.Pres
                                 physicalEntity.getDisplayName() + "'\nfor Processes Tab is empty or faulty " +
                                 "and could not be parsed.\n" +
                                 "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-                        eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                        eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
                         Console.error(getClass() + " ERROR: " + ex.getMessage());
                         view.setReactionsWhereInput(physicalEntity, new ArrayList<ReactionLikeEvent>());
                     }
@@ -337,7 +337,7 @@ public class ProcessesPresenter extends Controller implements ProcessesView.Pres
                     MessageObject msgObj = new MessageObject("The request for '" + physicalEntity.getDisplayName() +
                             "' in the Processes Tab received an error instead of a valid response.\n" +
                             "ERROR: " + exception.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-                    eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                    eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
                     Console.error(getClass() + " ERROR: " + exception.getMessage());
                     view.setReactionsWhereInput(physicalEntity, new ArrayList<ReactionLikeEvent>());
                 }
@@ -347,7 +347,7 @@ public class ProcessesPresenter extends Controller implements ProcessesView.Pres
             MessageObject msgObj = new MessageObject("The required data for the Processes of\n'" +
                     physicalEntity.getDisplayName() + "' could not be received.\n" +
                     "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-            eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+            eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
             Console.error(getClass() + " ERROR: " + ex.getMessage());
             view.setReactionsWhereInput(physicalEntity, new ArrayList<ReactionLikeEvent>());
         }
@@ -377,7 +377,7 @@ public class ProcessesPresenter extends Controller implements ProcessesView.Pres
                                 physicalEntity.getDisplayName() + "'\nfor Processes Tab is empty or faulty " +
                                 "and could not be parsed.\n" +
                                 "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-                        eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                        eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
                         Console.error(getClass() + " ERROR: " + ex.getMessage());
                         view.setReactionsWhereOutput(physicalEntity, new ArrayList<ReactionLikeEvent>());
                     }
@@ -388,7 +388,7 @@ public class ProcessesPresenter extends Controller implements ProcessesView.Pres
                     MessageObject msgObj = new MessageObject("The request for '" + physicalEntity.getDisplayName() +
                             "' in the Processes Tab received an error instead of a valid response.\n" +
                             "ERROR: " + exception.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-                    eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                    eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
                     Console.error(getClass() + " ERROR: " + exception.getMessage());
                     view.setReactionsWhereOutput(physicalEntity, new ArrayList<ReactionLikeEvent>());
                 }
@@ -398,7 +398,7 @@ public class ProcessesPresenter extends Controller implements ProcessesView.Pres
             MessageObject msgObj = new MessageObject("The required data for the Processes of\n'" +
                     physicalEntity.getDisplayName() + "' could not be received.\n" +
                     "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-            eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+            eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
             Console.error(getClass() + " ERROR: " + ex.getMessage());
             view.setReactionsWhereOutput(physicalEntity, new ArrayList<ReactionLikeEvent>());
         }
@@ -430,7 +430,7 @@ public class ProcessesPresenter extends Controller implements ProcessesView.Pres
                                 ewas.getDisplayName() + "'\nfor Processes Tab is empty or faulty " +
                                 "and could not be parsed.\n" +
                                 "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-                        eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                        eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
                         Console.error(getClass() + " ERROR: " + ex.getMessage());
                         view.setOtherFormsForEWAS(ewas, new ArrayList<EntityWithAccessionedSequence>());
                     }
@@ -441,7 +441,7 @@ public class ProcessesPresenter extends Controller implements ProcessesView.Pres
                     MessageObject msgObj = new MessageObject("The request for '" + ewas.getDisplayName() +
                             "' in the Processes Tab received an error instead of a valid response.\n" +
                             "ERROR: " + exception.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-                    eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                    eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
                     Console.error(getClass() + " ERROR: " + exception.getMessage());
                     view.setOtherFormsForEWAS(ewas, new ArrayList<EntityWithAccessionedSequence>());
                 }
@@ -451,7 +451,7 @@ public class ProcessesPresenter extends Controller implements ProcessesView.Pres
             MessageObject msgObj = new MessageObject("The required data for the Processes of\n'" +
                     ewas.getDisplayName() + "' could not be received.\n" +
                     "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-            eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+            eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
             Console.error(getClass() + " ERROR: " + ex.getMessage());
             view.setOtherFormsForEWAS(ewas, new ArrayList<EntityWithAccessionedSequence>());
         }

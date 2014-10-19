@@ -5,7 +5,9 @@ import org.reactome.web.elv.client.center.content.analysis.event.AnalysisComplet
 import org.reactome.web.elv.client.center.content.analysis.event.AnalysisErrorEvent;
 import org.reactome.web.elv.client.center.model.CenterToolType;
 import org.reactome.web.elv.client.common.data.model.*;
-import org.reactome.web.elv.client.common.events.*;
+import org.reactome.web.elv.client.common.events.ELVEvent;
+import org.reactome.web.elv.client.common.events.ELVEventType;
+import org.reactome.web.elv.client.common.handlers.ELVEventHandler;
 import org.reactome.web.elv.client.common.model.Pair;
 import org.reactome.web.elv.client.common.model.Path;
 import org.reactome.web.elv.client.details.events.DetailsSelection;
@@ -33,7 +35,7 @@ public abstract class Controller implements ELVEventHandler {
     }
 
     @Override
-    public void onEventThrown(ELVEvent event) {
+    public void onEventFired(ELVEvent event) {
         Object obj = event.getEventAttachedObject();
         switch (event.getELVEventType()){
                     /* GENERAL */
@@ -166,9 +168,6 @@ public abstract class Controller implements ELVEventHandler {
                 break;
 
                     /* DATA MANAGER EVENTS*/
-//            case DATA_MANAGER_LOAD_ERROR://ToDo: No longer in use
-//                onDataManagerLoadError((String) obj);//Nowhere implemented
-//                break;
             case DATA_MANAGER_OBJECT_DETAILED_VIEW_RETRIEVED:
                 onDataManagerObjectDetailedViewRetrieved((DatabaseObject) obj);
                 break;
@@ -203,9 +202,6 @@ public abstract class Controller implements ELVEventHandler {
             case STATE_MANAGER_DETAILS_TAB_SELECTED:
                 onStateManagerDetailsTabSelected((DetailsTabType) obj);
                 break;
-//            case STATE_MANAGER_ERROR: //ToDo: No longer in use
-//                onStateManagerError((String) obj);
-//                break;
             case STATE_MANAGER_INSTANCES_INITIAL_STATE:
                 onStateManagerInstancesInitialStateReached();
                 break;
@@ -241,7 +237,7 @@ public abstract class Controller implements ELVEventHandler {
                 break;
 
                     /* ERROR HANDLING */
-            case INTERANL_MESSAGE:
+            case INTERNAL_MESSAGE:
                 MessageObject msgObj = (MessageObject) obj;
                 onInternalMessageSent(msgObj);
                 break;
@@ -305,7 +301,6 @@ public abstract class Controller implements ELVEventHandler {
     public void onOverviewItemSelected(DatabaseObject databaseObject){}
 
     /* DATA MANAGER EVENTS*/
-//    public void onDataManagerLoadError(String message){}
     public void onDataManagerObjectDetailedViewRetrieved(DatabaseObject databaseObject){}
     public void onDataManagerObjectTupleRetrieved(Pathway pathway, DatabaseObject databaseObject){}
     public void onDataManagerSpeciesListRetrieved(List<Species> speciesList){}
@@ -319,7 +314,6 @@ public abstract class Controller implements ELVEventHandler {
     public void onStateManagerDatabaseObjectsRequired(Long pathwayId, Long databaseObjectId){}
     public void onStateManagerDatabaseObjectsSelected(List<Event> path, Pathway pathway, DatabaseObject databaseObject){}
     public void onStateManagerDetailsTabSelected(DetailsTabType tab){}
-    public void onStateManagerError(String message){}
     public void onStateManagerInstancesInitialStateReached(){}
     public void onStateManagerSpeciesSelected(Species species){}
     public void onStateManagerTargetReached(){}

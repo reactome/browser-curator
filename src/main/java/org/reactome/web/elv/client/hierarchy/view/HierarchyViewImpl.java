@@ -13,7 +13,10 @@ import org.reactome.web.elv.client.common.data.model.Species;
 import org.reactome.web.elv.client.common.model.Path;
 import org.reactome.web.elv.client.common.utils.Console;
 import org.reactome.web.elv.client.common.widgets.glass.GlassPanel;
+import org.reactome.web.elv.client.hierarchy.events.HierarchyItemMouseOverEvent;
 import org.reactome.web.elv.client.hierarchy.events.HierarchyTreeSpeciesNotFoundException;
+import org.reactome.web.elv.client.hierarchy.handlers.HierarchyItemMouseOutHandler;
+import org.reactome.web.elv.client.hierarchy.handlers.HierarchyItemMouseOverHandler;
 import org.reactome.web.elv.client.hierarchy.model.HierarchyContainerPanel;
 import org.reactome.web.elv.client.hierarchy.model.HierarchyItem;
 import org.reactome.web.elv.client.hierarchy.model.HierarchyTree;
@@ -27,7 +30,7 @@ import java.util.Set;
 /**
  * @author Antonio Fabregat <fabregat@ebi.ac.uk>
  */
-public class HierarchyViewImpl implements IsWidget, HierarchyView, OpenHandler<TreeItem>, SelectionHandler<TreeItem> {
+public class HierarchyViewImpl implements IsWidget, HierarchyView, OpenHandler<TreeItem>, SelectionHandler<TreeItem>, HierarchyItemMouseOverHandler, HierarchyItemMouseOutHandler {
 
 	private Presenter presenter;
 
@@ -154,6 +157,8 @@ public class HierarchyViewImpl implements IsWidget, HierarchyView, OpenHandler<T
             this.hierarchyTree = new HierarchyTree(species);
             this.hierarchyTree.setScrollOnSelectEnabled(true);
             this.hierarchyTree.setAnimationEnabled(true);
+            this.hierarchyTree.addHierarchyItemMouseOverHandler(this);
+            this.hierarchyTree.addHierarchyItemMouseOutHandler(this);
             this.hierarchyTree.addOpenHandler(this);
             this.hierarchyTree.addSelectionHandler(this);
             this.hierarchyContainerPanel.addHierarchyTree(species, this.hierarchyTree);
@@ -258,5 +263,19 @@ public class HierarchyViewImpl implements IsWidget, HierarchyView, OpenHandler<T
         if(glass!=null){
             RootPanel.get().remove(glass);
         }
+    }
+
+    @Override
+    public void onHierarchyItemHoveredReset() {
+        this.presenter.eventHoveredReset();
+    }
+
+    @Override
+    public void onHierarchyItemMouseOver(HierarchyItemMouseOverEvent e) {
+        HierarchyItem hi = e.getItem();
+        Event event = hi.getEvent();
+        Path path = hi.getSelectedPath();
+        Pathway pathway = (Pathway) hi.getParentWithDiagram().getEvent();
+        this.presenter.eventHovered(path, pathway, event);
     }
 }

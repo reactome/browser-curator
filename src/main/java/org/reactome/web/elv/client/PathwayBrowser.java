@@ -16,7 +16,7 @@ public class PathwayBrowser implements EntryPoint {
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
-        EventBus eventBus = new EventBus(null);
+        EventBus eventBus = new EventBus();
         AppController appController = new AppController(eventBus);
         appController.go(RootLayoutPanel.get());
         this.removeStaticMessages();

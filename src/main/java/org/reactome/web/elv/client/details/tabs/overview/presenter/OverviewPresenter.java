@@ -48,7 +48,7 @@ public class OverviewPresenter extends Controller implements OverviewView.Presen
                         MessageObject msgObj = new MessageObject("The received object for '" + currentDatabaseObject.getDisplayName()
                                 + "' is empty or faulty and could not be parsed.\n" +
                                 "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-                        eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                        eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
                         Console.error(getClass() + " ERROR: " + ex.getMessage());
                         view.setInitialState();
                     }
@@ -63,7 +63,7 @@ public class OverviewPresenter extends Controller implements OverviewView.Presen
                     MessageObject msgObj = new MessageObject("The request for '" + currentDatabaseObject.getDisplayName()
                             + "' received an error instead of a valid response.\n" +
                             "ERROR: " + exception.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-                    eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                    eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
                     view.setInitialState();
                 }
             });
@@ -71,7 +71,7 @@ public class OverviewPresenter extends Controller implements OverviewView.Presen
             MessageObject msgObj = new MessageObject("The requested detailed data for\n'" + currentDatabaseObject.getDisplayName()
                     + "' in the Overview could not be received.\n" +
                     "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-            eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+            eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
             Console.error(getClass() + " ERROR: " + ex.getMessage());
             view.setInitialState();
         }

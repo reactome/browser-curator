@@ -14,6 +14,8 @@ import java.util.Set;
 public interface HierarchyView {
 
 	public interface Presenter {
+        void eventHovered(Path path, Pathway pathway, Event event);
+        void eventHoveredReset();
         void eventSelected(Path path, Pathway pathway, Event event);
         void eventChildrenRequired(Path path, Event event);
         void frontPageItemsRequired(Species species);

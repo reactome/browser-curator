@@ -62,6 +62,6 @@ public class MainPresenter extends Controller implements MainView.Presenter {
 
     @Override
     public void errorMsg(MessageObject msgObj){
-        this.eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+        this.eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
     }
 }

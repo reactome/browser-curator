@@ -3,6 +3,7 @@ package org.reactome.web.elv.client.center.content.fireworks.view;
 import com.google.gwt.resources.client.TextResource;
 import com.google.gwt.user.client.ui.Widget;
 import org.reactome.web.elv.client.center.content.fireworks.util.Resources;
+import org.reactome.web.elv.client.common.data.model.Pathway;
 import org.reactome.web.fireworks.client.FireworksFactory;
 import org.reactome.web.fireworks.client.FireworksViewer;
 
@@ -28,5 +29,16 @@ public class FireworksViewImpl implements FireworksView {
     @Override
     public void setPresenter(Presenter presenter) {
         this.presenter = presenter;
+    }
+
+    @Override
+    public void highlightPathway(Pathway pathway) {
+        if(pathway==null) return;
+        this.fireworks.highlightNodeByDbIdentifier(pathway.getDbId());
+    }
+
+    @Override
+    public void resetHighlight() {
+        this.fireworks.resetHighlight();
     }
 }

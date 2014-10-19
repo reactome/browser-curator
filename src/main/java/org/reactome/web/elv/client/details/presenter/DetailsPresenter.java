@@ -165,7 +165,7 @@ public class DetailsPresenter extends Controller implements DetailsView.Presente
                        MessageObject msgObj = new MessageObject("The received object for 'DbId=" + databaseObject.getDbId()
                                 + "' is empty or faulty and could not be parsed.\n" +
                                 "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-                        eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                        eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
                         Console.error(getClass() + " ERROR: " + ex.getMessage());
                     }
 
@@ -180,7 +180,7 @@ public class DetailsPresenter extends Controller implements DetailsView.Presente
                     MessageObject msgObj = new MessageObject("The request for 'DbId=" + databaseObject.getDbId()
                             + "' received an error instead of a valid response.\n" +
                             "ERROR: " + exception.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-                    eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                    eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
                 }
             });
         }
@@ -188,7 +188,7 @@ public class DetailsPresenter extends Controller implements DetailsView.Presente
             MessageObject msgObj = new MessageObject("The requested data for 'DbId=" + databaseObject.getDbId()
                     + "' could not be received.\n" +
                     "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-            eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+            eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
             Console.error(getClass() + " ERROR: " + ex.getMessage());
         }
     }
@@ -214,7 +214,7 @@ public class DetailsPresenter extends Controller implements DetailsView.Presente
                         MessageObject msgObj = new MessageObject("The received object for 'DbId=" + event.getDbId()
                                 + "' is empty or faulty and could not be parsed into a path or hierarchy.\n" +
                                 "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-                        eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                        eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
                         Console.error(getClass() + " ERROR: " + ex.getMessage());
                     }
 
@@ -229,14 +229,14 @@ public class DetailsPresenter extends Controller implements DetailsView.Presente
                     MessageObject msgObj = new MessageObject("The PathRequired request for 'DbId=" + event.getDbId()
                             + "' received an error instead of a valid response.\n" +
                             "ERROR: " + exception.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-                    eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                    eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
                 }
             });
         } catch (RequestException ex) {
             MessageObject msgObj = new MessageObject("The requested data for 'DbId=" + event.getDbId()
                     + "' could not be received.\n" +
                     "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-            eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+            eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
             Console.error(getClass() + " ERROR: " + ex.getMessage());
         }
     }
@@ -260,7 +260,7 @@ public class DetailsPresenter extends Controller implements DetailsView.Presente
                         MessageObject msgObj = new MessageObject("The received object for Molecule '" + molecule.getDisplayName()
                                 + "' is empty or faulty and could not be parsed.\n" +
                                 "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-                        eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                        eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
                         Console.error(getClass() + " ERROR: " + ex.getMessage());
                         DataRequiredListener.getDataRequiredListener().setRequiredMoleculeData(molecule);
                     }
@@ -275,7 +275,7 @@ public class DetailsPresenter extends Controller implements DetailsView.Presente
                     MessageObject msgObj = new MessageObject("The request for Molecule '" + molecule.getDisplayName()
                             + "' received an error instead of a valid response.\n" +
                             "ERROR: " + exception.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-                    eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                    eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
                     DataRequiredListener.getDataRequiredListener().setRequiredMoleculeData(molecule);
                 }
             });
@@ -283,7 +283,7 @@ public class DetailsPresenter extends Controller implements DetailsView.Presente
             MessageObject msgObj = new MessageObject("The requested detailed data for Molecule \n'" + molecule.getDisplayName()
                     + "' could not be received.\n" +
                     "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-            eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+            eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
             Console.error(getClass() + " ERROR: " + ex.getMessage());
             DataRequiredListener.getDataRequiredListener().setRequiredMoleculeData(molecule);
         }
@@ -311,7 +311,7 @@ public class DetailsPresenter extends Controller implements DetailsView.Presente
                         MessageObject msgObj = new MessageObject("The received References object for 'DbId=" + dbId
                                 + "' is empty or faulty and could not be parsed.\n" +
                                 "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-                        eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                        eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
                         Console.error(getClass() + " ERROR: " + ex.getMessage());
                         DataRequiredListener.getDataRequiredListener().setRequiredReferences(dbId, new ArrayList<LiteratureReference>());
                     }
@@ -326,7 +326,7 @@ public class DetailsPresenter extends Controller implements DetailsView.Presente
                     MessageObject msgObj = new MessageObject("The request for 'DbId=" + dbId
                             + "' received an error instead of a valid response.\n" +
                             "ERROR: " + exception.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-                    eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                    eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
                     DataRequiredListener.getDataRequiredListener().setRequiredReferences(dbId, new ArrayList<LiteratureReference>());
                 }
             });
@@ -335,7 +335,7 @@ public class DetailsPresenter extends Controller implements DetailsView.Presente
             MessageObject msgObj = new MessageObject("The requested references data for 'DbId=" + dbId
                     + "' could not be received.\n" +
                     "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-            eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+            eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
             Console.error(getClass() + " ERROR: " + ex.getMessage());
             DataRequiredListener.getDataRequiredListener().setRequiredReferences(dbId, new ArrayList<LiteratureReference>());
         }

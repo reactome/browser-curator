@@ -1,5 +1,6 @@
 package org.reactome.web.elv.client.hierarchy.model;
 
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.CustomTree;
 import org.reactome.web.elv.client.common.analysis.model.PathwaySummary;
 import org.reactome.web.elv.client.common.data.model.DatabaseObject;
@@ -8,6 +9,10 @@ import org.reactome.web.elv.client.common.data.model.ReactionLikeEvent;
 import org.reactome.web.elv.client.common.data.model.Species;
 import org.reactome.web.elv.client.common.utils.Console;
 import org.reactome.web.elv.client.common.utils.MapSet;
+import org.reactome.web.elv.client.hierarchy.events.HierarchyItemMouseOutEvent;
+import org.reactome.web.elv.client.hierarchy.events.HierarchyItemMouseOverEvent;
+import org.reactome.web.elv.client.hierarchy.handlers.HierarchyItemMouseOutHandler;
+import org.reactome.web.elv.client.hierarchy.handlers.HierarchyItemMouseOverHandler;
 
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -17,7 +22,7 @@ import java.util.Set;
 /**
  * @author Antonio Fabregat <fabregat@ebi.ac.uk>
  */
-public class HierarchyTree extends CustomTree {
+public class HierarchyTree extends CustomTree implements HierarchyItemMouseOverHandler, HierarchyItemMouseOutHandler {
 
     private MapSet<Long, HierarchyItem> treeItems;
     private Species species;
@@ -26,6 +31,15 @@ public class HierarchyTree extends CustomTree {
         super();
         this.treeItems = new MapSet<Long, HierarchyItem>();
         this.species = species;
+    }
+
+
+    public HandlerRegistration addHierarchyItemMouseOverHandler(HierarchyItemMouseOverHandler handler){
+        return addHandler(handler, HierarchyItemMouseOverEvent.TYPE);
+    }
+
+    public HandlerRegistration addHierarchyItemMouseOutHandler(HierarchyItemMouseOutHandler handler){
+        return addHandler(handler, HierarchyItemMouseOutEvent.TYPE);
     }
 
     public void clearAnalysisData(){
@@ -104,16 +118,18 @@ public class HierarchyTree extends CustomTree {
     }
 
     public void loadPathwayChildren(List<Long> path, DatabaseObject databaseObject, List<Event> children) throws Exception{
-        HierarchyItem item=null;
-        if(databaseObject!=null){
+        HierarchyItem item = null;
+        if(databaseObject != null){
             item = getHierarchyItemByDatabaseObject(path, databaseObject);
         }
-        if(item!=null){
+        if(item != null){
             item.removeItems();
             item.setChildrenLoaded(true);
         }
         for (Event child : children) {
             HierarchyItem hi = new HierarchyItem(species, child);
+            hi.addHierarchyItemMouseOverHandler(this);
+            hi.addHierarchyItemMouseOutHandler(this);
             this.treeItems.add(child.getDbId(), hi);
             if(item==null){
                 addItem(hi);
@@ -138,5 +154,15 @@ public class HierarchyTree extends CustomTree {
             }
             return null;
         }
+    }
+
+    @Override
+    public void onHierarchyItemHoveredReset() {
+        fireEvent(new HierarchyItemMouseOutEvent());
+    }
+
+    @Override
+    public void onHierarchyItemMouseOver(HierarchyItemMouseOverEvent e) {
+        fireEvent(e);
     }
 }

@@ -14,7 +14,6 @@ import org.reactome.web.elv.client.common.data.model.DatabaseObject;
 import org.reactome.web.elv.client.common.data.model.Event;
 import org.reactome.web.elv.client.common.data.model.Pathway;
 import org.reactome.web.elv.client.common.events.ELVEventType;
-import org.reactome.web.elv.client.manager.messages.MessageType;
 import org.reactome.web.elv.client.common.model.Pair;
 import org.reactome.web.elv.client.common.utils.Console;
 import org.reactome.web.elv.client.common.utils.MapSet;
@@ -27,6 +26,7 @@ import org.reactome.web.elv.client.details.tabs.molecules.model.data.Result;
 import org.reactome.web.elv.client.details.tabs.molecules.model.type.PathwayType;
 import org.reactome.web.elv.client.details.tabs.molecules.view.MoleculesView;
 import org.reactome.web.elv.client.manager.messages.MessageObject;
+import org.reactome.web.elv.client.manager.messages.MessageType;
 
 import java.util.*;
 
@@ -217,7 +217,7 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
                         MessageObject msgObj = new MessageObject("The received object containing the Molecules for " +
                                 currentPathway.getName() + "\nis empty or faulty and could not be parsed.\n" +
                                 "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-                        eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                        eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
                         Console.error(getClass() + " ERROR: " + ex.getMessage());
                         view.setInitialState();
                     }
@@ -233,7 +233,7 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
 
                     MessageObject msgObj = new MessageObject("The required data could not be received.\n" +
                             "ERROR: " + exception.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-                    eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                    eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
                     view.setInitialState();
                 }
             });
@@ -241,7 +241,7 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
             MessageObject msgObj = new MessageObject("The received object containing the Molecules for " +
                     currentPathway.getName() + "\nis empty or faulty and could not be parsed.\n" +
                     "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-            eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+            eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
             Console.error(PREFIX + " getPathwayParticipants caught an error! " + ex.getMessage());
             view.setInitialState();
         }
@@ -288,7 +288,7 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
                         MessageObject msgObj = new MessageObject("The received object is empty or faulty " +
                                 "and the Molecules for\n'" + currentDatabaseObject.getDisplayName() + "' could not be parsed.\n" +
                                 "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-                        eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                        eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
                         Console.error(getClass() + " ERROR: " + ex.getMessage());
                         result.highlight();
                         view.setMoleculesData(result);
@@ -305,7 +305,7 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
 
                     MessageObject msgObj = new MessageObject("The request received an error instead of a valid response.\n" +
                             "ERROR: " + exception.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-                    eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                    eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
                     result.highlight();
                     view.setMoleculesData(result);
                 }
@@ -314,7 +314,7 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
             MessageObject msgObj = new MessageObject("The Molecules for '" + currentDatabaseObject.getDisplayName() +
                     "' could not be received.\n" +
                     "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-            eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+            eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
             Console.error(PREFIX + " getPathwayParticipants caught an error! " + ex.getMessage());
             result.highlight();
             view.setMoleculesData(result);
@@ -364,7 +364,7 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
                         public void onFailure(Throwable exception) {
                             MessageObject msgObj = new MessageObject("Error while trying to run AsyncCallback and clear loading Msg.\n" +
                                     "ERROR: " + exception.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-                            eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                            eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
                             Console.warn("Something went wrong in Molecules Tab. Take a look at MoleculesPresenter > moleculeSelected.");
                         }
 
@@ -445,7 +445,7 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
 //                        //ModelFactoryException, NullPointerException, IllegalArgumentException, JSONException
 //                        MessageObject msgObj = new MessageObject("The received object is empty or faulty and could not be parsed.\n" +
 //                                "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-//                        eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+//                        eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
 //                        Console.error(getClass() + " ERROR: " + ex.getMessage());
 //                    }
 //
@@ -459,14 +459,14 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
 //
 //                    MessageObject msgObj = new MessageObject("The request received an error instead of a valid response.\n" +
 //                            "ERROR: " + exception.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-//                    eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+//                    eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
 //                }
 //
 //            });
 //        } catch (RequestException ex) {
 //            MessageObject msgObj = new MessageObject("The required data could not be received.\n" +
 //                    "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-//            eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+//            eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
 //            Console.warn("Something went wrong in Molecules Tab: " + ex.getMessage());
 //        }
 //    }
@@ -522,7 +522,7 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
 //                        //ModelFactoryException, NullPointerException, IllegalArgumentException, JSONException
 //                        MessageObject msgObj = new MessageObject("The received object is empty or faulty and could not be parsed.\n" +
 //                                "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-//                        eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+//                        eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
 //                        Console.error(getClass() + " ERROR: " + ex.getMessage());
 //                    }
 //
@@ -536,13 +536,13 @@ public class MoleculesPresenter extends Controller implements MoleculesView.Pres
 //
 //                    MessageObject msgObj = new MessageObject("The request received an error instead of a valid response.\n" +
 //                            "ERROR: " + exception.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-//                    eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+//                    eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
 //                }
 //            });
 //        } catch (RequestException ex) {
 //            MessageObject msgObj = new MessageObject("The required data could not be received.\n" +
 //                    "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-//            eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+//            eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
 //            Console.warn("Something went wrong in Molecules Tab: " + ex.getMessage());
 //        }
 //    }

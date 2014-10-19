@@ -1,12 +1,13 @@
-package org.reactome.web.elv.client.common.events;
+package org.reactome.web.elv.client.common.handlers;
 
 import com.google.gwt.event.shared.EventHandler;
+import org.reactome.web.elv.client.common.events.ELVEvent;
 
 /**
  * @author Antonio Fabregat <fabregat@ebi.ac.uk>
  */
 public interface ELVEventHandler<T> extends EventHandler {
 
-    void onEventThrown(ELVEvent<T> event);
+    void onEventFired(ELVEvent<T> event);
 
 }

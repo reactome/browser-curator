@@ -60,10 +60,8 @@ public class MapSet<S,T> {
     }
 
     private Set<T> getOrCreate(S identifier){
-        Set<T> set;
-        if(map.containsKey(identifier)){
-            set = map.get(identifier);
-        }else{
+        Set<T> set = map.get(identifier);
+        if(set == null){
             set = new HashSet<T>();
             map.put(identifier, set);
         }

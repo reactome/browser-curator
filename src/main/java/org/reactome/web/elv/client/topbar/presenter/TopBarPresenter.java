@@ -89,7 +89,7 @@ public class TopBarPresenter extends Controller implements TopBarView.Presenter 
             MessageObject msgObj = new MessageObject("The species '" + species.getDisplayName() +
                     "' could not be selected.\n" +
                     "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-            eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+            eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
             Console.error(getClass() + ex.getMessage());
         }
     }

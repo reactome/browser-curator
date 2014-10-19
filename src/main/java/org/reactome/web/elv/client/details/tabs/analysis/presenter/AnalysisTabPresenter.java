@@ -139,7 +139,7 @@ public class AnalysisTabPresenter extends Controller implements AnalysisTabView.
                         MessageObject msgObj = new MessageObject("The received object for '" + resource
                                 + "' is empty or faulty and could not be parsed.\n" +
                                 "ERROR: " + e.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-                        eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                        eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
                         Console.error(getClass() + " ERROR: " + e.getMessage());
                         view.setInitialState();
                     }
@@ -151,7 +151,7 @@ public class AnalysisTabPresenter extends Controller implements AnalysisTabView.
                     MessageObject msgObj = new MessageObject("The request for '" + resource
                             + "' received an error instead of a valid response.\n" +
                             "ERROR: " + exception.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-                    eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                    eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
                     Console.error(getClass() + " ERROR: " + exception.getMessage());
                     view.setInitialState();
                 }
@@ -160,7 +160,7 @@ public class AnalysisTabPresenter extends Controller implements AnalysisTabView.
             MessageObject msgObj = new MessageObject("The requested detailed data for '" + resource
                     + "'\nin the Analysis could not be received.\n" +
                     "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-            eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+            eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
             Console.error(getClass() + " ERROR: " + ex.getMessage());
             view.setInitialState();
         }

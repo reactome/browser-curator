@@ -13,6 +13,8 @@ import org.reactome.web.elv.client.common.analysis.model.PathwaySummary;
 import org.reactome.web.elv.client.common.data.factory.ModelFactory;
 import org.reactome.web.elv.client.common.data.model.*;
 import org.reactome.web.elv.client.common.events.ELVEventType;
+import org.reactome.web.elv.client.common.events.EventHoverEvent;
+import org.reactome.web.elv.client.common.events.EventHoverResetEvent;
 import org.reactome.web.elv.client.common.model.Ancestors;
 import org.reactome.web.elv.client.common.model.Path;
 import org.reactome.web.elv.client.common.utils.Console;
@@ -55,6 +57,16 @@ public class HierarchyPresenter extends Controller implements HierarchyView.Pres
         this.loadedDiagram = null;
         this.selectedDatabaseObject = null;
 	}
+
+    @Override
+    public void eventHovered(Path path, Pathway pathway, Event event) {
+        this.eventBus.fireEventFromSource(new EventHoverEvent(path, pathway, event), this);
+    }
+
+    @Override
+    public void eventHoveredReset() {
+        this.eventBus.fireEventFromSource(new EventHoverResetEvent(), this);
+    }
 
     @Override
     public void eventSelected(Path path, Pathway pathway, Event event) {
@@ -236,7 +248,7 @@ public class HierarchyPresenter extends Controller implements HierarchyView.Pres
                                 + "\nand resource=" + resource + " is empty or faulty and could not be parsed.\n"
                                 + "The analysis values for pathways cannot be set.\n" +
                                 "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-                        eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                        eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
                         Console.error(getClass() + " ERROR: " + ex.getMessage());
                     }
                 }
@@ -251,7 +263,7 @@ public class HierarchyPresenter extends Controller implements HierarchyView.Pres
                             "\nand resource=" + resource + " received an error instead of a valid response.\n"
                             + "The analysis values for pathways cannot be set.\n" +
                             "ERROR: " + exception.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-                    eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                    eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
                 }
             });
 
@@ -260,7 +272,7 @@ public class HierarchyPresenter extends Controller implements HierarchyView.Pres
                     "\nand resource=" + resource + " could not be received.\n"
                     + "The analysis values for pathways cannot be set.\n" +
                     "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-            eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+            eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
             Console.error(getClass() + " ERROR: " + ex.getMessage());
         }
     }
@@ -292,7 +304,7 @@ public class HierarchyPresenter extends Controller implements HierarchyView.Pres
                                 + "\nand resource=" + resource + " is empty or faulty and could not be parsed.\n"
                                 + "The analysis values for reactions cannot be set.\n" +
                                 "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-                        eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                        eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
                         Console.error(getClass() + " ERROR: " + ex.getMessage());
                     }
 
@@ -308,7 +320,7 @@ public class HierarchyPresenter extends Controller implements HierarchyView.Pres
                             "\nand resource=" + resource + " received an error instead of a valid response.\n"
                             + "The analysis values for reactions cannot be set.\n" +
                             "ERROR: " + exception.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-                    eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+                    eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
                 }
             });
 
@@ -317,7 +329,7 @@ public class HierarchyPresenter extends Controller implements HierarchyView.Pres
                     "\nand resource=" + resource + " could not be received.\n"
                     + "The analysis values for reactions cannot be set.\n" +
                     "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-            eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+            eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
             Console.error(getClass() + " ERROR: " + ex.getMessage());
         }
     }
@@ -464,7 +476,7 @@ public class HierarchyPresenter extends Controller implements HierarchyView.Pres
 
     @Override
     public void errorMsg(MessageObject msgObj) {
-        eventBus.fireELVEvent(ELVEventType.INTERANL_MESSAGE, msgObj);
+        eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
     }
 
     protected void setAncestorsListToExpand(List<Event> path, Ancestors ancestors) throws Exception {

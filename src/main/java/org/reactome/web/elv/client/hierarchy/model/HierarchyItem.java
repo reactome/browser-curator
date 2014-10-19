@@ -2,33 +2,51 @@ package org.reactome.web.elv.client.hierarchy.model;
 
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.MouseOutEvent;
+import com.google.gwt.event.dom.client.MouseOutHandler;
+import com.google.gwt.event.dom.client.MouseOverEvent;
+import com.google.gwt.event.dom.client.MouseOverHandler;
+import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.event.shared.HasHandlers;
 import com.google.gwt.i18n.client.NumberFormat;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.InlineLabel;
-import com.google.gwt.user.client.ui.TreeItem;
+import com.google.gwt.user.client.ui.*;
 import org.reactome.web.elv.client.common.ReactomeImages;
 import org.reactome.web.elv.client.common.analysis.model.EntityStatistics;
 import org.reactome.web.elv.client.common.analysis.model.PathwaySummary;
 import org.reactome.web.elv.client.common.data.model.*;
 import org.reactome.web.elv.client.common.model.Path;
 import org.reactome.web.elv.client.common.provider.InstanceTypeIconProvider;
-import org.reactome.web.elv.client.common.utils.Console;
+import org.reactome.web.elv.client.hierarchy.events.HierarchyItemMouseOutEvent;
+import org.reactome.web.elv.client.hierarchy.events.HierarchyItemMouseOverEvent;
+import org.reactome.web.elv.client.hierarchy.handlers.HierarchyItemMouseOutHandler;
+import org.reactome.web.elv.client.hierarchy.handlers.HierarchyItemMouseOverHandler;
 import org.reactome.web.elv.client.manager.state.AdvancedState;
 
 /**
  * @author Antonio Fabregat <fabregat@ebi.ac.uk>
  */
-public class HierarchyItem extends TreeItem {
+public class HierarchyItem extends TreeItem implements HasHandlers, MouseOverHandler, MouseOutHandler {
+    private HandlerManager handlerManager = new HandlerManager(this);
+
     private boolean childrenLoaded = false;
     private FlowPanel text;
-    private InlineLabel label;
     private InlineLabel analysisData;
 
     public HierarchyItem(Species species, Event event) {
         super();
         setUserObject(event);
         init(species, event);
+        initHandlers();
+    }
+
+    public HandlerRegistration addHierarchyItemMouseOverHandler(HierarchyItemMouseOverHandler handler){
+        return handlerManager.addHandler(HierarchyItemMouseOverEvent.TYPE, handler);
+    }
+
+    public HandlerRegistration addHierarchyItemMouseOutHandler(HierarchyItemMouseOutHandler handler){
+        return handlerManager.addHandler(HierarchyItemMouseOutEvent.TYPE, handler);
     }
 
     private void init(Species species, Event event){
@@ -68,8 +86,7 @@ public class HierarchyItem extends TreeItem {
         text.getElement().getStyle().setMarginLeft(5, Unit.PX);
         text.setStyleName("elv-Hierarchy-Item");
 
-
-        label = new InlineLabel(event.getDisplayName());
+        InlineLabel label = new InlineLabel(event.getDisplayName());
         label.getElement().getStyle().setMarginLeft(2, Unit.PX);
         label.setTitle(event.getDisplayName());
         text.add(label);
@@ -94,6 +111,14 @@ public class HierarchyItem extends TreeItem {
             loaderMsg.add(loadingLabel);
             addItem(loaderMsg); // Add a place holder so that this item can be opened.
         }
+    }
+
+    private void initHandlers(){
+        Widget widget = getWidget();
+        widget.sinkEvents(com.google.gwt.user.client.Event.ONMOUSEOVER);
+        widget.sinkEvents(com.google.gwt.user.client.Event.ONMOUSEOUT);
+        widget.addHandler(this, MouseOverEvent.getType());
+        widget.addHandler(this, MouseOutEvent.getType());
     }
 
     public void clearAnalysisData(){
@@ -184,5 +209,20 @@ public class HierarchyItem extends TreeItem {
 //            Console.error("HierarchyItem: showAnalysisData FDR is NULL!");
 //        }
         this.analysisData.setText(sb.toString());
+    }
+
+    @Override
+    public void onMouseOver(MouseOverEvent event) {
+        fireEvent(new HierarchyItemMouseOverEvent(this));
+    }
+
+    @Override
+    public void onMouseOut(MouseOutEvent event) {
+        fireEvent(new HierarchyItemMouseOutEvent());
+    }
+
+    @Override
+    public void fireEvent(GwtEvent<?> event) {
+        handlerManager.fireEvent(event);
     }
 }
