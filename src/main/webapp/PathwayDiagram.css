@@ -28,3 +28,7 @@
 	overflow-y: auto;
 	overflow-x: hidden;
 }
+
+.gwt-SuggestBoxPopup {
+	z-index: 3;
+}
