@@ -7,6 +7,6 @@ import com.google.gwt.event.shared.EventHandler;
  */
 public interface EventHoverResetHandler extends EventHandler {
 
-    void onHierarchyEventHoveredReset();
+    void onEventHoveredReset();
 
 }
