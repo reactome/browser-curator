@@ -27,9 +27,23 @@ import java.util.Map;
  */
 public class DataManager extends Controller {
 
+    private static DataManager dataManager;
+
+    public static DataManager getDataManager(EventBus eventBus){
+        if(dataManager==null){
+            dataManager = new DataManager(eventBus);
+        }
+        return dataManager;
+    }
+
+    public static DataManager getDataManager() throws Exception {
+        if(dataManager==null) throw new Exception("DataManager has not been created");
+        return dataManager;
+    }
+
     private Map<Long, DatabaseObject> databaseObjectMap = new HashMap<Long, DatabaseObject>();
 
-    public DataManager(EventBus eventBus) {
+    protected DataManager(EventBus eventBus) {
         super(eventBus);
     }
 
@@ -43,8 +57,12 @@ public class DataManager extends Controller {
         }
     }
 
-    @Override
-    public void onDatabaseObjectDetailedViewRequired(final Long dbId) {
+    public interface DataManagerObjectRetrievedHandler {
+        void onDatabaseObjectRetrieved(DatabaseObject databaseObject);
+        void onError(MessageObject messageObject);
+    }
+
+    public void databaseObjectDetailedViewRequired(final Long dbId, final DataManagerObjectRetrievedHandler handler){
         String url = "/ReactomeRESTfulAPI/RESTfulWS/detailedView/DatabaseObject/" + dbId;
         RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, url);
         requestBuilder.setHeader("Accept", "application/json");
@@ -57,14 +75,14 @@ public class DataManager extends Controller {
                         JSONObject json = JSONParser.parseStrict(text).isObject();
                         DatabaseObject databaseObject = ModelFactory.getDatabaseObject(json);
                         cacheDatabaseObjects(databaseObject); //Todo: check whether this is better option
-                        eventBus.fireELVEvent(ELVEventType.DATA_MANAGER_OBJECT_DETAILED_VIEW_RETRIEVED, databaseObject);
+                        handler.onDatabaseObjectRetrieved(databaseObject);
                     }catch (Exception ex){
                         //ModelFactoryException, NullPointerException, IllegalArgumentException, JSONException
                         MessageObject msgObj = new MessageObject("The received object for the required detailed view" +
                                 "\n'DbId=" + dbId + "' is empty or faulty and could not be parsed.\n" +
                                 "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-                        eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
-                        Console.error(getClass() + " ERROR: " + ex.getMessage());
+                        handler.onError(msgObj);
+                        if(!GWT.isScript()) ex.printStackTrace();
                     }
                 }
                 @Override
@@ -73,18 +91,32 @@ public class DataManager extends Controller {
                     MessageObject msgObj = new MessageObject("The detailed view request for 'DbId=" + dbId + "'\n" +
                             "received an error instead of a valid response.\n" +
                             "ERROR: " + exception.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-                    eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
-                    Console.error(getClass() + " ERROR: " + exception.getMessage());
+                    handler.onError(msgObj);
+                    if(!GWT.isScript()) exception.printStackTrace();
                 }
             });
         }catch (RequestException ex) {
-            /*replaced: eventBus.fireELVEvent(ELVEventType.DATA_MANAGER_LOAD_ERROR, ex.getMessage());*/
             MessageObject msgObj = new MessageObject("The requested detailed view for 'DbId=" + dbId
                     + "' could not be received.\n" +
                     "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
-            eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
-            Console.error(getClass() + " ERROR: " + ex.getMessage());
+            handler.onError(msgObj);
+            if(!GWT.isScript()) ex.printStackTrace();
         }
+    }
+
+    @Override
+    public void onDatabaseObjectDetailedViewRequired(final Long dbId) {
+        this.databaseObjectDetailedViewRequired(dbId, new DataManagerObjectRetrievedHandler() {
+            @Override
+            public void onDatabaseObjectRetrieved(DatabaseObject databaseObject) {
+                eventBus.fireELVEvent(ELVEventType.DATA_MANAGER_OBJECT_DETAILED_VIEW_RETRIEVED, databaseObject);
+            }
+
+            @Override
+            public void onError(MessageObject messageObject) {
+                eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, messageObject);
+            }
+        });
     }
 
     /**

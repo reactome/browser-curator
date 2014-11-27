@@ -6,7 +6,6 @@ import com.google.gwt.user.client.ui.HasWidgets;
 import org.reactome.web.elv.client.center.content.analysis.presenter.AnalysisPresenter;
 import org.reactome.web.elv.client.center.content.analysis.view.AnalysisView;
 import org.reactome.web.elv.client.center.content.analysis.view.AnalysisViewImpl;
-import org.reactome.web.elv.client.center.content.diagram.presenter.DiagramPresenter;
 import org.reactome.web.elv.client.center.content.diagram.view.DiagramView;
 import org.reactome.web.elv.client.center.content.diagram.view.DiagramViewImpl;
 import org.reactome.web.elv.client.center.content.fireworks.presenter.FireworksPresenter;
@@ -84,7 +83,7 @@ public class AppController extends Controller {
 
                     //############ CENTER CONTENT ################
                     DiagramView diagramView = new DiagramViewImpl();
-                    new DiagramPresenter(eventBus, diagramView);
+//                    new DiagramPresenter(eventBus, diagramView);
 
                     AnalysisView analysisView = new AnalysisViewImpl();
                     new AnalysisPresenter(eventBus, analysisView);
@@ -114,7 +113,7 @@ public class AppController extends Controller {
      */
     private void loadManagerModules() {
         new GAManager(eventBus);
-        new DataManager(eventBus);
+        DataManager.getDataManager(eventBus); //Singleton pattern
         new OrthologyManager(eventBus);
         new StateManager(eventBus);
         new PopupManager(eventBus);
