@@ -8,6 +8,6 @@ import org.reactome.web.elv.client.common.events.EventHoverEvent;
  */
 public interface EventHoverHandler extends EventHandler {
 
-    void onHierarchyEventHovered(EventHoverEvent e);
+    void onEventHovered(EventHoverEvent e);
 
 }
