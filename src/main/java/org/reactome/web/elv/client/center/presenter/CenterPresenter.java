@@ -71,7 +71,7 @@ public class CenterPresenter extends Controller implements CenterView.Presenter 
         }
         switch (tool){
             case DIAGRAM:
-                this.view.selectContent(1);
+//                this.view.selectContent(1);
                 break;
             case ANALYSIS:
                 this.view.selectContent(2);
