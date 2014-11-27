@@ -16,6 +16,10 @@ public class EventHoverEvent extends GwtEvent<EventHoverHandler> {
     private Pathway pathway;
     private Event event;
 
+    public EventHoverEvent(Pathway pathway) {
+        this.pathway = pathway;
+    }
+
     public EventHoverEvent(Path path, Pathway pathway, Event event) {
         this.path = path;
         this.pathway = pathway;
@@ -29,7 +33,7 @@ public class EventHoverEvent extends GwtEvent<EventHoverHandler> {
 
     @Override
     protected void dispatch(EventHoverHandler handler) {
-        handler.onHierarchyEventHovered(this);
+        handler.onEventHovered(this);
     }
 
 
