@@ -21,6 +21,7 @@ import org.reactome.web.elv.client.manager.messages.MessageObject;
 import org.reactome.web.elv.client.manager.messages.MessageType;
 
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Manages the app state in order to control the History.
@@ -227,6 +228,59 @@ public class StateManager extends Controller implements ValueChangeHandler<Strin
     }
 
     @Override
+    public void onFireworksPathwaySelected(final Pathway pathway) {
+        if(pathway==null || pathway.equals(this.currentState.getPathway())) return;
+        /**
+         * The following procedure is quite complicated and it is because we are projecting here from a graph point
+         * of view of the pathways to a tree based representation. The main difference is that for each node in a graph
+         * we can find now several locations and at the same time for "subpathways" that are only once in the graph
+         * the location opened in the hierarchy is related to the current location (where the browser is focused)
+         */
+        //1) The ancestors have to be retrieved in order to start the calculations
+        PathRetriever.retrieveAncestors(pathway, new PathRetriever.PathHandler() {
+            @Override
+            public void onPathsRetrieved(List<Path> paths) {
+                List<Event> targetPath; //Can not defined it as final here
+                List<Event> currentPath = currentState.getPath();
+
+                //2) By default the targetPath is the first one provided
+                targetPath = paths.get(0).getPath();
+                if(!currentPath.isEmpty()){
+                    //3) In case there is currently a path selected, we pick the path which includes it (or leave the default)
+                    for (Path path : paths) {
+                        if(path.contains(currentPath)){
+                            targetPath = path.getPath();
+                            break;
+                        }
+                    }
+                }
+                final List<Event> pathAux = targetPath; //It could not be defined final a few lines above :(
+                //4) Simulates a stableIdentifier loader (using the dbId, yes it works ;D) and mixes the resulting state
+                //   with the currentState and the path calculated previously
+                new StableIdentifierLoader(pathway.getDbId().toString(), new StableIdentifierLoader.StableIdentifierLoadedHandler() {
+                    @Override
+                    public void onStableIdentifierLoaded(AdvancedState advancedState) {
+                        AdvancedState aux = new AdvancedState(currentState);
+                        aux.setPathway(advancedState.getPathway());
+                        aux.setPath(pathAux);
+                        aux.setInstance(advancedState.getInstance());
+                        History.newItem(aux.toString(), true);
+                    }
+                });
+            }
+        });
+    }
+
+    @Override
+    public void onFireworksPathwaySelectionReset() {
+        this.desiredState = new AdvancedState(this.currentState);
+        this.desiredState.setPathway(null);
+        this.desiredState.setInstance(null);
+        this.desiredState.setPath(new LinkedList<Event>());
+        History.newItem(this.desiredState.toString(), true);
+    }
+
+    @Override
     public void onHierarchyEventSelected(Path path, Pathway pathway, Event event) {
         this.desiredState = new AdvancedState(this.currentState);
         this.desiredState.setPathway(pathway);
@@ -245,10 +299,6 @@ public class StateManager extends Controller implements ValueChangeHandler<Strin
     public void onOrthologousManagerStateSelected(AdvancedState state) {
         state.setDetailsTab(this.currentState.getDetailsTab());
         state.setAnalysisToken(this.currentState.getAnalysisToken());
-        //Requirement from diagram side
-        if(state.getSpecies().equals(this.currentState.getSpecies())){
-            state.setAnalysisToken(this.currentState.getAnalysisToken());
-        }
         state.changeCenterToolIfNeeded(true);
         History.newItem(state.toString(), true);
     }
