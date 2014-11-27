@@ -101,6 +101,14 @@ public abstract class Controller implements ELVEventHandler {
                 onDiagramLoaded((DatabaseObject) obj);
                 break;
 
+                    /* FIREWORKS EVENTS */
+            case FIREWORKS_PATHWAY_SELECTED:
+                onFireworksPathwaySelected((Pathway) obj);
+                break;
+            case FIREWORKS_PATHWAY_SELECTION_RESET:
+                onFireworksPathwaySelectionReset();
+                break;
+
                     /* PANELS */
             case DETAILS_PANEL_RESIZED:
                 onDetailPanelResized((Integer) obj);
@@ -269,6 +277,10 @@ public abstract class Controller implements ELVEventHandler {
     public void onDiagramOverlayCleared(){}
     public void onDiagramSubpathwaySelected(Pathway pathway, Pathway subpathway){}
     public void onDiagramLoaded(DatabaseObject databaseObject){}
+
+    /* FIREWORKS EVENTS */
+    public void onFireworksPathwaySelected(Pathway pathway){}
+    public void onFireworksPathwaySelectionReset(){}
 
     /* PANELS */
     public void onDetailPanelResized(Integer size){}
