@@ -314,7 +314,7 @@ public class OrthologyManager extends Controller {
             nextDiagram = this.getOrthologousFromHomoSapiens(d, species);
         }
 
-        // when the next diagram can not be calculated we stays where we are
+        // when the next diagram can not be calculated we stay where we are
         // and just show the selected instance without changing the scope
         if(nextDiagram==null){
             species = this.species;
@@ -420,8 +420,6 @@ public class OrthologyManager extends Controller {
         //If there is more than one, for the moment we only take into account the first one
         cacheDetailedView(event);
 
-//        this.path = path==null ? new LinkedList<Event>() : path.getPath();
-//        this.diagram = pathway;
         goToDatabaseObject(event);
     }
 
