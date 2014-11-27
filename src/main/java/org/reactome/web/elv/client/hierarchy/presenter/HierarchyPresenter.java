@@ -15,6 +15,8 @@ import org.reactome.web.elv.client.common.data.model.*;
 import org.reactome.web.elv.client.common.events.ELVEventType;
 import org.reactome.web.elv.client.common.events.EventHoverEvent;
 import org.reactome.web.elv.client.common.events.EventHoverResetEvent;
+import org.reactome.web.elv.client.common.handlers.EventHoverHandler;
+import org.reactome.web.elv.client.common.handlers.EventHoverResetHandler;
 import org.reactome.web.elv.client.common.model.Ancestors;
 import org.reactome.web.elv.client.common.model.Path;
 import org.reactome.web.elv.client.common.utils.Console;
@@ -32,7 +34,8 @@ import java.util.Set;
 /**
  * @author Antonio Fabregat <fabregat@ebi.ac.uk>
  */
-public class HierarchyPresenter extends Controller implements HierarchyView.Presenter, AnalysisHelper.ResourceChosenHandler {
+public class HierarchyPresenter extends Controller implements HierarchyView.Presenter, AnalysisHelper.ResourceChosenHandler,
+        EventHoverHandler, EventHoverResetHandler {
 
 	private HierarchyView view;
 
@@ -51,6 +54,9 @@ public class HierarchyPresenter extends Controller implements HierarchyView.Pres
         super(eventBus);
 		this.view = treeView;
 		this.view.setPresenter(this);
+
+//        this.eventBus.addHandler(EventHoverEvent.TYPE, this);
+//        this.eventBus.addHandler(EventHoverResetEvent.TYPE, this);
 
         this.pathToExpand = new Path();
         this.openingPath = -1;
@@ -510,5 +516,17 @@ public class HierarchyPresenter extends Controller implements HierarchyView.Pres
     public void onResourceChosen(String resource) {
         this.resource = resource;
         this.getAnalysisData(view.getContainedEventIds(), view.getHierarchyPathwaysWithReactionsLoaded());
+    }
+
+    @Override
+    public void onEventHovered(EventHoverEvent e) {
+        if(e.getSource() == this) return;
+        System.out.println(e.getSource().getClass());
+        System.out.println(getClass().getSimpleName() + " >> Fireworks " +  e.getPathway().getName() + " hovered");
+    }
+
+    @Override
+    public void onEventHoveredReset() {
+        System.out.println("Fireworks hovering reset");
     }
 }
