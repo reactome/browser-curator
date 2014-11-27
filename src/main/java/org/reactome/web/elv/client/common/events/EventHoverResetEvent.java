@@ -16,7 +16,7 @@ public class EventHoverResetEvent extends GwtEvent<EventHoverResetHandler> {
 
     @Override
     protected void dispatch(EventHoverResetHandler handler) {
-        handler.onHierarchyEventHoveredReset();
+        handler.onEventHoveredReset();
     }
 
 }
