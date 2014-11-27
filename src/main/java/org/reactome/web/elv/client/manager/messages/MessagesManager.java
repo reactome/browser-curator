@@ -33,10 +33,10 @@ public class MessagesManager extends Controller {
     public void onInternalMessageSent(MessageObject msgObj){
         switch (msgObj.getMsgType()){
             case INTERNAL_ERROR:
-                DialogBoxFactory.alertMsg(msgObj.getClazz().getName(), msgObj.getMessage(), new Image(ReactomeImages.INSTANCE.exclamation()));
+                DialogBoxFactory.alertMsg(msgObj.getClazz().getSimpleName(), msgObj.getMessage(), new Image(ReactomeImages.INSTANCE.exclamation()));
                 break;
             case INTERNAL_WARNING:
-                DialogBoxFactory.alertMsg(msgObj.getClazz().getName(), msgObj.getMessage(), new Image(ReactomeImages.INSTANCE.information()));
+                DialogBoxFactory.alertMsg(msgObj.getClazz().getSimpleName(), msgObj.getMessage(), new Image(ReactomeImages.INSTANCE.information()));
                 break;
 //            default: INTERNAL_INFO:
         }
