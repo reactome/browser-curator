@@ -463,6 +463,13 @@ public class OrthologyManager extends Controller {
     }
 
     @Override
+    public void onStateManagerInstancesInitialStateReached() {
+        this.diagram = null;
+        this.databaseObject = null;
+        this.path = new LinkedList<Event>();
+    }
+
+    @Override
     public void onStateManagerSpeciesSelected(Species species) {
         this.species = species;
     }
