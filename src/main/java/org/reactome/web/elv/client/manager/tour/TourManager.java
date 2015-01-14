@@ -537,7 +537,7 @@ public class TourManager extends Controller implements TourQuestionEventHandler,
         TourInfoPanel info = new TourInfoPanel();
         info.addContent(new InlineLabel("We hope the tour was helpful"));
         info.addContent(new InlineLabel("If you would like to learn more, please refer to the "));
-        info.addContent(new Anchor("Reactome User Guide", "http://www.reactome.org/userguide/Usersguide.html", "_blank"));
+        info.addContent(new Anchor("Reactome User Guide", "http://wiki.reactome.org/index.php/Usersguide", "_blank"));
         info.addContent(new InlineLabel("Enjoy Browsing the REACTOME Pathways!"));
         info.show();
     }

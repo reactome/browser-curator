@@ -17,7 +17,6 @@
 
     <!-- Other module inherits -->
     <inherits name='org.reactome.diagram.PathwayDiagram'/>
-    <inherits name="org.reactome.web.fireworks.Fireworks"/>
     <inherits name="uk.ac.ebi.pwp.utils.analytics.GoogleAnalytics"/>
     <inherits name="uk.ac.ebi.pwp.widgets.chebi.ChEBI"/>
     <inherits name="uk.ac.ebi.pwp.widgets.gxa.GXA"/>
@@ -30,6 +29,10 @@
     <!-- https://github.com/eligrey/FileSaver.js/blob/master/README.md -->
     <script src="FileSaver.js"/>
     <script src="Blob.js"/>
+    
+    <!-- Scripts needed for the GenomeSpace integration -->
+    <script src="https://gsui.genomespace.org/jsui/js/jquery-1.7.2.min.js"/>
+    <script src="https://gsui.genomespace.org/jsui/upload/gsuploadwindow.js"/>
 
     <!-- Specify the app entry point class -->
     <entry-point class='org.reactome.web.elv.client.PathwayBrowser'/>
