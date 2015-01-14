@@ -27,8 +27,8 @@
     <!-- the standard W3C File API Blob interface is not available in all browsers. -->
     <!-- Blob.js is a cross-browser Blob implementation that solves this. -->
     <!-- https://github.com/eligrey/FileSaver.js/blob/master/README.md -->
-    <script src="FileSaver.js"></script>
-    <script src="Blob.js"></script>
+    <script src="FileSaver.js"/>
+    <script src="Blob.js"/>
     
     <!-- Scripts needed for the GenomeSpace integration -->
     <script src="https://gsui.genomespace.org/jsui/js/jquery-1.7.2.min.js"/>
