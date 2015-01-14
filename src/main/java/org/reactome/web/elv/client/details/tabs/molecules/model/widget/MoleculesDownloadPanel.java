@@ -3,8 +3,8 @@ package org.reactome.web.elv.client.details.tabs.molecules.model.widget;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
-
 import org.reactome.web.elv.client.common.ReactomeImages;
 import org.reactome.web.elv.client.common.widgets.DialogBoxFactory;
 import org.reactome.web.elv.client.common.widgets.button.CustomButton;
@@ -169,7 +169,7 @@ public class MoleculesDownloadPanel extends DockLayoutPanel {
         			uploadListToGenomeSpace(textArea.getText(),randomInt.toString());
         		}else{
         			Window.alert("You are trying to download an empty file.\n" +
-        					"Please select at least one type of molecules AND one field for the download.");
+                            "Please select at least one type of molecules AND one field for the download.");
         		}
         		presenter.moleculeDownloadStarted();
         	}
@@ -212,7 +212,6 @@ public class MoleculesDownloadPanel extends DockLayoutPanel {
 
     /**
      * Uses GenomeSpace JavaScript method to upload data.
-     * @param text from preview
      */
     public static native void uploadListToGenomeSpace(String list, String randomInt) /*-{    	                                                                                	    
 		var blob = new Blob([list], {type: "text/plain"});
