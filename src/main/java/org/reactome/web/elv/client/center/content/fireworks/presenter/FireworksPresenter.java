@@ -1,12 +1,14 @@
 package org.reactome.web.elv.client.center.content.fireworks.presenter;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.http.client.*;
 import org.reactome.web.elv.client.center.content.fireworks.view.FireworksView;
 import org.reactome.web.elv.client.common.Controller;
 import org.reactome.web.elv.client.common.EventBus;
 import org.reactome.web.elv.client.common.data.model.DatabaseObject;
 import org.reactome.web.elv.client.common.data.model.Event;
 import org.reactome.web.elv.client.common.data.model.Pathway;
+import org.reactome.web.elv.client.common.data.model.Species;
 import org.reactome.web.elv.client.common.events.ELVEventType;
 import org.reactome.web.elv.client.common.events.EventHoverEvent;
 import org.reactome.web.elv.client.common.events.EventHoverResetEvent;
@@ -52,6 +54,12 @@ public class FireworksPresenter extends Controller implements FireworksView.Pres
         this.view.resetHighlight();
     }
 
+
+    @Override
+    public void onStateManagerSpeciesSelected(Species species) {
+        String speciesName = species.getDisplayName().replaceAll(" ", "_");
+        loadSpeciesFireworks(speciesName);
+    }
 
     @Override
     public void onStateManagerDatabaseObjectsSelected(List<Event> path, Pathway pathway, DatabaseObject databaseObject) {
@@ -107,5 +115,44 @@ public class FireworksPresenter extends Controller implements FireworksView.Pres
     @Override
     public void resetPathwayHighlighting() {
         eventBus.fireEventFromSource(new EventHoverResetEvent(), this);
+    }
+
+
+
+
+    public void loadSpeciesFireworks(String species){
+        String url = "/download/current/fireworks/" + species + ".json";
+        RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, url);
+        requestBuilder.setHeader("Accept", "application/json");
+        try {
+            requestBuilder.sendRequest(null, new RequestCallback() {
+                @Override
+                public void onResponseReceived(Request request, Response response) {
+                    try{
+                        String json = response.getText();
+                        view.loadSpeciesFireworks(json);
+                    }catch (Exception ex){
+                        //ModelFactoryException, NullPointerException, IllegalArgumentException, JSONException
+//                        MessageObject msgObj = new MessageObject("The received object for the required detailed view" +
+//                                "\n'DbId=" + dbId + "' is empty or faulty and could not be parsed.\n" +
+//                                "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
+                        if(!GWT.isScript()) ex.printStackTrace();
+                    }
+                }
+                @Override
+                public void onError(Request request, Throwable exception) {
+                    /*replaced: eventBus.fireELVEvent(ELVEventType.DATA_MANAGER_LOAD_ERROR, exception.getMessage());*/
+//                    MessageObject msgObj = new MessageObject("The detailed view request for 'DbId=" + dbId + "'\n" +
+//                            "received an error instead of a valid response.\n" +
+//                            "ERROR: " + exception.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
+                    if(!GWT.isScript()) exception.printStackTrace();
+                }
+            });
+        }catch (RequestException ex) {
+//            MessageObject msgObj = new MessageObject("The requested detailed view for 'DbId=" + dbId
+//                    + "' could not be received.\n" +
+//                    "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
+            if(!GWT.isScript()) ex.printStackTrace();
+        }
     }
 }

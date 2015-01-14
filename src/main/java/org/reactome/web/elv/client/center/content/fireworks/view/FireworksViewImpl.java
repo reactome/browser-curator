@@ -1,8 +1,9 @@
 package org.reactome.web.elv.client.center.content.fireworks.view;
 
-import com.google.gwt.resources.client.TextResource;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.ResizeLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
-import org.reactome.web.elv.client.center.content.fireworks.util.Resources;
 import org.reactome.web.elv.client.common.data.model.Pathway;
 import org.reactome.web.fireworks.client.FireworksFactory;
 import org.reactome.web.fireworks.client.FireworksViewer;
@@ -13,32 +14,44 @@ import org.reactome.web.fireworks.handlers.NodeHoverResetEventHandler;
 import org.reactome.web.fireworks.handlers.NodeSelectedEventHandler;
 import org.reactome.web.fireworks.handlers.NodeSelectedResetEventHandler;
 
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * @author Antonio Fabregat <fabregat@ebi.ac.uk>
  */
 public class FireworksViewImpl implements FireworksView, NodeHoverEventHandler, NodeSelectedEventHandler, NodeSelectedResetEventHandler, NodeHoverResetEventHandler {
     private Presenter presenter;
     private FireworksViewer fireworks;
-
+    private ResizeLayoutPanel container;
+    private List<HandlerRegistration> handlers;
 
     public FireworksViewImpl() {
-        //For the time being the json is retrieved from a static file in resources
-        TextResource json = Resources.INSTANCE.getFireworks();
-        this.fireworks = FireworksFactory.createFireworksViewer(json);
-        this.fireworks.addNodeHoverEventHandler(this);
-        this.fireworks.addNodeSelectedEventHandler(this);
-        this.fireworks.addNodeSelectedResetEventHandler(this);
-        this.fireworks.addNodeHoverResetEventHandler(this);
+        this.container = new ResizeLayoutPanel();
+        this.container.add(new Label("Loading..."));
+        this.handlers = new LinkedList<HandlerRegistration>();
     }
 
     @Override
     public Widget asWidget() {
-        return this.fireworks.asWidget();
+        return this.container;
     }
 
     @Override
     public void setPresenter(Presenter presenter) {
         this.presenter = presenter;
+    }
+
+    @Override
+    public void loadSpeciesFireworks(String speciesJson) {
+        this.removeHandlers(); //Needed to allow the garbage collection to get rid of previous instances of fireworks
+        this.fireworks = FireworksFactory.createFireworksViewer(speciesJson);
+        handlers.add(this.fireworks.addNodeHoverEventHandler(this));
+        handlers.add(this.fireworks.addNodeSelectedEventHandler(this));
+        handlers.add(this.fireworks.addNodeSelectedResetEventHandler(this));
+        handlers.add(this.fireworks.addNodeHoverResetEventHandler(this));
+        this.container.clear();
+        this.container.add(this.fireworks);
     }
 
     @Override
@@ -56,6 +69,17 @@ public class FireworksViewImpl implements FireworksView, NodeHoverEventHandler, 
     public void selectPathway(Pathway pathway) {
         if(pathway==null) return;
         this.fireworks.selectNodeByDbIdentifier(pathway.getDbId());
+    }
+
+    /**
+     * Gets rid of current possible existing handlers to the fireworks object, so the garbage collector will
+     * clean the memory and this class wont be listening to previous deleted instances of Fireworks
+     */
+    private void removeHandlers(){
+        for (HandlerRegistration handler : handlers) {
+            handler.removeHandler();
+        }
+        handlers.clear();
     }
 
     @Override

@@ -18,6 +18,8 @@ public interface FireworksView {
     Widget asWidget();
     void setPresenter(Presenter presenter);
 
+    void loadSpeciesFireworks(String speciesJson);
+
     void highlightPathway(Pathway pathway);
     void resetHighlight();
 
