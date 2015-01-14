@@ -83,7 +83,7 @@ public class PersonPanel extends DetailsPanel implements OpenHandler<DisclosureP
     private Widget getNoReferencesMessage(){
         HTMLPanel message;
         if(getLevel(this)==1)
-            message = new HTMLPanel("No references for this author in Reactome database");
+            message = new HTMLPanel("No other references");
         else
             message = new HTMLPanel("No more references for this author in Reactome database");
         message.addStyleName("elv-Details-OverviewDisclosure");
