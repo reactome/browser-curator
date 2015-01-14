@@ -29,6 +29,10 @@
     <!-- https://github.com/eligrey/FileSaver.js/blob/master/README.md -->
     <script src="FileSaver.js"></script>
     <script src="Blob.js"></script>
+    
+    <!-- Scripts needed for the GenomeSpace integration -->
+    <script src="https://gsui.genomespace.org/jsui/js/jquery-1.7.2.min.js"/>
+    <script src="https://gsui.genomespace.org/jsui/upload/gsuploadwindow.js"/>
 
     <!-- Specify the app entry point class -->
     <entry-point class='org.reactome.web.elv.client.PathwayBrowser'/>

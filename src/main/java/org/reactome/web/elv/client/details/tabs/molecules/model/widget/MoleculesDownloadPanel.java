@@ -5,6 +5,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
+
 import org.reactome.web.elv.client.common.ReactomeImages;
 import org.reactome.web.elv.client.details.model.widgets.TextPanel;
 import org.reactome.web.elv.client.details.tabs.molecules.model.data.Molecule;
@@ -14,6 +15,7 @@ import org.reactome.web.elv.client.details.tabs.molecules.view.MoleculesView;
 import org.reactome.web.elv.client.common.widgets.button.CustomButton;
 
 import java.util.HashSet;
+import java.util.Random;
 
 /**
  * @author Kerstin Hausmann <khaus@ebi.ac.uk>
@@ -28,8 +30,10 @@ public class MoleculesDownloadPanel extends DockLayoutPanel {
     private final CheckBox sequTB;
     private final CheckBox otheTB;
     private TextArea textArea;
+    private Random random = new Random();
 
     private final CustomButton startDownloadBtn = new CustomButton(ReactomeImages.INSTANCE.downloadFile(), "Start Download");
+    private final CustomButton startGenomeSpaceDownloadBtn = new CustomButton(ReactomeImages.INSTANCE.downloadFile(), "Save to GenomeSpace");
     private final MoleculesView.Presenter presenter;
 
     public MoleculesDownloadPanel(Result result, MoleculesView.Presenter presenter) {
@@ -137,20 +141,38 @@ public class MoleculesDownloadPanel extends DockLayoutPanel {
         startDownloadBtn.setStyleName("elv-Download-Button");
         buttonField.setStyleName("elv-ButtonPanel-Download");
         startDownloadBtn.setTitle("Depending on your browser you can either download your file by clicking on this button" +
-                                  " or your will be redirected to a new tab in your browser where you can right click and" +
-                                  " save the data.");
+        		" or your will be redirected to a new tab in your browser where you can right click and" +
+        		" save the data.");
         startDownloadBtn.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 if((chemTB.getValue() || protTB.getValue() || sequTB.getValue() || otheTB.getValue())
                         && (typeTB.getValue() || nameTB.getValue() || identifierTB.getValue())){
-                    alertDownload(textArea.getText());
+                	alertDownload(textArea.getText());
                 }else{
                     Window.alert("You are trying to download an empty file.\n" +
                             "Please select at least one type of molecules AND one field for the download.");
                 }
                 presenter.moleculeDownloadStarted();
             }
+        });
+        buttonField.add(startGenomeSpaceDownloadBtn);
+        startGenomeSpaceDownloadBtn.setStyleName("elv-Download-Button");
+        startGenomeSpaceDownloadBtn.setTitle("Clicking this button should open a window to import the data to GenomeSpace. " +
+        		"Depending on your browser configuration, you may have to enable popups for the Reactome website");
+        startGenomeSpaceDownloadBtn.addClickHandler(new ClickHandler() {
+        	@Override
+        	public void onClick(ClickEvent event) {
+        		if((chemTB.getValue() || protTB.getValue() || sequTB.getValue() || otheTB.getValue())
+        				&& (typeTB.getValue() || nameTB.getValue() || identifierTB.getValue())){
+        			Integer randomInt = random.nextInt(1000 - 1) + 1;
+        			uploadListToGenomeSpace(textArea.getText(),randomInt.toString());
+        		}else{
+        			Window.alert("You are trying to download an empty file.\n" +
+        					"Please select at least one type of molecules AND one field for the download.");
+        		}
+        		presenter.moleculeDownloadStarted();
+        	}
         });
 
         //Bringing together the two panels.
@@ -172,6 +194,7 @@ public class MoleculesDownloadPanel extends DockLayoutPanel {
 
         this.addStyleName("elv-Details-OverviewPanel");
     }
+    
 
     /**
      * Uses files in resources/public to enable download.
@@ -187,6 +210,18 @@ public class MoleculesDownloadPanel extends DockLayoutPanel {
         );
     }-*/;
 
+    /**
+     * Uses GenomeSpace JavaScript method to upload data.
+     * @param text from preview
+     */
+    public static native void uploadListToGenomeSpace(String list, String randomInt) /*-{    	                                                                                	    
+		var blob = new Blob([list], {type: "text/plain"});
+		var formData = new FormData();
+		var fileName = "Reactome_" + randomInt + "_gene_list.txt";
+		formData.append("webmasterfile", blob, fileName);
+		$wnd.gsUploadByPost(formData);
+	}-*/;
+   
     /**
      * Converting ResultObject into text for preview according to checkboxes.
      * @return String for preview
