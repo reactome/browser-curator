@@ -102,6 +102,9 @@ public abstract class Controller implements ELVEventHandler {
                 break;
 
                     /* FIREWORKS EVENTS */
+            case FIREWORKS_ANALYSIS_RESET:
+                onFireworksAnalysisReset();
+                break;
             case FIREWORKS_PATHWAY_SELECTED:
                 onFireworksPathwaySelected((Pathway) obj);
                 break;
@@ -279,6 +282,7 @@ public abstract class Controller implements ELVEventHandler {
     public void onDiagramLoaded(DatabaseObject databaseObject){}
 
     /* FIREWORKS EVENTS */
+    public void onFireworksAnalysisReset(){}
     public void onFireworksPathwaySelected(Pathway pathway){}
     public void onFireworksPathwaySelectionReset(){}
 

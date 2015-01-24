@@ -227,6 +227,14 @@ public class StateManager extends Controller implements ValueChangeHandler<Strin
         }
     }
 
+
+    @Override
+    public void onFireworksAnalysisReset() {
+        currentState.setAnalysisToken(null);
+        History.newItem(currentState.toString(), false);
+        this.eventBus.fireELVEvent(ELVEventType.STATE_MANAGER_ANALYSIS_TOKEN_RESET);
+    }
+
     @Override
     public void onFireworksPathwaySelected(final Pathway pathway) {
         if(pathway==null || pathway.equals(this.currentState.getPathway())) return;

@@ -12,6 +12,7 @@ public interface FireworksView {
         void selectPathway(Long dbId);
         void resetPathwaySelection();
         void highlightPathway(Long dbId);
+        public void resetAnalysis();
         void resetPathwayHighlighting();
     }
 
@@ -22,6 +23,10 @@ public interface FireworksView {
 
     void highlightPathway(Pathway pathway);
     void resetHighlight();
+
+    void setAnalysisToken(String token);
+    void setAnalysisResource(String resource);
+    void resetAnalysisToken();
 
     void selectPathway(Pathway pathway);
     void resetSelection();

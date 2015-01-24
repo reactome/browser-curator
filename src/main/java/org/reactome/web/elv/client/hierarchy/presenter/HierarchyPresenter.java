@@ -253,7 +253,7 @@ public class HierarchyPresenter extends Controller implements HierarchyView.Pres
                         MessageObject msgObj = new MessageObject("The received object for token=" + analysisToken
                                 + "\nand resource=" + resource + " is empty or faulty and could not be parsed.\n"
                                 + "The analysis values for pathways cannot be set.\n" +
-                                "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_ERROR);
+                                "ERROR: " + ex.getMessage(), getClass(), MessageType.INTERNAL_WARNING);
                         eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, msgObj);
                         Console.error(getClass() + " ERROR: " + ex.getMessage());
                     }

@@ -50,10 +50,25 @@ public class FireworksPresenter extends Controller implements FireworksView.Pres
     }
 
     @Override
+    public void onAnalysisTabResourceSelected(String resource) {
+        this.view.setAnalysisResource(resource);
+    }
+
+    @Override
     public void onEventHoveredReset() {
         this.view.resetHighlight();
     }
 
+
+    @Override
+    public void onStateManagerAnalysisTokenSelected(String token) {
+        this.view.setAnalysisToken(token);
+    }
+
+    @Override
+    public void onStateManagerAnalysisTokenReset() {
+        this.view.resetAnalysisToken();
+    }
 
     @Override
     public void onStateManagerSpeciesSelected(Species species) {
@@ -113,11 +128,14 @@ public class FireworksPresenter extends Controller implements FireworksView.Pres
     }
 
     @Override
+    public void resetAnalysis() {
+        eventBus.fireELVEvent(ELVEventType.FIREWORKS_ANALYSIS_RESET);
+    }
+
+    @Override
     public void resetPathwayHighlighting() {
         eventBus.fireEventFromSource(new EventHoverResetEvent(), this);
     }
-
-
 
 
     public void loadSpeciesFireworks(String species){

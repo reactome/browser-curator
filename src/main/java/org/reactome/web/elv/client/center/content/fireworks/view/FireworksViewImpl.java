@@ -1,18 +1,16 @@
 package org.reactome.web.elv.client.center.content.fireworks.view;
 
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.ResizeLayoutPanel;
-import com.google.gwt.user.client.ui.Widget;
+import org.reactome.web.elv.client.common.analysis.helper.AnalysisHelper;
 import org.reactome.web.elv.client.common.data.model.Pathway;
 import org.reactome.web.fireworks.client.FireworksFactory;
 import org.reactome.web.fireworks.client.FireworksViewer;
 import org.reactome.web.fireworks.events.NodeHoverEvent;
 import org.reactome.web.fireworks.events.NodeSelectedEvent;
-import org.reactome.web.fireworks.handlers.NodeHoverEventHandler;
-import org.reactome.web.fireworks.handlers.NodeHoverResetEventHandler;
-import org.reactome.web.fireworks.handlers.NodeSelectedEventHandler;
-import org.reactome.web.fireworks.handlers.NodeSelectedResetEventHandler;
+import org.reactome.web.fireworks.handlers.*;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -20,21 +18,19 @@ import java.util.List;
 /**
  * @author Antonio Fabregat <fabregat@ebi.ac.uk>
  */
-public class FireworksViewImpl implements FireworksView, NodeHoverEventHandler, NodeSelectedEventHandler, NodeSelectedResetEventHandler, NodeHoverResetEventHandler {
+public class FireworksViewImpl extends DockLayoutPanel implements FireworksView, AnalysisHelper.ResourceChosenHandler,
+        AnalysisResetHandler, NodeHoverHandler, NodeSelectedHandler, NodeSelectedResetHandler, NodeHoverResetHandler {
     private Presenter presenter;
     private FireworksViewer fireworks;
-    private ResizeLayoutPanel container;
     private List<HandlerRegistration> handlers;
 
-    public FireworksViewImpl() {
-        this.container = new ResizeLayoutPanel();
-        this.container.add(new Label("Loading..."));
-        this.handlers = new LinkedList<HandlerRegistration>();
-    }
+    private String token;
+    private String resource;
 
-    @Override
-    public Widget asWidget() {
-        return this.container;
+    public FireworksViewImpl() {
+        super(Style.Unit.PX);
+        this.add(new Label("Loading..."));
+        this.handlers = new LinkedList<HandlerRegistration>();
     }
 
     @Override
@@ -46,12 +42,16 @@ public class FireworksViewImpl implements FireworksView, NodeHoverEventHandler, 
     public void loadSpeciesFireworks(String speciesJson) {
         this.removeHandlers(); //Needed to allow the garbage collection to get rid of previous instances of fireworks
         this.fireworks = FireworksFactory.createFireworksViewer(speciesJson);
-        handlers.add(this.fireworks.addNodeHoverEventHandler(this));
-        handlers.add(this.fireworks.addNodeSelectedEventHandler(this));
-        handlers.add(this.fireworks.addNodeSelectedResetEventHandler(this));
-        handlers.add(this.fireworks.addNodeHoverResetEventHandler(this));
-        this.container.clear();
-        this.container.add(this.fireworks);
+        handlers.add(this.fireworks.addAnalysisResetHandler(this));
+        handlers.add(this.fireworks.addNodeHoverHandler(this));
+        handlers.add(this.fireworks.addNodeSelectedHandler(this));
+        handlers.add(this.fireworks.addNodeSelectedResetHandler(this));
+        handlers.add(this.fireworks.addNodeHoverResetHandler(this));
+        if(this.token!=null) {
+            this.fireworks.setAnalysisToken(token, resource);
+        }
+        this.clear();
+        this.add(this.fireworks);
     }
 
     @Override
@@ -63,6 +63,25 @@ public class FireworksViewImpl implements FireworksView, NodeHoverEventHandler, 
     @Override
     public void resetHighlight() {
         this.fireworks.resetHighlight();
+    }
+
+    @Override
+    public void setAnalysisToken(final String token) {
+        this.token = token;
+        AnalysisHelper.chooseResource(token, this);
+    }
+
+    @Override
+    public void setAnalysisResource(String resource) {
+        fireworks.setAnalysisToken(this.token, resource);
+    }
+
+    @Override
+    public void resetAnalysisToken() {
+        if(this.token!=null) {
+            this.token = null;
+            fireworks.resetAnalysis();
+        }
     }
 
     @Override
@@ -88,6 +107,11 @@ public class FireworksViewImpl implements FireworksView, NodeHoverEventHandler, 
     }
 
     @Override
+    public void onAnalysisReset() {
+        this.presenter.resetAnalysis();
+    }
+
+    @Override
     public void onNodeHover(NodeHoverEvent event) {
         this.presenter.highlightPathway(event.getNode().getDbId());
     }
@@ -105,5 +129,13 @@ public class FireworksViewImpl implements FireworksView, NodeHoverEventHandler, 
     @Override
     public void onNodeHoverReset() {
         this.presenter.resetPathwayHighlighting();
+    }
+
+    @Override
+    public void onResourceChosen(String resource) {
+        if(this.token!=null) {
+            this.resource = resource;
+            this.fireworks.setAnalysisToken(token, resource);
+        }
     }
 }
