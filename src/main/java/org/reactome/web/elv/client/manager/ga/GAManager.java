@@ -230,6 +230,19 @@ public class GAManager extends Controller {
     }
 
     @Override
+    public void onFireworksPathwaySelected(Pathway pathway) {
+        if(!pathway.equals(this.state.getLastDatabaseObjectSelected())){
+            this.state.setLastDatabaseObjectSelected(pathway);
+            this.trackEvent(pathway, GAAction.SELECTED, GAModule.FIREWORKS);
+        }
+    }
+
+    @Override
+    public void onFireworksPathwaySelectionReset() {
+        this.state.setLastDatabaseObjectSelected(null); //TODO: Really needed?
+    }
+
+    @Override
     public void onTourManagerTourStarted() {
         this.trackEvent(GACategory.TOUR, GAAction.STARTED, GAModule.GENERAL);
     }
