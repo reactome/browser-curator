@@ -163,13 +163,14 @@ public class StateManager extends Controller implements ValueChangeHandler<Strin
         this.desiredState.setPathway(selected.getDiagram());
         this.desiredState.setInstance(selected.getPathway());
         this.desiredState.setPath(new LinkedList<Event>());
-        this.desiredState.setCenterTool(CenterToolType.getDefault());
+//        this.desiredState.setCenterTool(CenterToolType.getDefault()); //TODO: Test if still needed
         History.newItem(this.desiredState.toString(), true);
     }
 
     @Override
     public void onAnalysisCompleted(AnalysisCompletedEvent event) {
         this.desiredState = new AdvancedState(this.currentState);
+        this.desiredState.setCenterTool(CenterToolType.getDefault());
         this.desiredState.setAnalysisToken(event.getAnalysisResult().getSummary().getToken());
         this.desiredState.setDetailsTab(DetailsTabType.ANALYSIS);
         this.desiredState.changeCenterToolIfNeeded(true);
