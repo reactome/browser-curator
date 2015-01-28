@@ -64,6 +64,9 @@ public interface ReactomeImages extends ClientBundle {
     @Source("images/diagram_key_new.png")
     ImageResource diagramKey();
 
+    @Source("images/fireworks.png")
+    ImageResource fireworks();
+
     @Source("images/show_diagram_key.png")
     ImageResource diagramKeyIcon();
 

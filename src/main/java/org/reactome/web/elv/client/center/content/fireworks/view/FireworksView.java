@@ -12,8 +12,9 @@ public interface FireworksView {
         void selectPathway(Long dbId);
         void resetPathwaySelection();
         void highlightPathway(Long dbId);
-        public void resetAnalysis();
+        void resetAnalysis();
         void resetPathwayHighlighting();
+        void showPathwayDiagram(Long dbId);
     }
 
     Widget asWidget();
@@ -30,4 +31,6 @@ public interface FireworksView {
 
     void selectPathway(Pathway pathway);
     void resetSelection();
+
+//    void forceSelectPathway(Pathway pathway);
 }

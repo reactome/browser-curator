@@ -4,6 +4,7 @@ import org.reactome.web.elv.client.center.model.CenterToolType;
 import org.reactome.web.elv.client.center.view.CenterView;
 import org.reactome.web.elv.client.common.Controller;
 import org.reactome.web.elv.client.common.EventBus;
+import org.reactome.web.elv.client.common.data.model.Pathway;
 import org.reactome.web.elv.client.manager.tour.TourStage;
 
 /**
@@ -19,18 +20,34 @@ public class CenterPresenter extends Controller implements CenterView.Presenter 
     }
 
     @Override
+    public void onDiagramFireworksRequired(Pathway pathway) {
+        this.view.setMainToolToFireworks();
+    }
+
+    @Override
+    public void onFireworksPathwayOpened(Pathway pathway) {
+        this.view.setMainToolToDiagram();
+    }
+
+    @Override
     public void onStateManagerToolsInitialStateReached() {
-        showTool(null);
+        this.view.setMainToolToFireworks();
     }
 
     @Override
     public void onStateManagerToolSelected(CenterToolType tool) {
-        showTool(tool);
+        switch (tool){
+            case ANALYSIS:
+                this.view.showAnalysisTool();
+                break;
+            default:
+                this.view.setMainToolToFireworks();
+        }
     }
 
     @Override
     public void onTopBarAnalysisSelected(){
-        this.view.selectContent(2);
+        this.view.showAnalysisTool();
     }
 
     @Override
@@ -63,19 +80,4 @@ public class CenterPresenter extends Controller implements CenterView.Presenter 
         this.view.tourFadeIn();
     }
 
-
-    private void showTool(CenterToolType tool){
-        if(tool==null){
-            this.view.selectContent(0);
-            return;
-        }
-        switch (tool){
-            case DIAGRAM:
-//                this.view.selectContent(1);
-                break;
-            case ANALYSIS:
-                this.view.selectContent(2);
-                break;
-        }
-    }
 }

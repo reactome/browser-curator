@@ -7,24 +7,36 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineLabel;
 import org.reactome.web.elv.client.common.data.model.Figure;
+import org.reactome.web.elv.client.common.data.model.Pathway;
 
 /**
  * @author Antonio Fabregat <fabregat@ebi.ac.uk>
  */
-public class FigureButton extends Button {
+public class DiagramButton extends Button {
+    private Pathway pathway;
     private Figure figure;
 
-    public FigureButton(ImageResource imageResource, Figure figure) {
-        super(FigureButton.getHTML(imageResource));
+    public DiagramButton(ImageResource imageResource, Figure figure) {
+        super(DiagramButton.getHTML(imageResource, "Illustration"));
         setWidth("90px");
         this.figure = figure;
+    }
+
+    public DiagramButton(ImageResource imageResource, Pathway pathway) {
+        super(DiagramButton.getHTML(imageResource, "Fireworks"));
+        setWidth("90px");
+        this.pathway = pathway;
     }
 
     public Figure getFigure() {
         return figure;
     }
 
-    private static String getHTML(ImageResource imageResource){
+    public Pathway getPathway() {
+        return pathway;
+    }
+
+    private static String getHTML(ImageResource imageResource, String text){
         FlowPanel panel = new FlowPanel();
 
         Image image = new Image(imageResource.getSafeUri());
@@ -32,7 +44,7 @@ public class FigureButton extends Button {
         image.getElement().getStyle().setMarginRight(5, Style.Unit.PX);
         panel.add(image);
 
-        InlineLabel label = new InlineLabel("Illustration");
+        InlineLabel label = new InlineLabel(text);
         label.getElement().getStyle().setFontSize(11, Style.Unit.PX);
         panel.add(label);
 

@@ -34,12 +34,8 @@ public class CenterViewImpl implements CenterView {
         this.container.setAnimationDuration(500);
         this.container.addStyleName("elv-Diagram-Container");
 
-//        WelcomeMessage welcomeMessage = new WelcomeMessage();
-//        this.container.add(welcomeMessage, "Welcome");
         this.container.add(fireworksView.asWidget());
-
         this.container.add(diagramView.asWidget());
-
         this.container.add(analysisView.asWidget());
     }
 
@@ -49,13 +45,26 @@ public class CenterViewImpl implements CenterView {
     }
 
     @Override
-    public void selectContent(Integer index) {
-        this.container.selectTab(index);
+    public void setPresenter(Presenter presenter) {
+        //Nothing here
     }
 
     @Override
-    public void setPresenter(Presenter presenter) {
-        //Nothing here
+    public void showAnalysisTool() {
+        this.container.setAnimationDuration(500);
+        this.container.selectTab(2);
+    }
+
+    @Override
+    public void setMainToolToDiagram() {
+        this.container.selectTab(1);
+        this.container.setAnimationDuration(0);
+    }
+
+    @Override
+    public void setMainToolToFireworks() {
+        this.container.selectTab(0);
+        this.container.setAnimationDuration(0);
     }
 
     @Override

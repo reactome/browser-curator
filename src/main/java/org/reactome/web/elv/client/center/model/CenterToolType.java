@@ -10,7 +10,7 @@ import java.util.List;
  */
 public enum CenterToolType {
 
-    DIAGRAM("DM", "Diagram"),
+    MAIN("MN", "Main Tool"),
     ANALYSIS("AT", "Analysis Tool");
 
     private String code;
@@ -35,7 +35,7 @@ public enum CenterToolType {
     }
 
     public static CenterToolType getDefault(){
-        return DIAGRAM;
+        return MAIN;
     }
 
     public static int getDefaultIndex(){

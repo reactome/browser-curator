@@ -87,6 +87,9 @@ public abstract class Controller implements ELVEventHandler {
             case DIAGRAM_FIGURE_SELECTED:
                 onDiagramFigureSelected((Figure) obj);
                 break;
+            case DIAGRAM_FIREWORKS_REQUIRED:
+                onDiagramFireworksRequired((Pathway) obj);
+                break;
             case DIAGRAM_ILLUSTRATION_CLOSED:
                 onDiagramIllustrationClosed();
                 break;
@@ -104,6 +107,9 @@ public abstract class Controller implements ELVEventHandler {
                     /* FIREWORKS EVENTS */
             case FIREWORKS_ANALYSIS_RESET:
                 onFireworksAnalysisReset();
+                break;
+            case FIREWORKS_PATHWAY_OPENED:
+                onFireworksPathwayOpened((Pathway) obj);
                 break;
             case FIREWORKS_PATHWAY_SELECTED:
                 onFireworksPathwaySelected((Pathway) obj);
@@ -276,6 +282,7 @@ public abstract class Controller implements ELVEventHandler {
     public void onDiagramEntitySelected(DatabaseObject databaseObject){}
     public void onDiagramEntitiesSelected(List<Long> selection){}
     public void onDiagramFigureSelected(Figure figure){}
+    public void onDiagramFireworksRequired(Pathway pathway){}
     public void onDiagramIllustrationClosed(){}
     public void onDiagramOverlayCleared(){}
     public void onDiagramSubpathwaySelected(Pathway pathway, Pathway subpathway){}
@@ -283,6 +290,7 @@ public abstract class Controller implements ELVEventHandler {
 
     /* FIREWORKS EVENTS */
     public void onFireworksAnalysisReset(){}
+    public void onFireworksPathwayOpened(Pathway pathway){}
     public void onFireworksPathwaySelected(Pathway pathway){}
     public void onFireworksPathwaySelectionReset(){}
 

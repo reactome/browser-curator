@@ -9,6 +9,7 @@ import org.reactome.web.elv.client.common.data.model.Pathway;
 import org.reactome.web.fireworks.client.FireworksFactory;
 import org.reactome.web.fireworks.client.FireworksViewer;
 import org.reactome.web.fireworks.events.NodeHoverEvent;
+import org.reactome.web.fireworks.events.NodeOpenedEvent;
 import org.reactome.web.fireworks.events.NodeSelectedEvent;
 import org.reactome.web.fireworks.handlers.*;
 
@@ -19,7 +20,8 @@ import java.util.List;
  * @author Antonio Fabregat <fabregat@ebi.ac.uk>
  */
 public class FireworksViewImpl extends DockLayoutPanel implements FireworksView, AnalysisHelper.ResourceChosenHandler,
-        AnalysisResetHandler, NodeHoverHandler, NodeSelectedHandler, NodeSelectedResetHandler, NodeHoverResetHandler {
+        AnalysisResetHandler, NodeHoverHandler, NodeSelectedHandler, NodeSelectedResetHandler, NodeHoverResetHandler,
+        NodeOpenedHandler {
     private Presenter presenter;
     private FireworksViewer fireworks;
     private List<HandlerRegistration> handlers;
@@ -44,6 +46,7 @@ public class FireworksViewImpl extends DockLayoutPanel implements FireworksView,
         this.fireworks = FireworksFactory.createFireworksViewer(speciesJson);
         handlers.add(this.fireworks.addAnalysisResetHandler(this));
         handlers.add(this.fireworks.addNodeHoverHandler(this));
+        handlers.add(this.fireworks.addNodeOpenedHandler(this));
         handlers.add(this.fireworks.addNodeSelectedHandler(this));
         handlers.add(this.fireworks.addNodeSelectedResetHandler(this));
         handlers.add(this.fireworks.addNodeHoverResetHandler(this));
@@ -114,6 +117,11 @@ public class FireworksViewImpl extends DockLayoutPanel implements FireworksView,
     @Override
     public void onNodeHover(NodeHoverEvent event) {
         this.presenter.highlightPathway(event.getNode().getDbId());
+    }
+
+    @Override
+    public void onNodeOpened(NodeOpenedEvent event) {
+        this.presenter.showPathwayDiagram(event.getNode().getDbId());
     }
 
     @Override

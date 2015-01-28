@@ -19,6 +19,7 @@ public interface DiagramView {
         public void figureClosed();
         public void pathwayLoaded(Long dbId);
         public void resetAnalysisId();
+        public void showFireworks(Long dbId);
         public void subpathwaySelected(Long pathwayId, Long subpathwayId);
     }
 

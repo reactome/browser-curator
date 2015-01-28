@@ -7,12 +7,13 @@ import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.RequiresResize;
 import org.reactome.diagram.client.PathwayDiagramPanel;
+import org.reactome.web.elv.client.common.ReactomeImages;
 import org.reactome.web.elv.client.common.data.model.DatabaseObject;
 import org.reactome.web.elv.client.common.data.model.Event;
 import org.reactome.web.elv.client.common.data.model.Figure;
 import org.reactome.web.elv.client.common.data.model.Pathway;
 import org.reactome.web.elv.client.common.provider.InstanceTypeIconProvider;
-import org.reactome.web.elv.client.common.widgets.button.FigureButton;
+import org.reactome.web.elv.client.common.widgets.button.DiagramButton;
 
 /**
  * @author Antonio Fabregat <fabregat@ebi.ac.uk>
@@ -35,7 +36,7 @@ public class DiagramContainer extends AbsolutePanel implements RequiresResize {
     }
 
     private void addFigureButton(ImageResource imageResource, Figure figure, DatabaseObject databaseObject){
-        FigureButton button = new FigureButton(imageResource, figure);
+        DiagramButton button = new DiagramButton(imageResource, figure);
         button.setTitle("Illustration for " + databaseObject.getDisplayName());
         if(clickHandler!=null){
             button.addClickHandler(this.clickHandler);
@@ -49,6 +50,7 @@ public class DiagramContainer extends AbsolutePanel implements RequiresResize {
 
     public void setSelectedObjects(Pathway pathway, DatabaseObject databaseObject){
         this.buttonContainer.clear();
+
         if(pathway!=null && !pathway.getFigure().isEmpty()){
             ImageResource imageResource = InstanceTypeIconProvider.getItemIcon(pathway.getSchemaClass());
             for (Figure figure : pathway.getFigure()) {
@@ -62,6 +64,13 @@ public class DiagramContainer extends AbsolutePanel implements RequiresResize {
                 this.addFigureButton(imageResource, figure, event);
             }
         }
+
+        DiagramButton fireworks = new DiagramButton(ReactomeImages.INSTANCE.fireworks(), pathway);
+        if(this.clickHandler!=null){
+            fireworks.addClickHandler(this.clickHandler);
+        }
+        this.buttonContainer.add(fireworks);
+
         setButtonContainerPosition();
     }
 

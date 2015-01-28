@@ -12,8 +12,12 @@ public interface CenterView {
     }
 
     Widget asWidget();
-    void selectContent(Integer index);
+//    void selectContent(Integer index);
     void setPresenter(Presenter presenter);
+    void showAnalysisTool();
+//    void showMainTool();
+    void setMainToolToDiagram();
+    void setMainToolToFireworks();
     void tourFadeIn();
     void tourFadeOut();
 }

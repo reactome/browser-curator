@@ -17,7 +17,7 @@ import org.reactome.web.elv.client.common.analysis.helper.AnalysisHelper;
 import org.reactome.web.elv.client.common.data.model.DatabaseObject;
 import org.reactome.web.elv.client.common.data.model.Figure;
 import org.reactome.web.elv.client.common.data.model.Pathway;
-import org.reactome.web.elv.client.common.widgets.button.FigureButton;
+import org.reactome.web.elv.client.common.widgets.button.DiagramButton;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -41,21 +41,14 @@ public class DiagramViewImpl implements DiagramView, SelectionEventHandler, Path
     private List<Long> selectedDBIds;
     private List<Long> objectsInDiagram;
 
-    /**
-     * The glass element.
-     */
-//    private GlassPanel glass = null;
-
     public DiagramViewImpl() {
-        this.container = new TabLayoutPanel(0, Style.Unit.PX); //{
-//            @Override
-//            public void onResize() {
-//                super.onResize();
-//                if(glass!=null){
-//                    glass.onResize();
-//                }
-//            }
-//        };
+        this.container = new TabLayoutPanel(0, Style.Unit.PX){
+            @Override
+            public void setVisible(boolean visible) {
+                super.setVisible(visible);
+                super.onResize();
+            }
+        };
         this.container.setAnimationDuration(500);
         this.container.addStyleName("elv-Diagram-Container");
 
@@ -88,8 +81,12 @@ public class DiagramViewImpl implements DiagramView, SelectionEventHandler, Path
         this.diagramContainer.setFigureButtonsClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                FigureButton button = (FigureButton) event.getSource();
-                presenter.figureSelected(button.getFigure());
+                DiagramButton button = (DiagramButton) event.getSource();
+                if(button.getFigure()!=null) {
+                    presenter.figureSelected(button.getFigure());
+                }else{
+                    presenter.showFireworks(button.getPathway().getDbId());
+                }
             }
         });
         this.container.add(diagramContainer, "Diagram");
@@ -130,8 +127,8 @@ public class DiagramViewImpl implements DiagramView, SelectionEventHandler, Path
 
     @Override
     public void loadPathway(Pathway pathway) {
-        this.container.selectTab(0);
         this.selectedDBIds.clear();
+        this.container.selectTab(0);
         this.diagram.setPathway(pathway.getDbId());
     }
 
@@ -149,7 +146,6 @@ public class DiagramViewImpl implements DiagramView, SelectionEventHandler, Path
     @Override
     public void setAnalysisResource(String resource) {
         if(this.token!=null){
-//            this.diagram.setResource(resource);
             this.diagram.showAnalysisData(this.token, resource);
         }
     }

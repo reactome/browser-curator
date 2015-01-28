@@ -1,6 +1,7 @@
 package org.reactome.web.elv.client.center.content.diagram.presenter;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.http.client.*;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
@@ -18,6 +19,7 @@ import org.reactome.web.elv.client.common.model.Pair;
 import org.reactome.web.elv.client.common.utils.Console;
 import org.reactome.web.elv.client.manager.messages.MessageObject;
 import org.reactome.web.elv.client.manager.messages.MessageType;
+import org.reactome.web.elv.client.manager.state.AdvancedState;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -31,6 +33,9 @@ public class DiagramPresenter extends Controller implements DiagramView.Presente
 
     private Long loadedPathwayId;
     private Long entitySelected;
+
+    private boolean visible = false; // True when the diagram has to be shown
+    private AdvancedState targetState; //Used to keep the state to be loaded when the diagram becomes visible
 
     private DatabaseObject selectAfterLoadingDiagram;
 
@@ -78,6 +83,17 @@ public class DiagramPresenter extends Controller implements DiagramView.Presente
     }
 
     @Override
+    public void onFireworksPathwayOpened(final Pathway pathway) {
+        Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+            @Override
+            public void execute() {
+                visible = true;
+                onStateManagerDatabaseObjectsSelected(targetState.getPath(), targetState.getPathway(), targetState.getInstance());
+            }
+        });
+    }
+
+    @Override
     public void onStateManagerAnalysisTokenSelected(String token) {
         this.view.setAnalysisToken(token);
     }
@@ -94,6 +110,15 @@ public class DiagramPresenter extends Controller implements DiagramView.Presente
 
     @Override
     public void onStateManagerDatabaseObjectsSelected(List<Event> path, Pathway pathway, DatabaseObject databaseObject) {
+        //Since Fireworks was introduced, the diagram is not always visible
+        if(!visible){
+            this.targetState = new AdvancedState();
+            this.targetState.setPathway(pathway);
+            this.targetState.setInstance(databaseObject);
+            this.targetState.setPath(path);
+            return;
+        }
+        this.targetState = null;
         this.view.setFigures(pathway, databaseObject);
         if(this.loadedPathwayId==null || !this.loadedPathwayId.equals(pathway.getDbId())){
             if(pathway.getHasDiagram()){
@@ -217,6 +242,13 @@ public class DiagramPresenter extends Controller implements DiagramView.Presente
             if(!GWT.isProdMode() && GWT.isClient())
                 Console.error(getClass() + " ERROR: " + ex.getMessage());
         }
+    }
+
+    @Override
+    public void showFireworks(Long dbId) {
+        this.visible = false;
+        Pair<Long, ELVEventType> tuple = new Pair<Long, ELVEventType>(dbId, ELVEventType.DIAGRAM_FIREWORKS_REQUIRED);
+        this.eventBus.fireELVEvent(ELVEventType.DATABASE_OBJECT_REQUIRED, tuple);
     }
 
     private void setSelection(DatabaseObject databaseObject){
