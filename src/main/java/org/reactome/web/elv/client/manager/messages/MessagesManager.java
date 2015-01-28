@@ -1,10 +1,9 @@
 package org.reactome.web.elv.client.manager.messages;
 
-import com.google.gwt.user.client.ui.Image;
 import org.reactome.web.elv.client.center.content.analysis.event.AnalysisErrorEvent;
 import org.reactome.web.elv.client.common.Controller;
 import org.reactome.web.elv.client.common.EventBus;
-import org.reactome.web.elv.client.common.ReactomeImages;
+import org.reactome.web.elv.client.common.utils.Console;
 import org.reactome.web.elv.client.common.widgets.DialogBoxFactory;
 
 /**
@@ -33,12 +32,16 @@ public class MessagesManager extends Controller {
     public void onInternalMessageSent(MessageObject msgObj){
         switch (msgObj.getMsgType()){
             case INTERNAL_ERROR:
-                DialogBoxFactory.alertMsg(msgObj.getClazz().getSimpleName(), msgObj.getMessage(), new Image(ReactomeImages.INSTANCE.exclamation()));
+//                DialogBoxFactory.alertMsg(msgObj.getClazz().getSimpleName(), msgObj.getMessage(), new Image(ReactomeImages.INSTANCE.exclamation()));
+                Console.error(msgObj.getClazz().getSimpleName() + " -> " + msgObj.getMessage());
                 break;
             case INTERNAL_WARNING:
-                DialogBoxFactory.alertMsg(msgObj.getClazz().getSimpleName(), msgObj.getMessage(), new Image(ReactomeImages.INSTANCE.information()));
+//                DialogBoxFactory.alertMsg(msgObj.getClazz().getSimpleName(), msgObj.getMessage(), new Image(ReactomeImages.INSTANCE.information()));
+                Console.warn(msgObj.getClazz().getSimpleName() + " -> " + msgObj.getMessage());
                 break;
-//            default: INTERNAL_INFO:
+            case INTERNAL_INFO:
+            default:
+                Console.info(msgObj.getClazz().getSimpleName() + " -> " + msgObj.getMessage());
         }
     }
 }
