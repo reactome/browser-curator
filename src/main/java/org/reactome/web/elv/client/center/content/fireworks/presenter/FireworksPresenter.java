@@ -1,7 +1,6 @@
 package org.reactome.web.elv.client.center.content.fireworks.presenter;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.http.client.*;
 import org.reactome.web.elv.client.center.content.fireworks.view.FireworksView;
 import org.reactome.web.elv.client.common.Controller;
@@ -18,7 +17,6 @@ import org.reactome.web.elv.client.common.handlers.EventHoverResetHandler;
 import org.reactome.web.elv.client.common.model.Pair;
 import org.reactome.web.elv.client.manager.data.DataManager;
 import org.reactome.web.elv.client.manager.messages.MessageObject;
-import org.reactome.web.elv.client.manager.state.AdvancedState;
 
 import java.util.List;
 
@@ -28,10 +26,10 @@ import java.util.List;
 public class FireworksPresenter extends Controller implements FireworksView.Presenter, EventHoverHandler, EventHoverResetHandler {
     private FireworksView view;
 
-    private Long selected;
+//    private Long selected;
 
+    private Pathway selected;
     private boolean visible = true;
-    private AdvancedState targetState; //Used to keep the state to be loaded when the diagram becomes visible
 
     public FireworksPresenter(EventBus eventBus, FireworksView view) {
         super(eventBus);
@@ -60,14 +58,9 @@ public class FireworksPresenter extends Controller implements FireworksView.Pres
     }
 
     @Override
-    public void onDiagramFireworksRequired(Pathway pathway) {
-        Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
-            @Override
-            public void execute() {
-                visible = true;
-                onStateManagerDatabaseObjectsSelected(targetState.getPath(), targetState.getPathway(), targetState.getInstance());
-            }
-        });
+    public void onDiagramFireworksRequired(Pathway pathway) { //IMPORTANT: DO NOT USE pathway here. use this.toSelect
+        this.visible = true;
+        this.view.selectPathway(this.selected);
     }
 
     @Override
@@ -93,22 +86,16 @@ public class FireworksPresenter extends Controller implements FireworksView.Pres
 
     @Override
     public void onStateManagerDatabaseObjectsSelected(List<Event> path, Pathway pathway, DatabaseObject databaseObject) {
-        if(!visible){
-            this.targetState = new AdvancedState();
-            this.targetState.setPathway(pathway);
-            this.targetState.setInstance(databaseObject);
-            this.targetState.setPath(path);
-            return;
-        }
-        this.targetState = null;
         Pathway toSelect;
         if(databaseObject instanceof Pathway){
             toSelect = (Pathway) databaseObject;
         }else{
             toSelect = (Pathway) path.get(path.size()-1);
         }
-        this.selected = toSelect.getDbId();
-        this.view.selectPathway(toSelect);
+        if(this.visible && toSelect!=null && !toSelect.equals(this.selected)) {
+            this.view.selectPathway(toSelect);
+        }
+        this.selected = toSelect;
     }
 
     @Override
@@ -118,9 +105,14 @@ public class FireworksPresenter extends Controller implements FireworksView.Pres
 
     @Override
     public void selectPathway(Long dbId) {
-        if(dbId.equals(selected)) return;
+        if(this.selected!=null && dbId.equals(this.selected.getDbId())) return;
         Pair<Long, ELVEventType> tuple = new Pair<Long, ELVEventType>(dbId, ELVEventType.FIREWORKS_PATHWAY_SELECTED);
         this.eventBus.fireELVEvent(ELVEventType.DATABASE_OBJECT_REQUIRED, tuple);
+    }
+
+    @Override //This is weird but needed since the object didn't exist before;
+    public void onFireworksPathwaySelected(Pathway pathway) {
+        this.selected = pathway;
     }
 
     @Override
@@ -163,8 +155,13 @@ public class FireworksPresenter extends Controller implements FireworksView.Pres
     @Override
     public void showPathwayDiagram(Long dbId) {
         this.visible = false;
-        Pair<Long, ELVEventType> tuple = new Pair<Long, ELVEventType>(dbId, ELVEventType.FIREWORKS_PATHWAY_OPENED);
-        this.eventBus.fireELVEvent(ELVEventType.DATABASE_OBJECT_REQUIRED, tuple);
+        if(this.selected==null || !this.selected.getDbId().equals(dbId)) {
+            Pair<Long, ELVEventType> tuple = new Pair<Long, ELVEventType>(dbId, ELVEventType.FIREWORKS_PATHWAY_OPENED);
+            this.eventBus.fireELVEvent(ELVEventType.DATABASE_OBJECT_REQUIRED, tuple);
+        }else{
+            //Here we carry out the selection event, so this.selected contains the proper object already
+            this.eventBus.fireELVEvent(ELVEventType.FIREWORKS_PATHWAY_OPENED, this.selected);
+        }
     }
 
 

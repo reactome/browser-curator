@@ -88,6 +88,7 @@ public class DiagramPresenter extends Controller implements DiagramView.Presente
             @Override
             public void execute() {
                 visible = true;
+                if(targetState==null) return;
                 onStateManagerDatabaseObjectsSelected(targetState.getPath(), targetState.getPathway(), targetState.getInstance());
             }
         });
