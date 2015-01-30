@@ -19,6 +19,12 @@ public abstract class DatabaseObject {
     private SchemaClass schemaClass;
     private StableIdentifier stableIdentifier;
 
+    public DatabaseObject(Long dbId, String displayName, SchemaClass schemaClass) {
+        this.dbId = dbId;
+        this.displayName = displayName;
+        this.schemaClass = schemaClass;
+    }
+
     public DatabaseObject(SchemaClass schemaClass, JSONObject jsonObject) {
         if(jsonObject.containsKey("dbId")){
             this.dbId = FactoryUtils.getLongValue(jsonObject, "dbId");

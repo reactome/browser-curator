@@ -2,8 +2,8 @@ package org.reactome.web.elv.client.common.data.model;
 
 import com.google.gwt.json.client.JSONObject;
 import org.reactome.web.elv.client.common.data.factory.FactoryUtils;
-import org.reactome.web.elv.client.common.data.factory.SchemaClass;
 import org.reactome.web.elv.client.common.data.factory.ModelFactory;
+import org.reactome.web.elv.client.common.data.factory.SchemaClass;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -17,6 +17,10 @@ public class Pathway extends Event {
     private String isCanonical;
     private List<Event> hasEvent = new LinkedList<Event>();
     private Boolean hasDiagram;
+
+    public Pathway(Long dbId, String displayName) {
+        super(dbId, displayName, SchemaClass.PATHWAY);
+    }
 
     public Pathway(JSONObject jsonObject) {
         super(SchemaClass.PATHWAY, jsonObject);

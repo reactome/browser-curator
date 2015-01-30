@@ -3,7 +3,10 @@ package org.reactome.web.elv.client.details.tabs.analysis.view.widgets.results;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.MouseOutEvent;
+import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.cellview.client.RowHoverEvent;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -14,15 +17,19 @@ import org.reactome.web.elv.client.common.analysis.model.PathwaySummary;
 import org.reactome.web.elv.client.common.widgets.button.CustomButton;
 import org.reactome.web.elv.client.details.tabs.analysis.presenter.providers.AnalysisAsyncDataProvider;
 import org.reactome.web.elv.client.details.tabs.analysis.view.widgets.common.CustomPager;
+import org.reactome.web.elv.client.details.tabs.analysis.view.widgets.results.events.PathwayHoveredEvent;
+import org.reactome.web.elv.client.details.tabs.analysis.view.widgets.results.events.PathwayHoveredResetEvent;
 import org.reactome.web.elv.client.details.tabs.analysis.view.widgets.results.events.PathwaySelectedEvent;
 import org.reactome.web.elv.client.details.tabs.analysis.view.widgets.results.events.ResultPathwaySelectedEvent;
+import org.reactome.web.elv.client.details.tabs.analysis.view.widgets.results.handlers.PathwayHoveredHandler;
+import org.reactome.web.elv.client.details.tabs.analysis.view.widgets.results.handlers.PathwayHoveredResetHandler;
 import org.reactome.web.elv.client.details.tabs.analysis.view.widgets.results.handlers.PathwaySelectedHandler;
 import org.reactome.web.elv.client.details.tabs.analysis.view.widgets.results.handlers.ResultPathwaySelectedHandler;
 
 /**
  * @author Antonio Fabregat <fabregat@ebi.ac.uk>
  */
-public class AnalysisResultPanel extends DockLayoutPanel implements SelectionChangeEvent.Handler,
+public class AnalysisResultPanel extends DockLayoutPanel implements SelectionChangeEvent.Handler, RowHoverEvent.Handler, MouseOutHandler,
         AnalysisAsyncDataProvider.PageFoundHandler,
         AnalysisAsyncDataProvider.PageLoadedHandler,
         ResultPathwaySelectedHandler {
@@ -33,6 +40,7 @@ public class AnalysisResultPanel extends DockLayoutPanel implements SelectionCha
 
     private Long candidateForSelection;
     private Long selected;
+    private Long hovered;
     private String resource;
 
     public AnalysisResultPanel() {
@@ -50,6 +58,14 @@ public class AnalysisResultPanel extends DockLayoutPanel implements SelectionCha
         return this.addHandler(handler, PathwaySelectedEvent.TYPE);
     }
 
+    public HandlerRegistration addPathwayHoveredHandler(PathwayHoveredHandler handler){
+        return this.addHandler(handler, PathwayHoveredEvent.TYPE);
+    }
+
+    public HandlerRegistration addPathwayHoveredResetHandler(PathwayHoveredResetHandler handler){
+        return this.addHandler(handler, PathwayHoveredResetEvent.TYPE);
+    }
+
     public void clearSelection() {
         if(this.table!=null){
             this.selected = null;
@@ -64,6 +80,21 @@ public class AnalysisResultPanel extends DockLayoutPanel implements SelectionCha
     @Override
     public void onAnalysisAsyncDataProvider(Integer page) {
         this.selectPathway(candidateForSelection);
+    }
+
+    @Override
+    public void onMouseOut(MouseOutEvent event) {
+        fireEvent(new PathwayHoveredResetEvent());
+        this.hovered = null;
+    }
+
+    @Override
+    public void onRowHover(RowHoverEvent event) {
+        PathwaySummary ps = dataProvider.getCurrentData().get(event.getHoveringRow().getRowIndex());
+        if(ps!=null && !ps.getDbId().equals(this.hovered)){
+            this.hovered = ps.getDbId();
+            fireEvent(new PathwayHoveredEvent(this.hovered));
+        }
     }
 
     @Override
@@ -90,6 +121,9 @@ public class AnalysisResultPanel extends DockLayoutPanel implements SelectionCha
 //        ColumnSortEvent.ListHandler<PathwaySummary> sortHandler = new ColumnSortEvent.ListHandler<PathwaySummary>(analysisResult.getPathways());
         this.table = new AnalysisResultTable(analysisResult.getExpression().getColumnNames());
         this.table.addSelectionChangeHandler(this);
+        this.table.addRowHoverHandler(this);
+        this.table.addMouseOutHandler(this);
+
         this.table.addResultPathwaySelectedHandler(this);
         this.table.setRowCount(analysisResult.getPathwaysFound());
 

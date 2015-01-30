@@ -47,6 +47,10 @@ public abstract class Event extends DatabaseObject {
     private List<Compartment> compartment = new LinkedList<Compartment>();
 
 
+    public Event(Long dbId, String displayName, SchemaClass schemaClass) {
+        super(dbId, displayName, schemaClass);
+    }
+
     public Event(SchemaClass schemaClass, JSONObject jsonObject) {
         super(schemaClass, jsonObject);
 

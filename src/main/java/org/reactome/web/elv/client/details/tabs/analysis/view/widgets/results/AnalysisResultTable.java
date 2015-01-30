@@ -1,8 +1,11 @@
 package org.reactome.web.elv.client.details.tabs.analysis.view.widgets.results;
 
 import com.google.gwt.cell.client.FieldUpdater;
+import com.google.gwt.event.dom.client.MouseOutEvent;
+import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.cellview.client.DataGrid;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.view.client.ProvidesKey;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
@@ -66,6 +69,12 @@ public class AnalysisResultTable extends DataGrid<PathwaySummary> {
 
         this.selectionModel = new SingleSelectionModel<PathwaySummary>();
         this.setSelectionModel(selectionModel);
+
+        this.sinkEvents(Event.ONMOUSEOUT);
+    }
+
+    public HandlerRegistration addMouseOutHandler(MouseOutHandler handler){
+        return this.addHandler(handler, MouseOutEvent.getType());
     }
 
     public HandlerRegistration addSelectionChangeHandler(SelectionChangeEvent.Handler handler){

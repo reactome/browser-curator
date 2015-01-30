@@ -12,6 +12,8 @@ import org.reactome.web.elv.client.common.data.model.Event;
 import org.reactome.web.elv.client.common.data.model.Pathway;
 import org.reactome.web.elv.client.common.data.model.Species;
 import org.reactome.web.elv.client.common.events.ELVEventType;
+import org.reactome.web.elv.client.common.events.EventHoverEvent;
+import org.reactome.web.elv.client.common.events.EventHoverResetEvent;
 import org.reactome.web.elv.client.common.utils.Console;
 import org.reactome.web.elv.client.details.tabs.DetailsTabView;
 import org.reactome.web.elv.client.details.tabs.analysis.events.AnalysisTabPathwaySelected;
@@ -99,6 +101,17 @@ public class AnalysisTabPresenter extends Controller implements AnalysisTabView.
     public void onResourceSelected(String resource) {
         this.onResourceChosen(resource);
         eventBus.fireELVEvent(ELVEventType.ANALYSIS_TAB_RESOURCE_SELECTED, resource);
+    }
+
+    @Override
+    public void onPathwayHovered(Long dbId) {
+        Pathway pathway = new Pathway(dbId, ""); //Fake Pathway
+        this.eventBus.fireEventFromSource(new EventHoverEvent(null, null, pathway), this);
+    }
+
+    @Override
+    public void onPathwayHoveredReset() {
+        this.eventBus.fireEventFromSource(new EventHoverResetEvent(), this);
     }
 
     @Override

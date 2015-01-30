@@ -13,8 +13,12 @@ import org.reactome.web.elv.client.details.model.DetailsTabType;
 import org.reactome.web.elv.client.details.tabs.analysis.view.widgets.found.FoundPanel;
 import org.reactome.web.elv.client.details.tabs.analysis.view.widgets.notfound.NotFoundPanel;
 import org.reactome.web.elv.client.details.tabs.analysis.view.widgets.results.AnalysisResultPanel;
+import org.reactome.web.elv.client.details.tabs.analysis.view.widgets.results.events.PathwayHoveredEvent;
+import org.reactome.web.elv.client.details.tabs.analysis.view.widgets.results.events.PathwayHoveredResetEvent;
 import org.reactome.web.elv.client.details.tabs.analysis.view.widgets.results.events.PathwaySelectedEvent;
 import org.reactome.web.elv.client.details.tabs.analysis.view.widgets.results.events.ResultPathwaySelectedEvent;
+import org.reactome.web.elv.client.details.tabs.analysis.view.widgets.results.handlers.PathwayHoveredHandler;
+import org.reactome.web.elv.client.details.tabs.analysis.view.widgets.results.handlers.PathwayHoveredResetHandler;
 import org.reactome.web.elv.client.details.tabs.analysis.view.widgets.results.handlers.PathwaySelectedHandler;
 import org.reactome.web.elv.client.details.tabs.analysis.view.widgets.results.handlers.ResultPathwaySelectedHandler;
 import org.reactome.web.elv.client.details.tabs.analysis.view.widgets.summary.AnalysisInfoType;
@@ -30,7 +34,10 @@ import java.util.List;
 /**
  * @author Antonio Fabregat <fabregat@ebi.ac.uk>
  */
-public class AnalysisTabViewImpl implements AnalysisTabView, ResourceChangedHandler, OptionSelectedHandler, PathwaySelectedHandler, ResultPathwaySelectedHandler {
+public class AnalysisTabViewImpl implements AnalysisTabView, ResourceChangedHandler, OptionSelectedHandler,
+        PathwaySelectedHandler, PathwayHoveredHandler, PathwayHoveredResetHandler,
+        ResultPathwaySelectedHandler {
+
     private final DetailsTabType TYPE = DetailsTabType.ANALYSIS;
     private Presenter presenter;
 
@@ -75,6 +82,8 @@ public class AnalysisTabViewImpl implements AnalysisTabView, ResourceChangedHand
         this.analysisResultPanel = new AnalysisResultPanel();
         this.analysisResultPanel.addResultPathwaySelectedHandler(this);
         this.analysisResultPanel.addPathwaySelectedHandler(this);
+        this.analysisResultPanel.addPathwayHoveredHandler(this);
+        this.analysisResultPanel.addPathwayHoveredResetHandler(this);
         this.analysisResultPanel.getElement().getStyle().setBackgroundColor("transparent");
         this.analysisResultPanel.getElement().getStyle().setBorderWidth(0, Style.Unit.PX);
         this.stackPanel.add(this.analysisResultPanel, "Analysis Result", 0);
@@ -236,6 +245,17 @@ public class AnalysisTabViewImpl implements AnalysisTabView, ResourceChangedHand
         this.analysisResultPanel.setResource(event.getResource());
         this.pathwayPanel.setResource(event.getResource());
         presenter.onResourceSelected(event.getResource());
+    }
+
+    @Override
+    public void onPathwayHovered(PathwayHoveredEvent event) {
+        this.presenter.onPathwayHovered(event.getIdentifier());
+    }
+
+
+    @Override
+    public void onPathwayHoveredReset(PathwayHoveredResetEvent event) {
+        this.presenter.onPathwayHoveredReset();
     }
 
     @Override
