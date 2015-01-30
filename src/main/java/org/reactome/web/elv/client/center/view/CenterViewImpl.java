@@ -57,23 +57,14 @@ public class CenterViewImpl implements CenterView {
 
     @Override
     public void setMainToolToDiagram() {
-        this.container.getWidget(1).setVisible(false);
         this.container.selectTab(1);
-
-        this.container.getWidget(0).setVisible(false);
-
         this.container.setAnimationDuration(0);
     }
 
     @Override
     public void setMainToolToFireworks() {
-        this.container.getWidget(0).setVisible(true);
         this.container.selectTab(0);
-
-        this.container.getWidget(1).setVisible(false);
-
         this.container.setAnimationDuration(0);
-        this.container.getWidget(0);
     }
 
     @Override

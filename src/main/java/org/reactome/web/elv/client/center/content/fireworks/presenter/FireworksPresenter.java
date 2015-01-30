@@ -26,8 +26,6 @@ import java.util.List;
 public class FireworksPresenter extends Controller implements FireworksView.Presenter, EventHoverHandler, EventHoverResetHandler {
     private FireworksView view;
 
-//    private Long selected;
-
     private Pathway selected;
     private boolean visible = true;
 
@@ -60,7 +58,7 @@ public class FireworksPresenter extends Controller implements FireworksView.Pres
     @Override
     public void onDiagramFireworksRequired(Pathway pathway) { //IMPORTANT: DO NOT USE pathway here. use this.toSelect
         this.visible = true;
-        this.view.selectPathway(this.selected);
+        this.view.selectPathway(selected);
     }
 
     @Override

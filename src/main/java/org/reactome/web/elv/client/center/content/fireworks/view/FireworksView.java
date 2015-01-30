@@ -32,5 +32,4 @@ public interface FireworksView {
     void selectPathway(Pathway pathway);
     void resetSelection();
 
-//    void forceSelectPathway(Pathway pathway);
 }

@@ -146,4 +146,12 @@ public class FireworksViewImpl extends DockLayoutPanel implements FireworksView,
             this.fireworks.setAnalysisToken(token, resource);
         }
     }
+
+    @Override
+    public void setVisible(boolean visible) {
+        super.setVisible(visible);
+        if(visible && this.fireworks!=null) {
+            this.fireworks.onResize();
+        }
+    }
 }

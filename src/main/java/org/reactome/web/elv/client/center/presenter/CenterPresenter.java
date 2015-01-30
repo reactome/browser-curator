@@ -11,7 +11,11 @@ import org.reactome.web.elv.client.manager.tour.TourStage;
  * @author Antonio Fabregat <fabregat@ebi.ac.uk>
  */
 public class CenterPresenter extends Controller implements CenterView.Presenter {
+
+    private enum Display { FIREWORKS, DIAGRAM }
+
     private CenterView view;
+    private Display currentDisplay = Display.FIREWORKS;
 
     public CenterPresenter(EventBus eventBus, CenterView view) {
         super(eventBus);
@@ -21,27 +25,35 @@ public class CenterPresenter extends Controller implements CenterView.Presenter 
 
     @Override
     public void onDiagramFireworksRequired(Pathway pathway) {
+        this.currentDisplay = Display.FIREWORKS;
         this.view.setMainToolToFireworks();
     }
 
     @Override
     public void onFireworksPathwayOpened(Pathway pathway) {
+        this.currentDisplay = Display.DIAGRAM;
         this.view.setMainToolToDiagram();
     }
 
     @Override
     public void onStateManagerToolsInitialStateReached() {
+        this.currentDisplay = Display.FIREWORKS;
         this.view.setMainToolToFireworks();
     }
 
     @Override
     public void onStateManagerToolSelected(CenterToolType tool) {
-        switch (tool){
-            case ANALYSIS:
-                this.view.showAnalysisTool();
-                break;
-            default:
-                this.view.setMainToolToFireworks();
+        if(tool.equals(CenterToolType.ANALYSIS)){
+            this.view.showAnalysisTool();
+        }else{
+            switch (this.currentDisplay){
+                case FIREWORKS:
+                    this.view.setMainToolToFireworks();
+                    break;
+                case DIAGRAM:
+                    this.view.setMainToolToDiagram();
+                    break;
+            }
         }
     }
 
