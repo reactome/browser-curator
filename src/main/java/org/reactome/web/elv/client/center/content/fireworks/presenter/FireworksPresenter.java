@@ -3,6 +3,8 @@ package org.reactome.web.elv.client.center.content.fireworks.presenter;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.*;
 import org.reactome.web.elv.client.center.content.fireworks.view.FireworksView;
+import org.reactome.web.elv.client.center.model.CenterToolType;
+import org.reactome.web.elv.client.center.presenter.CenterPresenter;
 import org.reactome.web.elv.client.common.Controller;
 import org.reactome.web.elv.client.common.EventBus;
 import org.reactome.web.elv.client.common.data.model.DatabaseObject;
@@ -47,7 +49,9 @@ public class FireworksPresenter extends Controller implements FireworksView.Pres
         }else{
             toHighlight = (Pathway) e.getPath().get(e.getPath().size()-1);
         }
-        this.view.highlightPathway(toHighlight);
+        if(this.visible) {
+            this.view.highlightPathway(toHighlight);
+        }
     }
 
     @Override
@@ -148,6 +152,25 @@ public class FireworksPresenter extends Controller implements FireworksView.Pres
     @Override
     public void resetPathwayHighlighting() {
         eventBus.fireEventFromSource(new EventHoverResetEvent(), this);
+    }
+
+    @Override
+    public void onStateManagerToolsInitialStateReached() {
+        this.visible = CenterPresenter.CURRENT_DISPLAY.equals(CenterPresenter.Display.FIREWORKS);
+    }
+
+    @Override
+    public void onStateManagerToolSelected(CenterToolType tool) {
+        switch (tool){
+            case ANALYSIS:
+                this.visible = false;
+                break;
+            default:
+                this.visible = CenterPresenter.CURRENT_DISPLAY.equals(CenterPresenter.Display.FIREWORKS);
+        }
+        if(this.visible){
+            this.view.selectPathway(selected);
+        }
     }
 
     @Override

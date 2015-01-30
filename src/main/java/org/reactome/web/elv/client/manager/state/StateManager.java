@@ -319,8 +319,9 @@ public class StateManager extends Controller implements ValueChangeHandler<Strin
 
     @Override
     public void onTopBarAnalysisSelected(){
-        this.currentState.setCenterTool(CenterToolType.ANALYSIS);
-        History.newItem(this.currentState.toString(), false);
+        AdvancedState state = new AdvancedState(this.currentState);
+        state.setCenterTool(CenterToolType.ANALYSIS);
+        History.newItem(state.toString(), true);
     }
 
     private void setCurrentState(Pathway pathway, DatabaseObject databaseObject){
