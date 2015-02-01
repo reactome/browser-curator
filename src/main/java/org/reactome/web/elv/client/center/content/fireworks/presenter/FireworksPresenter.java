@@ -108,8 +108,23 @@ public class FireworksPresenter extends Controller implements FireworksView.Pres
     @Override
     public void selectPathway(Long dbId) {
         if(this.selected!=null && dbId.equals(this.selected.getDbId())) return;
-        Pair<Long, ELVEventType> tuple = new Pair<Long, ELVEventType>(dbId, ELVEventType.FIREWORKS_PATHWAY_SELECTED);
-        this.eventBus.fireELVEvent(ELVEventType.DATABASE_OBJECT_REQUIRED, tuple);
+        try {
+            DataManager.getDataManager().databaseObjectDetailedViewRequired(dbId, new DataManager.DataManagerObjectRetrievedHandler() {
+                @Override
+                public void onDatabaseObjectRetrieved(DatabaseObject databaseObject) {
+                    selected = (Pathway) databaseObject;
+                    eventBus.fireELVEvent(ELVEventType.FIREWORKS_PATHWAY_SELECTED, selected);
+                }
+
+                @Override
+                public void onError(MessageObject messageObject) {
+                    eventBus.fireELVEvent(ELVEventType.INTERNAL_MESSAGE, messageObject);
+                }
+            });
+        } catch (Exception e) {
+            //VERY UNLIKELY TO HAPPEN HERE :)
+            if(!GWT.isScript()) e.printStackTrace();
+        }
     }
 
     @Override //This is weird but needed since the object didn't exist before;
