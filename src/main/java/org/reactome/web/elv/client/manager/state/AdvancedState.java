@@ -48,7 +48,7 @@ public class AdvancedState implements StableIdentifierLoader.StableIdentifierLoa
         this.helper = new AdvancedStateHelper(this);
         this.path = new LinkedList<Event>();
         this.detailsTab = DetailsTabType.getDefault();
-        this.tool = null; //Initially there is no tool selected. The help view is shown
+        this.tool = CenterToolType.getDefault();
         this.analysisTokenAvailable = false;
     }
 
