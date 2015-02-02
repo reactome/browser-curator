@@ -31,7 +31,7 @@ public class CenterViewImpl implements CenterView {
                 }
             }
         };
-        this.container.setAnimationDuration(500);
+        this.container.setAnimationDuration(0);
         this.container.addStyleName("elv-Diagram-Container");
 
         this.container.add(fireworksView.asWidget());
