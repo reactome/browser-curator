@@ -18,6 +18,7 @@ import org.reactome.web.elv.client.common.model.Path;
 import org.reactome.web.elv.client.common.widgets.DialogBoxFactory;
 import org.reactome.web.elv.client.details.model.DetailsTabType;
 import org.reactome.web.elv.client.details.tabs.analysis.events.AnalysisTabPathwaySelected;
+import org.reactome.web.elv.client.manager.title.TitleManager;
 
 import java.util.LinkedList;
 

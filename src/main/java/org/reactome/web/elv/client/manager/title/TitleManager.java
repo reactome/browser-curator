@@ -1,4 +1,4 @@
-package org.reactome.web.elv.client.manager.state;
+package org.reactome.web.elv.client.manager.title;
 
 import com.google.gwt.user.client.Window;
 import org.reactome.web.elv.client.common.Controller;
@@ -8,6 +8,8 @@ import org.reactome.web.elv.client.common.data.model.Event;
 import org.reactome.web.elv.client.common.data.model.Pathway;
 import org.reactome.web.elv.client.common.data.model.Species;
 import org.reactome.web.elv.client.details.model.DetailsTabType;
+import org.reactome.web.elv.client.manager.state.AdvancedState;
+import org.reactome.web.elv.client.manager.title.event.TitleChangedEvent;
 
 import java.util.List;
 
@@ -93,5 +95,6 @@ public class TitleManager extends Controller {
             sb.append(this.detailsTabType.getTitle());
         }
         Window.setTitle(sb.toString());
+        this.eventBus.fireEvent(new TitleChangedEvent(sb.toString()));
     }
 }
