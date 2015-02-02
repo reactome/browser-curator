@@ -95,6 +95,6 @@ public class TitleManager extends Controller {
             sb.append(this.detailsTabType.getTitle());
         }
         Window.setTitle(sb.toString());
-        this.eventBus.fireEvent(new TitleChangedEvent(sb.toString()));
+        this.eventBus.fireEventFromSource(new TitleChangedEvent(sb.toString()), this);
     }
 }

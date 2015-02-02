@@ -19,6 +19,7 @@ import org.reactome.web.elv.client.details.model.DetailsTabType;
 import org.reactome.web.elv.client.details.tabs.analysis.events.AnalysisTabPathwaySelected;
 import org.reactome.web.elv.client.manager.messages.MessageObject;
 import org.reactome.web.elv.client.manager.messages.MessageType;
+import org.reactome.web.elv.client.manager.title.TitleManager;
 
 import java.util.LinkedList;
 import java.util.List;
