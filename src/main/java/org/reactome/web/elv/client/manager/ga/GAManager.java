@@ -101,6 +101,16 @@ public class GAManager extends Controller implements TitleChangedHandler {
         }
     }
 
+    @Override
+    public void onTitleChanged(TitleChangedEvent event) {
+        if(gaTrackerActive){
+            GATracker.trackPageview();
+        }
+        if(TRACK_GA_MANAGER && Console.VERBOSE){
+            Console.info(PREFIX + "Event tracked: [ Page name changed to : \"" + event.getTitle() + "\"]");
+        }
+    }
+
     //############################################################################################//
     //###################################### EVENTS TRACKED ######################################//
     //############################################################################################//
@@ -244,8 +254,4 @@ public class GAManager extends Controller implements TitleChangedHandler {
         this.trackEvent(GACategory.TOUR, GAAction.CANCELED, GAModule.GENERAL);
     }
 
-    @Override
-    public void onTitleChanged(TitleChangedEvent event) {
-        GATracker.trackPageview();
-    }
 }
