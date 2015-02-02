@@ -47,18 +47,15 @@ public class GAManager extends Controller {
         boolean inHost;
         switch (location){
             case PRODUCTION:
-                GATracker.setAccount("UA-42985898-1");
-                GATracker.setDomainName("reactome.org");
+                GATracker.setAccount("UA-42985898-1", "reactome.org");
                 inHost = true;
                 break;
             case DEV:
-                GATracker.setAccount("UA-42985898-2");
-                GATracker.setDomainName("oicr.on.ca");
+                GATracker.setAccount("UA-42985898-2", "oicr.on.ca");
                 inHost = true;
                 break;
             case CURATOR:
-                GATracker.setAccount("UA-42985898-3");
-                GATracker.setDomainName("oicr.on.ca");
+                GATracker.setAccount("UA-42985898-3", "oicr.on.ca");
                 inHost = true;
                 break;
             default:
