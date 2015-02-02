@@ -11,6 +11,8 @@ import org.reactome.web.elv.client.common.model.Path;
 import org.reactome.web.elv.client.common.utils.Console;
 import org.reactome.web.elv.client.details.model.DetailsTabType;
 import org.reactome.web.elv.client.details.tabs.analysis.events.AnalysisTabPathwaySelected;
+import org.reactome.web.elv.client.manager.title.event.TitleChangedEvent;
+import org.reactome.web.elv.client.manager.title.handler.TitleChangedHandler;
 import uk.ac.ebi.pwp.utils.analytics.client.GATracker;
 
 /**
@@ -30,7 +32,7 @@ import uk.ac.ebi.pwp.utils.analytics.client.GATracker;
  * @author Antonio Fabregat <fabregat@ebi.ac.uk>
  */
 @SuppressWarnings({"PointlessBooleanExpression", "ConstantConditions"})
-public class GAManager extends Controller {
+public class GAManager extends Controller implements TitleChangedHandler {
     private static final String PREFIX = "\t\t[GAManager] ";
 
     //Set to true in order to see in the console what the GAManager is doing
@@ -42,6 +44,7 @@ public class GAManager extends Controller {
 
     public GAManager(EventBus eventBus) {
         super(eventBus);
+        eventBus.addHandler(TitleChangedEvent.TYPE, this); //Listening to the title changed event
 
         LocationHelper.Location location = LocationHelper.getLocation();
         boolean inHost;
@@ -252,5 +255,10 @@ public class GAManager extends Controller {
     @Override
     public void onTourManagerTourCancelled() {
         this.trackEvent(GACategory.TOUR, GAAction.CANCELED, GAModule.GENERAL);
+    }
+
+    @Override
+    public void onTitleChanged(TitleChangedEvent event) {
+        GATracker.trackPageview();
     }
 }
