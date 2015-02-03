@@ -40,7 +40,7 @@
         <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-elemental</artifactId>
-            <version>${gwtVersion}</version>
+            <version>$GI{gwtVersion}</version>
             <scope>provided</scope>
         </dependency>
 
@@ -90,7 +90,7 @@
         <dependency>
             <groupId>uk.ac.ebi.pwp.utils</groupId>
             <artifactId>analytics</artifactId>
-            <version>0.2.0</version>
+            <version>0.2.1</version>
         </dependency>
     </dependencies>
 
