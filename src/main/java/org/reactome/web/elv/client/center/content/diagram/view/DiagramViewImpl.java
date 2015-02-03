@@ -25,7 +25,7 @@ import java.util.List;
 /**
  * @author Antonio Fabregat <fabregat@ebi.ac.uk>
  */
-public class DiagramViewImpl implements DiagramView, SelectionEventHandler, PathwayChangeEventHandler,
+public class DiagramViewImpl implements DiagramView, SelectionEventHandler, PathwayChangeEventHandler, ViewChangeEventHandler,
         ParticipatingMoleculeSelectionEventHandler , SubpathwaySelectionEventHandler, ExpressionOverlayStopEventHandler {
     private static final String RESTFUL_WS_FOLDER = "ReactomeRESTfulAPI/RESTfulWS/";
 
@@ -76,6 +76,7 @@ public class DiagramViewImpl implements DiagramView, SelectionEventHandler, Path
         this.diagram.addParticipatingMoleculeSelectionEventHandler(this);
         this.diagram.addSubpathwaySelectionEventHandler(this);
         this.diagram.addExpressionOverlayStopHandler(this);
+        this.diagram.addViewChangeEventHandler(this);
 
         this.diagramContainer = new DiagramContainer(this.diagram);
         this.diagramContainer.setFigureButtonsClickHandler(new ClickHandler() {
@@ -192,6 +193,13 @@ public class DiagramViewImpl implements DiagramView, SelectionEventHandler, Path
             }else{
                 presenter.entitiesSelected(selectedDBIds);
             }
+        }
+    }
+
+    @Override
+    public void onViewChange(ViewChangeEvent viewChangeEvent) {
+        if(viewChangeEvent.getZoomEvent().scaleLessThanMinimum()){
+//            this.presenter.showFireworks(null);
         }
     }
 
