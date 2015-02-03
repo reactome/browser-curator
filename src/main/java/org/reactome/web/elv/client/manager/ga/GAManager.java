@@ -38,7 +38,7 @@ public class GAManager extends Controller implements TitleChangedHandler {
     //Set to true in order to see in the console what the GAManager is doing
     private static final boolean TRACK_GA_MANAGER = true;
 
-    private boolean gaTrackerActive = false;
+    private final boolean gaTrackerActive;
 
     private GAManagerState state = new GAManagerState();
 
@@ -47,26 +47,21 @@ public class GAManager extends Controller implements TitleChangedHandler {
         eventBus.addHandler(TitleChangedEvent.TYPE, this); //Listening to the title changed event
 
         LocationHelper.Location location = LocationHelper.getLocation();
-        boolean inHost;
         switch (location){
             case PRODUCTION:
                 GATracker.setAccount("UA-42985898-1", "reactome.org");
-                inHost = true;
+                this.gaTrackerActive = true;
                 break;
             case DEV:
                 GATracker.setAccount("UA-42985898-2", "oicr.on.ca");
-                inHost = true;
+                this.gaTrackerActive = true;
                 break;
             case CURATOR:
                 GATracker.setAccount("UA-42985898-3", "oicr.on.ca");
-                inHost = true;
+                this.gaTrackerActive = true;
                 break;
             default:
-                inHost = false;
-        }
-        if(inHost){
-            GATracker.trackPageview();
-            this.gaTrackerActive = true;
+                this.gaTrackerActive = false;
         }
         if(!this.gaTrackerActive && TRACK_GA_MANAGER && Console.VERBOSE){
             Console.info("[GAManager] set for DEV purposes");
