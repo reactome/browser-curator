@@ -247,7 +247,7 @@ public class DiagramPresenter extends Controller implements DiagramView.Presente
 
     @Override
     public void showFireworks(Long dbId) {
-        this.visible = false; if (dbId==null) dbId = loadedPathwayId;
+        this.visible = false;
         Pair<Long, ELVEventType> tuple = new Pair<Long, ELVEventType>(dbId, ELVEventType.DIAGRAM_FIREWORKS_REQUIRED);
         this.eventBus.fireELVEvent(ELVEventType.DATABASE_OBJECT_REQUIRED, tuple);
     }

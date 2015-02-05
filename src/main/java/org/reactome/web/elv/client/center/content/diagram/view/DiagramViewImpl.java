@@ -199,7 +199,7 @@ public class DiagramViewImpl implements DiagramView, SelectionEventHandler, Path
     @Override
     public void onViewChange(ViewChangeEvent viewChangeEvent) {
         if(viewChangeEvent.getZoomEvent().scaleLessThanMinimum()){
-//            this.presenter.showFireworks(null);
+            this.presenter.showFireworks(this.diagram.getPathway().getReactomeId());
         }
     }
 
@@ -242,7 +242,6 @@ public class DiagramViewImpl implements DiagramView, SelectionEventHandler, Path
             //fires a onSelectionChanged event, and clear Selection does not
             if(objectsInDiagram.contains(dbId)){
                 this.diagram.setSelectionId(dbId);
-//                 this.diagram.setSelectionIds(Arrays.asList(dbId)); //Joel suggestion
             }else{
                 //In this case we want to clear the selection but do nothing after it :)
                 clearSelection();
@@ -283,19 +282,4 @@ public class DiagramViewImpl implements DiagramView, SelectionEventHandler, Path
         this.figureContainer.setFigure(figure);
         this.container.selectTab(1);
     }
-
-//    @Override
-//    public void tourFadeIn() {
-//        if(glass==null){
-//            glass = new GlassPanel(this.container);
-//        }
-//        RootPanel.get().add(glass);
-//    }
-//
-//    @Override
-//    public void tourFadeOut() {
-//        if(glass!=null){
-//            RootPanel.get().remove(glass);
-//        }
-//    }
 }
