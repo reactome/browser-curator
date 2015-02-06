@@ -1,6 +1,7 @@
 package org.reactome.web.elv.client.manager.state;
 
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Command;
 import org.reactome.web.elv.client.center.model.CenterToolType;
 import org.reactome.web.elv.client.common.LocationHelper;
@@ -285,7 +286,7 @@ public class AdvancedState implements StableIdentifierLoader.StableIdentifierLoa
 
     public void setAnalysisToken(String analysisToken) {
         this.analysisTokenAvailable = ( analysisToken != null );
-        this.analysisToken = analysisToken;
+        this.analysisToken = URL.decode(analysisToken);
         this.checkComplete(AdvancedStateKey.ANALYSIS);
     }
 
@@ -375,7 +376,7 @@ public class AdvancedState implements StableIdentifierLoader.StableIdentifierLoa
             if (addDelimiter) token.append(DELIMITER);
             token.append(AdvancedStateKey.ANALYSIS.getDefaultKey());
             token.append("=");
-            token.append(analysisToken);
+            token.append(URL.encode(analysisToken));
             //addDelimiter=true;
         }
         return token.toString();
