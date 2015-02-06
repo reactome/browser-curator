@@ -25,7 +25,7 @@ import java.util.List;
 /**
  * @author Antonio Fabregat <fabregat@ebi.ac.uk>
  */
-public class DiagramViewImpl implements DiagramView, SelectionEventHandler, PathwayChangeEventHandler, ViewChangeEventHandler,
+public class DiagramViewImpl implements DiagramView, SelectionEventHandler, PathwayChangeEventHandler, ZoomedOutEventHandler,
         ParticipatingMoleculeSelectionEventHandler , SubpathwaySelectionEventHandler, ExpressionOverlayStopEventHandler {
     private static final String RESTFUL_WS_FOLDER = "ReactomeRESTfulAPI/RESTfulWS/";
 
@@ -76,7 +76,7 @@ public class DiagramViewImpl implements DiagramView, SelectionEventHandler, Path
         this.diagram.addParticipatingMoleculeSelectionEventHandler(this);
         this.diagram.addSubpathwaySelectionEventHandler(this);
         this.diagram.addExpressionOverlayStopHandler(this);
-        this.diagram.addViewChangeEventHandler(this);
+        this.diagram.addZoomedOutEventHandler(this);
 
         this.diagramContainer = new DiagramContainer(this.diagram);
         this.diagramContainer.setFigureButtonsClickHandler(new ClickHandler() {
@@ -196,11 +196,12 @@ public class DiagramViewImpl implements DiagramView, SelectionEventHandler, Path
         }
     }
 
+    /**
+     * Fired when the user zooms the diagram out enough to switch back to Fireworks
+     */
     @Override
-    public void onViewChange(ViewChangeEvent viewChangeEvent) {
-        if(viewChangeEvent.getZoomEvent().scaleLessThanMinimum()){
-            this.presenter.showFireworks(this.diagram.getPathway().getReactomeId());
-        }
+    public void onZoomedOut(ZoomedOutEvent zoomedOutEvent) {
+        this.presenter.showFireworks(zoomedOutEvent.getPathwayId());
     }
 
     private boolean selectionHasChange(List<Long> selection){
