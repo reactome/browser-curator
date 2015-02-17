@@ -286,7 +286,7 @@ public class AdvancedState implements StableIdentifierLoader.StableIdentifierLoa
 
     public void setAnalysisToken(String analysisToken) {
         this.analysisTokenAvailable = ( analysisToken != null );
-        this.analysisToken = URL.decode(analysisToken);
+        this.analysisToken = this.analysisTokenAvailable ? URL.decode(analysisToken) : null;
         this.checkComplete(AdvancedStateKey.ANALYSIS);
     }
 
