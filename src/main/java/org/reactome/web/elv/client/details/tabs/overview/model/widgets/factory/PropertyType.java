@@ -57,7 +57,8 @@ public enum PropertyType {
     CREATED("Created"),
     MODIFIED("Modified"),
     AUTHORED("Authored"),
-    REVIEWED("Reviewed");
+    REVIEWED("Reviewed"),
+    REVISED("Revised");
 
     private String title;
 

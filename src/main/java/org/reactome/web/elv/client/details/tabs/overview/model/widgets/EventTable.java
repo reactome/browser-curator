@@ -52,6 +52,8 @@ public class EventTable extends OverviewTable {
                 return TableRowFactory.getInstanceEditRow(title, this.event.getAuthored());
             case REVIEWED:
                 return TableRowFactory.getInstanceEditRow(title, this.event.getReviewed());
+            case REVISED:
+                return TableRowFactory.getInstanceEditRow(title, this.event.getRevised());
             default:
                 return null;
         }
