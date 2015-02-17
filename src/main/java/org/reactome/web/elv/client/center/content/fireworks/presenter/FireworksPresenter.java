@@ -7,10 +7,7 @@ import org.reactome.web.elv.client.center.model.CenterToolType;
 import org.reactome.web.elv.client.center.presenter.CenterPresenter;
 import org.reactome.web.elv.client.common.Controller;
 import org.reactome.web.elv.client.common.EventBus;
-import org.reactome.web.elv.client.common.data.model.DatabaseObject;
-import org.reactome.web.elv.client.common.data.model.Event;
-import org.reactome.web.elv.client.common.data.model.Pathway;
-import org.reactome.web.elv.client.common.data.model.Species;
+import org.reactome.web.elv.client.common.data.model.*;
 import org.reactome.web.elv.client.common.events.ELVEventType;
 import org.reactome.web.elv.client.common.events.EventHoverEvent;
 import org.reactome.web.elv.client.common.events.EventHoverResetEvent;
@@ -26,6 +23,8 @@ import java.util.List;
  * @author Antonio Fabregat <fabregat@ebi.ac.uk>
  */
 public class FireworksPresenter extends Controller implements FireworksView.Presenter, EventHoverHandler, EventHoverResetHandler {
+    private boolean firstLoad = true;
+
     private FireworksView view;
 
     private Pathway selected;
@@ -88,14 +87,19 @@ public class FireworksPresenter extends Controller implements FireworksView.Pres
 
     @Override
     public void onStateManagerDatabaseObjectsSelected(List<Event> path, Pathway pathway, DatabaseObject databaseObject) {
-        Pathway toSelect;
+        Pathway toSelect = null;
         if(databaseObject instanceof Pathway){
             toSelect = (Pathway) databaseObject;
-        }else{
+        }else if(path!=null && !path.isEmpty()){
             toSelect = (Pathway) path.get(path.size()-1);
         }
-        if(this.visible && toSelect!=null && !toSelect.equals(this.selected)) {
-            this.view.selectPathway(toSelect);
+
+        if(this.visible && toSelect!=null) {
+            if(firstLoad || ( databaseObject!=null && databaseObject instanceof ReactionLikeEvent) ){
+                this.view.openPathway(toSelect);
+            }else if(!toSelect.equals(this.selected)){
+                this.view.selectPathway(toSelect);
+            }
         }
         this.selected = toSelect;
     }
@@ -103,6 +107,11 @@ public class FireworksPresenter extends Controller implements FireworksView.Pres
     @Override
     public void onStateManagerInstancesInitialStateReached() {
         this.view.resetSelection();
+    }
+
+    @Override
+    public void onStateManagerTargetReached() {
+        this.firstLoad = false;
     }
 
     @Override

@@ -60,12 +60,17 @@ public class FireworksViewImpl extends DockLayoutPanel implements FireworksView,
     @Override
     public void highlightPathway(Pathway pathway) {
         if(pathway==null) return;
-        this.fireworks.highlightNodeByDbIdentifier(pathway.getDbId());
+        this.fireworks.highlightNode(pathway.getDbId());
     }
 
     @Override
     public void resetHighlight() {
         this.fireworks.resetHighlight();
+    }
+
+    @Override
+    public void openPathway(Pathway pathway) {
+        this.fireworks.openPathway(pathway.getDbId());
     }
 
     @Override
@@ -90,7 +95,7 @@ public class FireworksViewImpl extends DockLayoutPanel implements FireworksView,
     @Override
     public void selectPathway(Pathway pathway) {
         if(pathway==null) return;
-        this.fireworks.selectNodeByDbIdentifier(pathway.getDbId());
+        this.fireworks.selectNode(pathway.getDbId());
     }
 
     /**

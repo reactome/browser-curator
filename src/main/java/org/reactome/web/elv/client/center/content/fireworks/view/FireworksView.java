@@ -25,6 +25,8 @@ public interface FireworksView {
     void highlightPathway(Pathway pathway);
     void resetHighlight();
 
+    void openPathway(Pathway pathway);
+
     void setAnalysisToken(String token);
     void setAnalysisResource(String resource);
     void resetAnalysisToken();
