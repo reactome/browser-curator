@@ -1,5 +1,6 @@
 package org.reactome.web.elv.client.manager.ga;
 
+import com.google.gwt.core.client.JavaScriptException;
 import com.google.gwt.user.client.ui.ToggleButton;
 import org.reactome.web.elv.client.center.content.analysis.event.AnalysisCompletedEvent;
 import org.reactome.web.elv.client.common.Controller;
@@ -38,7 +39,7 @@ public class GAManager extends Controller implements TitleChangedHandler {
     //Set to true in order to see in the console what the GAManager is doing
     private static final boolean TRACK_GA_MANAGER = true;
 
-    private final boolean gaTrackerActive;
+    private boolean gaTrackerActive;
 
     private GAManagerState state = new GAManagerState();
 
@@ -47,21 +48,25 @@ public class GAManager extends Controller implements TitleChangedHandler {
         eventBus.addHandler(TitleChangedEvent.TYPE, this); //Listening to the title changed event
 
         LocationHelper.Location location = LocationHelper.getLocation();
-        switch (location){
-            case PRODUCTION:
-                GATracker.setAccount("UA-42985898-1", "reactome.org");
-                this.gaTrackerActive = true;
-                break;
-            case DEV:
-                GATracker.setAccount("UA-42985898-2", "oicr.on.ca");
-                this.gaTrackerActive = true;
-                break;
-            case CURATOR:
-                GATracker.setAccount("UA-42985898-3", "oicr.on.ca");
-                this.gaTrackerActive = true;
-                break;
-            default:
-                this.gaTrackerActive = false;
+        try{
+            switch (location){
+                case PRODUCTION:
+                    GATracker.setAccount("UA-42985898-1", "reactome.org");
+                    this.gaTrackerActive = true;
+                    break;
+                case DEV:
+                    GATracker.setAccount("UA-42985898-2", "oicr.on.ca");
+                    this.gaTrackerActive = true;
+                    break;
+                case CURATOR:
+                    GATracker.setAccount("UA-42985898-3", "oicr.on.ca");
+                    this.gaTrackerActive = true;
+                    break;
+                default:
+                    this.gaTrackerActive = false;
+            }
+        }catch (JavaScriptException ex){
+            this.gaTrackerActive = false;
         }
         if(!this.gaTrackerActive && TRACK_GA_MANAGER && Console.VERBOSE){
             Console.info("[GAManager] set for DEV purposes");
