@@ -88,7 +88,7 @@ public class DiagramPresenter extends Controller implements DiagramView.Presente
             @Override
             public void execute() {
                 visible = true;
-                if(targetState==null) return;
+                if (targetState == null) return;
                 onStateManagerDatabaseObjectsSelected(targetState.getPath(), targetState.getPathway(), targetState.getInstance());
             }
         });
@@ -287,6 +287,7 @@ public class DiagramPresenter extends Controller implements DiagramView.Presente
                             list.add(Long.valueOf(value));
                         }
                         if(!list.isEmpty()){
+                            entitySelected = pathway.getDbId();
                             view.setSelectionIds(list);
                         }
                     }catch (Exception ex){
