@@ -224,6 +224,7 @@ public class DiagramPresenter extends Controller implements DiagramView.Presente
                         list.add(Long.valueOf(value));
                     }
                     if(!list.isEmpty()){
+                        entitySelected = pathway.getDbId();
                         view.setSelectionIds(list);
                     }
                 }
