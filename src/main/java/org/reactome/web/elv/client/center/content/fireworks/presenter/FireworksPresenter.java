@@ -1,5 +1,6 @@
 package org.reactome.web.elv.client.center.content.fireworks.presenter;
 
+import com.google.gwt.core.client.Duration;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.*;
 import org.reactome.web.elv.client.center.content.fireworks.view.FireworksView;
@@ -23,6 +24,13 @@ import java.util.List;
  * @author Antonio Fabregat <fabregat@ebi.ac.uk>
  */
 public class FireworksPresenter extends Controller implements FireworksView.Presenter, EventHoverHandler, EventHoverResetHandler {
+
+    /**
+     * Static files are cached by the browser, but we want to force download at least once per session
+     * to avoid old fireworks layout views
+     */
+    private final double SESSION_STATIC_VERSION = Duration.currentTimeMillis();
+
     private boolean firstLoad = true;
 
     private FireworksView view;
@@ -211,7 +219,7 @@ public class FireworksPresenter extends Controller implements FireworksView.Pres
 
 
     public void loadSpeciesFireworks(String species){
-        String url = "/download/current/fireworks/" + species + ".json";
+        String url = "/download/current/fireworks/" + species + ".json?t=" + SESSION_STATIC_VERSION;
         RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, url);
         requestBuilder.setHeader("Accept", "application/json");
         try {
