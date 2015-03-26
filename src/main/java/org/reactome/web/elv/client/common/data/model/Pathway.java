@@ -17,6 +17,7 @@ public class Pathway extends Event {
     private String isCanonical;
     private List<Event> hasEvent = new LinkedList<Event>();
     private Boolean hasDiagram;
+    private Pathway normalPathway;
 
     public Pathway(Long dbId, String displayName) {
         super(dbId, displayName, SchemaClass.PATHWAY);
@@ -42,6 +43,10 @@ public class Pathway extends Event {
         }else{
             this.hasDiagram = false;
         }
+
+        if(jsonObject.containsKey("normalPathway")){
+            this.normalPathway = (Pathway) FactoryUtils.getDatabaseObject(jsonObject, "normalPathway");
+        }
     }
 
     public String getDoi() {
@@ -58,5 +63,9 @@ public class Pathway extends Event {
 
     public Boolean getHasDiagram() {
         return hasDiagram;
+    }
+
+    public Pathway getNormalPathway() {
+        return normalPathway;
     }
 }

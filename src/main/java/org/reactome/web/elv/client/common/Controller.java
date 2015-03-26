@@ -180,6 +180,9 @@ public abstract class Controller implements ELVEventHandler {
                 DetailsSelection oes = (DetailsSelection) obj;
                 onOverviewEventSelected(oes.getPath(), oes.getDiagram(), oes.getEvent());
                 break;
+            case OVERVIEW_PATHWAY_SELECTED:
+                onOverviewPathwaySelected((Pathway) obj);
+                break;
             case OVERVIEW_ITEM_SELECTED:
                 onOverviewItemSelected((DatabaseObject) obj);
                 break;
@@ -322,6 +325,7 @@ public abstract class Controller implements ELVEventHandler {
 
     /* OVERVIEW TAB */
     public void onOverviewEventSelected(Path path, Pathway pathway, Event event){}
+    public void onOverviewPathwaySelected(Pathway pathway){}
     public void onOverviewItemSelected(DatabaseObject databaseObject){}
 
     /* DATA MANAGER EVENTS*/
