@@ -1,9 +1,9 @@
 package org.reactome.web.elv.client.details.tabs.overview.model.widgets;
 
 import com.google.gwt.user.client.ui.Widget;
-import org.reactome.web.elv.client.common.data.model.*;
-import org.reactome.web.elv.client.details.tabs.overview.model.widgets.factory.TableRowFactory;
+import org.reactome.web.elv.client.common.data.model.Pathway;
 import org.reactome.web.elv.client.details.tabs.overview.model.widgets.factory.PropertyType;
+import org.reactome.web.elv.client.details.tabs.overview.model.widgets.factory.TableRowFactory;
 
 /**
  * @author Antonio Fabregat <fabregat@ebi.ac.uk>
@@ -23,6 +23,8 @@ public class PathwayTable extends EventTable {
         switch (propertyType){
             case DOI:
                 return TableRowFactory.getTextPanelRow(title, this.pathway.getDoi());
+            case NORMAL_PATHWAY:
+                return TableRowFactory.getEventRow(title, this.pathway.getNormalPathway());
             default:
                 return super.getTableRow(propertyType);
         }

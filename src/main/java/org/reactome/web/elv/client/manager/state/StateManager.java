@@ -220,6 +220,15 @@ public class StateManager extends Controller implements ValueChangeHandler<Strin
     }
 
     @Override
+    public void onOverviewPathwaySelected(Pathway pathway) {
+        AdvancedState state = new AdvancedState(this.currentState);
+        state.resetInstancesState();
+        state.setPathway(pathway);
+        state.setPath(new LinkedList<Event>());
+        History.newItem(state.toString(), true);
+    }
+
+    @Override
     public void onHierarchyEventSelected(Path path, Pathway pathway, Event event) {
         this.desiredState = new AdvancedState(this.currentState);
         this.desiredState.setPathway(pathway);
@@ -238,10 +247,6 @@ public class StateManager extends Controller implements ValueChangeHandler<Strin
     public void onOrthologousManagerStateSelected(AdvancedState state) {
         state.setDetailsTab(this.currentState.getDetailsTab());
         state.setAnalysisToken(this.currentState.getAnalysisToken());
-        //Requirement from diagram side
-        if(state.getSpecies().equals(this.currentState.getSpecies())){
-            state.setAnalysisToken(this.currentState.getAnalysisToken());
-        }
         state.changeCenterToolIfNeeded(true);
         History.newItem(state.toString(), true);
     }

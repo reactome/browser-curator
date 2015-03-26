@@ -258,7 +258,11 @@ public class DetailsPresenter extends Controller implements DetailsView.Presente
 
     @Override
     public void eventSelected(Path path, Pathway pathway, Event event) {
-        DetailsSelection selection = new DetailsSelection(path, pathway, event);
-        eventBus.fireELVEvent(ELVEventType.OVERVIEW_EVENT_SELECTED, selection);
+        if(event!=null && event instanceof Pathway){
+            eventBus.fireELVEvent(ELVEventType.OVERVIEW_PATHWAY_SELECTED, event);
+        }else {
+            DetailsSelection selection = new DetailsSelection(path, pathway, event);
+            eventBus.fireELVEvent(ELVEventType.OVERVIEW_EVENT_SELECTED, selection);
+        }
     }
 }
