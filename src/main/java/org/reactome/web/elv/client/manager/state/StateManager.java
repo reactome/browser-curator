@@ -283,11 +283,9 @@ public class StateManager extends Controller implements ValueChangeHandler<Strin
 
     @Override
     public void onFireworksPathwaySelectionReset() {
-        this.desiredState = new AdvancedState(this.currentState);
-        this.desiredState.setPathway(null);
-        this.desiredState.setInstance(null);
-        this.desiredState.setPath(new LinkedList<Event>());
-        History.newItem(this.desiredState.toString(), true);
+        AdvancedState state = new AdvancedState(this.currentState);
+        state.resetInstancesState();
+        History.newItem(state.toString(), true);
     }
 
     @Override
@@ -295,18 +293,17 @@ public class StateManager extends Controller implements ValueChangeHandler<Strin
         AdvancedState state = new AdvancedState(this.currentState);
         state.resetInstancesState();
         state.setPathway(pathway);
-        state.setPath(new LinkedList<Event>());
         History.newItem(state.toString(), true);
     }
 
     @Override
     public void onHierarchyEventSelected(Path path, Pathway pathway, Event event) {
-        this.desiredState = new AdvancedState(this.currentState);
-        this.desiredState.setPathway(pathway);
-        this.desiredState.setInstance(event);
-        this.desiredState.setPath(path.getPath());
-        this.desiredState.setCenterTool(CenterToolType.getDefault());
-        History.newItem(this.desiredState.toString(), true);
+        AdvancedState state = new AdvancedState(this.currentState);
+        state.setPathway(pathway);
+        state.setInstance(event);
+        state.setPath(path.getPath());
+        state.setCenterTool(CenterToolType.getDefault());
+        History.newItem(state.toString(), true);
     }
 
     @Override
@@ -337,8 +334,7 @@ public class StateManager extends Controller implements ValueChangeHandler<Strin
     private void setCurrentState(Pathway pathway, DatabaseObject databaseObject){
         if( pathway==null ){
             this.selectedDiagram = null;
-            this.currentState.setPathway(null);
-            this.currentState.setInstance(null);
+            this.currentState.resetInstancesState();
         } else {
             this.selectedDiagram = pathway;
             this.currentState.setPathway(pathway);

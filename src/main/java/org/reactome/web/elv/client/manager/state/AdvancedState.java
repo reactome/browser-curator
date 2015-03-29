@@ -154,6 +154,7 @@ public class AdvancedState implements StableIdentifierLoader.StableIdentifierLoa
     public void resetInstancesState(){
         this.pathway = null;
         this.instance = null;
+        this.setPath(new LinkedList<Event>());
     }
 
     //Since the center contains more than the DIAGRAM, it has become a TOOL to load by default
