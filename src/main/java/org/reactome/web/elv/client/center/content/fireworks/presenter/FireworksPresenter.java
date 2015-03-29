@@ -177,6 +177,11 @@ public class FireworksPresenter extends Controller implements FireworksView.Pres
     }
 
     @Override
+    public void profileChanged(String profileName) {
+        eventBus.fireELVEvent(ELVEventType.FIREWORKS_PROFILE_CHANGED, profileName);
+    }
+
+    @Override
     public void resetAnalysis() {
         eventBus.fireELVEvent(ELVEventType.FIREWORKS_ANALYSIS_RESET);
     }

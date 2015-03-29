@@ -11,6 +11,7 @@ import org.reactome.web.fireworks.client.FireworksViewer;
 import org.reactome.web.fireworks.events.NodeHoverEvent;
 import org.reactome.web.fireworks.events.NodeOpenedEvent;
 import org.reactome.web.fireworks.events.NodeSelectedEvent;
+import org.reactome.web.fireworks.events.ProfileChangedEvent;
 import org.reactome.web.fireworks.handlers.*;
 
 import java.util.LinkedList;
@@ -21,7 +22,7 @@ import java.util.List;
  */
 public class FireworksViewImpl extends DockLayoutPanel implements FireworksView, AnalysisHelper.ResourceChosenHandler,
         AnalysisResetHandler, NodeHoverHandler, NodeSelectedHandler, NodeSelectedResetHandler, NodeHoverResetHandler,
-        NodeOpenedHandler {
+        NodeOpenedHandler, ProfileChangedHandler {
     private Presenter presenter;
     private FireworksViewer fireworks;
     private List<HandlerRegistration> handlers;
@@ -50,6 +51,7 @@ public class FireworksViewImpl extends DockLayoutPanel implements FireworksView,
         handlers.add(this.fireworks.addNodeSelectedHandler(this));
         handlers.add(this.fireworks.addNodeSelectedResetHandler(this));
         handlers.add(this.fireworks.addNodeHoverResetHandler(this));
+        handlers.add(this.fireworks.addProfileChangedHandler(this));
         if(this.token!=null) {
             this.fireworks.setAnalysisToken(token, resource);
         }
@@ -142,6 +144,11 @@ public class FireworksViewImpl extends DockLayoutPanel implements FireworksView,
     @Override
     public void onNodeHoverReset() {
         this.presenter.resetPathwayHighlighting();
+    }
+
+    @Override
+    public void onProfileChanged(ProfileChangedEvent event) {
+        this.presenter.profileChanged(event.getProfile().getName());
     }
 
     @Override

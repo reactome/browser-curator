@@ -117,6 +117,9 @@ public abstract class Controller implements ELVEventHandler {
             case FIREWORKS_PATHWAY_SELECTION_RESET:
                 onFireworksPathwaySelectionReset();
                 break;
+            case FIREWORKS_PROFILE_CHANGED:
+                onFireworksProfileChanged((String) obj);
+                break;
 
                     /* PANELS */
             case DETAILS_PANEL_RESIZED:
@@ -296,6 +299,7 @@ public abstract class Controller implements ELVEventHandler {
     public void onFireworksPathwayOpened(Pathway pathway){}
     public void onFireworksPathwaySelected(Pathway pathway){}
     public void onFireworksPathwaySelectionReset(){}
+    public void onFireworksProfileChanged(String profileName){}
 
     /* PANELS */
     public void onDetailPanelResized(Integer size){}

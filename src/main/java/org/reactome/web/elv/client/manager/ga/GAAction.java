@@ -12,5 +12,6 @@ public enum GAAction {
     SELECTED,
     STARTED,
     TOGGLED,
-    RESET
+    RESET,
+    PROFILE
 }

@@ -12,6 +12,7 @@ public interface FireworksView {
         void selectPathway(Long dbId);
         void resetPathwaySelection();
         void highlightPathway(Long dbId);
+        void profileChanged(String profileName);
         void resetAnalysis();
         void resetPathwayHighlighting();
         void showPathwayDiagram(Long dbId);
