@@ -89,6 +89,7 @@ public class FireworksPresenter extends Controller implements FireworksView.Pres
 
     @Override
     public void onStateManagerSpeciesSelected(Species species) {
+        this.view.resetView(); //this forces the view to "carry" the following actions in the EventBus
         String speciesName = species.getDisplayName().replaceAll(" ", "_");
         loadSpeciesFireworks(speciesName);
     }
