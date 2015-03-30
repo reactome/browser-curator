@@ -88,7 +88,11 @@ public class AdvancedStateHelper {
     private List<Event> getPathFromCache(String... identifier){
         List<Event> path = new LinkedList<Event>();
         for (String id : identifier) {
-            path.add((Event) map.get(id));
+            try {
+                path.add((Pathway) map.get(id));
+            }catch (ClassCastException ex){
+                //Do not take it into account
+            }
         }
         return path;
     }
