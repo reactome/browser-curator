@@ -243,14 +243,14 @@ public class GAManager extends Controller implements TitleChangedHandler {
     public void onFireworksPathwaySelected(Pathway pathway) {
         if(!pathway.equals(this.state.getLastDatabaseObjectSelected())){
             this.state.setLastDatabaseObjectSelected(pathway);
-            this.trackEvent(pathway, GAAction.PROFILE, GAModule.FIREWORKS);
+            this.trackEvent(pathway, GAAction.SELECTED, GAModule.FIREWORKS);
         }
     }
 
     @Override
     public void onFireworksProfileChanged(String profileName) {
         String element = profileName.toUpperCase().replaceAll("  *","_");
-        this.trackEvent(element, GAAction.SELECTED, GAModule.FIREWORKS);
+        this.trackEvent(element, GAAction.PROFILE, GAModule.FIREWORKS);
     }
 
     @Override
