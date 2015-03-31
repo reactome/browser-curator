@@ -90,7 +90,7 @@ public class OverviewViewImpl implements OverviewView {
         Image loader = new Image(ReactomeImages.INSTANCE.loader());
         message.add(loader);
 
-        Label label = new Label("Loading overview data, please wait...");
+        Label label = new Label("Loading description, please wait...");
         label.getElement().getStyle().setMarginLeft(5, Style.Unit.PX);
         message.add(label);
 

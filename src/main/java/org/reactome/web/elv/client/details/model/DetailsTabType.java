@@ -11,7 +11,7 @@ import java.util.List;
 public enum DetailsTabType  {
 
     /* NOTE: If a new tab is added, make sure GAModule correspondence method is updated */
-    OVERVIEW("OT", "Overview"),
+    OVERVIEW("OT", "Description"),
     PARTICIPATING_MOLECULES("MT", "Molecules"),
     STRUCTURES("ST", "Structures"),
     EXPRESSION("EX", "Expression"),

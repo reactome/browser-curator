@@ -23,7 +23,7 @@ public class DiagramButton extends Button {
     }
 
     public DiagramButton(ImageResource imageResource, Pathway pathway) {
-        super(DiagramButton.getHTML(imageResource, "Fireworks"));
+        super(DiagramButton.getHTML(imageResource, "Overview"));
         setWidth("90px");
         this.pathway = pathway;
     }

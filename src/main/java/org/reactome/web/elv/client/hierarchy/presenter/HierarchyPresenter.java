@@ -521,12 +521,12 @@ public class HierarchyPresenter extends Controller implements HierarchyView.Pres
     @Override
     public void onEventHovered(EventHoverEvent e) {
         if(e.getSource() == this) return;
-        System.out.println(e.getSource().getClass());
-        System.out.println(getClass().getSimpleName() + " >> Fireworks " +  e.getPathway().getName() + " hovered");
+//        System.out.println(e.getSource().getClass());
+//        System.out.println(getClass().getSimpleName() + " >> Fireworks " +  e.getPathway().getName() + " hovered");
     }
 
     @Override
     public void onEventHoveredReset() {
-        System.out.println("Fireworks hovering reset");
+//        System.out.println("Fireworks hovering reset");
     }
 }

@@ -227,7 +227,7 @@ public class FireworksViewImpl extends DockLayoutPanel implements FireworksView,
     private Widget getLoadingMessage(){
         HorizontalPanel hp = new HorizontalPanel();
         hp.add(new Image(DisclosureImages.INSTANCE.getLoadingImage()));
-        hp.add(new HTMLPanel("Loading Fireworks view..."));
+        hp.add(new HTMLPanel("Loading pathways overview graph..."));
         hp.setSpacing(5);
 
         return hp;
