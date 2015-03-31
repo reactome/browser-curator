@@ -10,6 +10,7 @@ public enum GAAction {
     FINISHED,
     PERFORMED,
     SELECTED,
+    OPEN,
     STARTED,
     TOGGLED,
     RESET,

@@ -248,6 +248,11 @@ public class GAManager extends Controller implements TitleChangedHandler {
     }
 
     @Override
+    public void onFireworksPathwayOpened(Pathway pathway) {
+        this.trackEvent(pathway, GAAction.OPEN, GAModule.FIREWORKS);
+    }
+
+    @Override
     public void onFireworksProfileChanged(String profileName) {
         String element = profileName.toUpperCase().replaceAll("  *","_");
         this.trackEvent(element, GAAction.PROFILE, GAModule.FIREWORKS);
