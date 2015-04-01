@@ -5,12 +5,19 @@ import org.reactome.web.elv.client.center.view.CenterView;
 import org.reactome.web.elv.client.common.Controller;
 import org.reactome.web.elv.client.common.EventBus;
 import org.reactome.web.elv.client.common.data.model.Pathway;
+import org.reactome.web.elv.client.common.data.model.Species;
 import org.reactome.web.elv.client.manager.tour.TourStage;
 
 /**
  * @author Antonio Fabregat <fabregat@ebi.ac.uk>
  */
 public class CenterPresenter extends Controller implements CenterView.Presenter {
+
+    //In some computer Fireworks takes a while to load. That is the reason of the
+    //following mechanism to ensure Fireworks is loaded
+    private Long currentSpeciesId;
+    private Long fireworksSpecies;
+    private boolean ANALYSIS_TOOL_PENDENT_TO_OPEN = false;
 
     public enum Display { FIREWORKS, DIAGRAM }
 
@@ -30,6 +37,15 @@ public class CenterPresenter extends Controller implements CenterView.Presenter 
     }
 
     @Override
+    public void onFireworksLoaded(Long speciesId) {
+        fireworksSpecies = speciesId;
+        if(currentSpeciesId.equals(fireworksSpecies) && ANALYSIS_TOOL_PENDENT_TO_OPEN){
+            ANALYSIS_TOOL_PENDENT_TO_OPEN = false;
+            this.view.showAnalysisTool();
+        }
+    }
+
+    @Override
     public void onFireworksPathwayOpened(Pathway pathway) {
         CURRENT_DISPLAY = Display.DIAGRAM;
         this.view.setMainToolToDiagram();
@@ -44,7 +60,11 @@ public class CenterPresenter extends Controller implements CenterView.Presenter 
     @Override
     public void onStateManagerToolSelected(CenterToolType tool) {
         if(tool.equals(CenterToolType.ANALYSIS)){
-            this.view.showAnalysisTool();
+            if(currentSpeciesId.equals(fireworksSpecies)) {
+                this.view.showAnalysisTool();
+            }else{
+                ANALYSIS_TOOL_PENDENT_TO_OPEN = true;
+            }
         }else{
             switch (CURRENT_DISPLAY){
                 case FIREWORKS:
@@ -55,6 +75,11 @@ public class CenterPresenter extends Controller implements CenterView.Presenter 
                     break;
             }
         }
+    }
+
+    @Override
+    public void onStateManagerSpeciesSelected(Species species) {
+        this.currentSpeciesId = species.getDbId();
     }
 
     @Override

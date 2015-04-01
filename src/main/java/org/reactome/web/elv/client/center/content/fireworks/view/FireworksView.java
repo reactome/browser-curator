@@ -16,6 +16,7 @@ public interface FireworksView {
         void resetAnalysis();
         void resetPathwayHighlighting();
         void showPathwayDiagram(Long dbId);
+        void viewLoaded(Long speciesId);
     }
 
     Widget asWidget();
