@@ -9,10 +9,7 @@ import org.reactome.web.elv.client.common.data.model.Pathway;
 import org.reactome.web.elv.client.common.widgets.disclosure.DisclosureImages;
 import org.reactome.web.fireworks.client.FireworksFactory;
 import org.reactome.web.fireworks.client.FireworksViewer;
-import org.reactome.web.fireworks.events.NodeHoverEvent;
-import org.reactome.web.fireworks.events.NodeOpenedEvent;
-import org.reactome.web.fireworks.events.NodeSelectedEvent;
-import org.reactome.web.fireworks.events.ProfileChangedEvent;
+import org.reactome.web.fireworks.events.*;
 import org.reactome.web.fireworks.handlers.*;
 
 import java.util.LinkedList;
@@ -21,9 +18,10 @@ import java.util.List;
 /**
  * @author Antonio Fabregat <fabregat@ebi.ac.uk>
  */
-public class FireworksViewImpl extends DockLayoutPanel implements FireworksView, AnalysisHelper.ResourceChosenHandler,
-        AnalysisResetHandler, NodeHoverHandler, NodeSelectedHandler, NodeSelectedResetHandler, NodeHoverResetHandler,
-        NodeOpenedHandler, ProfileChangedHandler {
+public class FireworksViewImpl extends DockLayoutPanel implements FireworksView, FireworksLoadedHandler,
+        AnalysisHelper.ResourceChosenHandler, AnalysisResetHandler,
+        NodeHoverHandler, NodeSelectedHandler, NodeSelectedResetHandler, NodeHoverResetHandler, NodeOpenedHandler,
+        ProfileChangedHandler {
     private Presenter presenter;
     private FireworksViewer fireworks;
     private List<HandlerRegistration> handlers;
@@ -49,8 +47,10 @@ public class FireworksViewImpl extends DockLayoutPanel implements FireworksView,
     @Override
     public void loadSpeciesFireworks(String speciesJson) {
         this.removeHandlers(); //Needed to allow the garbage collection to get rid of previous instances of fireworks
+//        FireworksFactory.EVENT_BUS_VERBOSE = true;
         this.fireworks = FireworksFactory.createFireworksViewer(speciesJson);
         handlers.add(this.fireworks.addAnalysisResetHandler(this));
+        handlers.add(this.fireworks.addFireworksLoaded(this));
         handlers.add(this.fireworks.addNodeHoverHandler(this));
         handlers.add(this.fireworks.addNodeOpenedHandler(this));
         handlers.add(this.fireworks.addNodeSelectedHandler(this));
@@ -172,6 +172,11 @@ public class FireworksViewImpl extends DockLayoutPanel implements FireworksView,
     @Override
     public void onAnalysisReset() {
         this.presenter.resetAnalysis();
+    }
+
+    @Override
+    public void onFireworksLoaded(FireworksLoadedEvent event) {
+        this.presenter.viewLoaded(event.getSpeciesId());
     }
 
     @Override
