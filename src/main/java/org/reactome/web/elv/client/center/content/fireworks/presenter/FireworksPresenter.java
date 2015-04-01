@@ -92,6 +92,13 @@ public class FireworksPresenter extends Controller implements FireworksView.Pres
         this.view.resetView(); //this forces the view to "carry" the following actions in the EventBus
         String speciesName = species.getDisplayName().replaceAll(" ", "_");
         loadSpeciesFireworks(speciesName);
+//        Timer timer = new Timer() {
+//            @Override
+//            public void run() {
+//                loadSpeciesFireworks(speciesName);
+//            }
+//        };
+//        timer.schedule(10000);
     }
 
     @Override
@@ -221,6 +228,11 @@ public class FireworksPresenter extends Controller implements FireworksView.Pres
             //Here we carry out the selection event, so this.selected contains the proper object already
             this.eventBus.fireELVEvent(ELVEventType.FIREWORKS_PATHWAY_OPENED, this.selected);
         }
+    }
+
+    @Override
+    public void viewLoaded(Long speciesId) {
+        this.eventBus.fireELVEvent(ELVEventType.FIREWORKS_LOADED, speciesId);
     }
 
 
