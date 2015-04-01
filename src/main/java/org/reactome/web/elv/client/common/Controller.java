@@ -108,6 +108,9 @@ public abstract class Controller implements ELVEventHandler {
             case FIREWORKS_ANALYSIS_RESET:
                 onFireworksAnalysisReset();
                 break;
+            case FIREWORKS_LOADED:
+                onFireworksLoaded((Long) obj);
+                break;
             case FIREWORKS_PATHWAY_OPENED:
                 onFireworksPathwayOpened((Pathway) obj);
                 break;
@@ -296,6 +299,7 @@ public abstract class Controller implements ELVEventHandler {
 
     /* FIREWORKS EVENTS */
     public void onFireworksAnalysisReset(){}
+    public void onFireworksLoaded(Long speciesId){}
     public void onFireworksPathwayOpened(Pathway pathway){}
     public void onFireworksPathwaySelected(Pathway pathway){}
     public void onFireworksPathwaySelectionReset(){}
