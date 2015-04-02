@@ -94,7 +94,7 @@ public class DiagramKey extends PopupPanel implements CloseHandler<PopupPanel>, 
     }
 
     private HTMLPanel getMoreDetailsLink() {
-        String moreDetailURL = "/userguide/Usersguide.html#Pathway_Diagrams";
+        String moreDetailURL = "http://wiki.reactome.org/index.php/Usersguide#Pathway_Diagrams. ";
         String moreDetailTITLE = "Click here for more detailed diagram key";
         String moreDetailHTML = "<a target=\"_blank\" href=\"" + moreDetailURL + "\">" + moreDetailTITLE + "</a>";
         HTMLPanel moreDetail = new HTMLPanel(moreDetailHTML);
