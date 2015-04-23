@@ -1,7 +1,7 @@
 package org.reactome.web.elv.client.details.tabs.structures.view;
 
-import org.reactome.web.elv.client.common.data.model.PhysicalEntity;
-import org.reactome.web.elv.client.common.data.model.ReferenceSequence;
+import org.reactome.web.elv.client.common.data.model.DatabaseObject;
+import org.reactome.web.elv.client.common.data.model.ReferenceEntity;
 import org.reactome.web.elv.client.details.tabs.DetailsTabView;
 
 import java.util.List;
@@ -12,9 +12,9 @@ import java.util.List;
 public interface StructuresView extends DetailsTabView<StructuresView.Presenter> {
 
     public interface Presenter extends DetailsTabView.Presenter{
-        void getProteinAccessions(PhysicalEntity physicalEntity, Long respId);
+        void getReferenceEntities(DatabaseObject databaseObject, Long respId);
     }
 
     void refreshTitle(Integer loadedStructures, Integer proteinAccessions);
-    void setProteinAccessions(List<ReferenceSequence> referenceSequenceList, Long respId);
+    void setReferenceEntities(List<ReferenceEntity> referenceSequenceList, Long respId);
 }

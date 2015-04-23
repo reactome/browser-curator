@@ -7,6 +7,10 @@ import com.google.gwt.user.client.ui.HTMLPanel;
  */
 public class EmptyStructuresPanel extends StructuresPanel<Object> {
 
+    public EmptyStructuresPanel() {
+        this.setEmpty();
+    }
+
     @Override
     public void add(Object element) {
         //Nothing here

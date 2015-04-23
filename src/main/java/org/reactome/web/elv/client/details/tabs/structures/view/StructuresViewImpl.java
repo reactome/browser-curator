@@ -80,7 +80,7 @@ public class StructuresViewImpl implements StructuresView, StructureLoadedHandle
     }
 
     @Override
-    public void setProteinAccessions(List<ReferenceSequence> referenceSequenceList, Long respId) {
+    public void setReferenceEntities(List<ReferenceEntity> referenceSequenceList, Long respId) {
         StructuresPanel panel = this.panelsLoaded.get(respId);
         if(panel instanceof PdbStructurePanel){
             PdbStructurePanel aux = (PdbStructurePanel) panel;
@@ -88,8 +88,16 @@ public class StructuresViewImpl implements StructuresView, StructureLoadedHandle
                 aux.setEmpty();
                 return;
             }
-            for (ReferenceSequence referenceSequence : referenceSequenceList) {
-                aux.add(referenceSequence);
+            for (ReferenceEntity ref : referenceSequenceList) {
+                if(ref instanceof ReferenceSequence) {
+                    aux.add((ReferenceSequence )ref);
+                }
+            }
+        }
+        else if(panel instanceof RheaStructuresPanel){
+            RheaStructuresPanel aux = (RheaStructuresPanel) panel;
+            for (ReferenceEntity ref : referenceSequenceList) {
+                aux.add(ref);
             }
         }
     }
@@ -108,12 +116,13 @@ public class StructuresViewImpl implements StructuresView, StructureLoadedHandle
                 PdbStructurePanel p = new PdbStructurePanel();
                 this.currentPanel = p;
                 p.addStructureLoadedHandler(this);
-                this.presenter.getProteinAccessions((PhysicalEntity) toShow, toShow.getDbId());
-            } else if(toShow instanceof Event) {
+                this.presenter.getReferenceEntities(toShow, toShow.getDbId());
+            } else if(toShow instanceof ReactionLikeEvent) {
                 RheaStructuresPanel p = new RheaStructuresPanel();
                 this.currentPanel = p;
                 p.addStructureLoadedHandler(this);
                 p.add((Event) toShow);
+                this.presenter.getReferenceEntities(toShow, toShow.getDbId());
             } else {
                 this.currentPanel = new EmptyStructuresPanel();
             }
