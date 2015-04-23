@@ -18,13 +18,13 @@ public class DiagramButton extends Button {
 
     public DiagramButton(ImageResource imageResource, Figure figure) {
         super(DiagramButton.getHTML(imageResource, "Illustration"));
-        setWidth("90px");
+        setWidth("95px");
         this.figure = figure;
     }
 
     public DiagramButton(ImageResource imageResource, Pathway pathway) {
         super(DiagramButton.getHTML(imageResource, "Overview"));
-        setWidth("90px");
+        setWidth("95px");
         this.pathway = pathway;
     }
 
@@ -40,7 +40,7 @@ public class DiagramButton extends Button {
         FlowPanel panel = new FlowPanel();
 
         Image image = new Image(imageResource.getSafeUri());
-        image.setSize("10px","10px");
+        image.setSize("16px","16px");
         image.getElement().getStyle().setMarginRight(5, Style.Unit.PX);
         panel.add(image);
 
