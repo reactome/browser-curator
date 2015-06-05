@@ -318,7 +318,7 @@ public class AdvancedState implements StableIdentifierLoader.StableIdentifierLoa
             case CURATOR:
                 isSingleIdentifier = !value.contains("=");
             default:
-                isSingleIdentifier |= value.matches("^REACT_\\d+(\\.\\d+)?$") ;
+                isSingleIdentifier |= value.matches("^R-[A-Z]{3}-\\d+(\\.\\d+)?$") ;
         }
         return isSingleIdentifier;
     }
