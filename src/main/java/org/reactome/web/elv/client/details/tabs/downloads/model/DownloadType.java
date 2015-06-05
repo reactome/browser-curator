@@ -5,7 +5,7 @@ package org.reactome.web.elv.client.details.tabs.downloads.model;
  */
 public enum DownloadType {
     SBML        ("SBML", "/ReactomeRESTfulAPI/RESTfulWS/sbmlExporter/__ID__", "SMBL"),
-//    SBGN        ("SBGN", "/ReactomeGWT/entrypoint/sbgnRetrieval?ID=__ID__", "SBGN"),
+    SBGN        ("SBGN", "/ReactomeRESTfulAPI/RESTfulWS/sbgnExporter/__ID__", "SBGN"),
     BIOPAX_2    ("BIOPAX 2", "/ReactomeRESTfulAPI/RESTfulWS/biopaxExporter/Level2/__ID__", "Biopax 2"),
     BIOPAX_3    ("BIOPAX 3", "/ReactomeRESTfulAPI/RESTfulWS/biopaxExporter/Level3/__ID__", "Biopax 3"),
     PDF         ("PDF", "/cgi-bin/pdfexporter?DB=__DB__&ID=__ID__", "PDF"),
