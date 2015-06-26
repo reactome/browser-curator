@@ -319,7 +319,7 @@ public class AdvancedState implements StableIdentifierLoader.StableIdentifierLoa
                 isSingleIdentifier = !value.contains("=");
             default:
                 //REACT like ST_ID compatibility is meant to be kept for a while ;)
-                isSingleIdentifier |= value.matches("^R-[A-Z]{3}-\\d+(\\.\\d+)?$") || value.matches("^REACT_\\d+(\\.\\d+)?$");
+                isSingleIdentifier |= value.matches("^R-[A-Z]{3}-\\d+(-\\d+)?(\\.\\d+)?$") || value.matches("^REACT_\\d+(\\.\\d+)?$");
         }
         return isSingleIdentifier;
     }
