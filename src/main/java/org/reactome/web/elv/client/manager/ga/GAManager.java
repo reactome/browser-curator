@@ -14,7 +14,7 @@ import org.reactome.web.elv.client.details.model.DetailsTabType;
 import org.reactome.web.elv.client.details.tabs.analysis.events.AnalysisTabPathwaySelected;
 import org.reactome.web.elv.client.manager.title.event.TitleChangedEvent;
 import org.reactome.web.elv.client.manager.title.handler.TitleChangedHandler;
-import uk.ac.ebi.pwp.utils.analytics.client.GATracker;
+import org.reactome.web.utils.analytics.client.GATracker;
 
 /**
  * GAManager keeps track of those events that are of interest in order to get statistics of the web application.
