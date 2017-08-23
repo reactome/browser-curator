@@ -107,9 +107,9 @@
         </dependency>
 
         <dependency>
-            <groupId>org.reactome.web</groupId>
-            <artifactId>diagram</artifactId>
-            <version>${reactome.web.diagram}</version>
+            <groupId>org.reactome.diagram</groupId>
+            <artifactId>pathway-diagram</artifactId>
+            <version>1.0.12</version>
         </dependency>
 
         <dependency>
