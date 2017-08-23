@@ -3,8 +3,8 @@ package org.reactome.web.pwp.client.tools.analysis.wizard.common;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.i18n.client.DateTimeFormat;
-import org.reactome.web.diagram.client.DiagramFactory;
-import org.reactome.web.diagram.util.Console;
+import org.reactome.web.pwp.client.AppConfig;
+import org.reactome.web.pwp.client.common.utils.Console;
 
 import java.util.Date;
 
@@ -23,7 +23,7 @@ public class WizardEventBus extends SimpleEventBus {
 
     @Override
     public void fireEventFromSource(GwtEvent<?> event, Object source) {
-        if(DiagramFactory.EVENT_BUS_VERBOSE) {
+        if(AppConfig.getEventBusVerbose()) {
             Console.info(
                     this.fmt.format(new Date()) + " #WizardEvent# " +
                             source.getClass().getSimpleName() + " >> " +
