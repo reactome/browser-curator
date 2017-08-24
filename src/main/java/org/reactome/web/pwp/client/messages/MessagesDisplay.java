@@ -7,7 +7,7 @@ import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.*;
-import org.reactome.web.diagram.common.PwpButton;
+import org.reactome.web.fireworks.controls.common.PwpButton;
 
 /**
  * @author Antonio Fabregat <fabregat@ebi.ac.uk>
