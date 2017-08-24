@@ -13,7 +13,8 @@ import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
-import org.reactome.web.diagram.common.PwpButton;
+import org.reactome.web.fireworks.controls.common.PwpButton;
+
 
 /**
  * @author Kostas Sidiropoulos (ksidiro@ebi.ac.uk)
