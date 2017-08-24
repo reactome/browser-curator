@@ -10,7 +10,7 @@
     <!-- Other module inherits                                      -->
     <inherits name="org.reactome.web.analysis.Analysis"/>
     <inherits name="org.reactome.web.carrousel.Carrousel"/>
-    <inherits name="org.reactome.web.diagram.DiagramViewer"/>
+    <inherits name="org.reactome.diagram.PathwayDiagram"/>
     <inherits name="org.reactome.web.fireworks.Fireworks"/>
     <inherits name='org.reactome.web.pwp.model.PathwayPortalModel'/>
     <inherits name="org.reactome.web.utils.analytics.GoogleAnalytics"/>
