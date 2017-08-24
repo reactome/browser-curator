@@ -31,7 +31,7 @@
 
     <properties>
         <!-- Name that will be used to generate the war file -->
-        <fileName>PathwayBrowser</fileName>
+        <fileName>PathwayBrowserCurator</fileName>
 
         <!-- Convenience property to set the GWT version -->
         <gwtVersion>2.8.1</gwtVersion>
