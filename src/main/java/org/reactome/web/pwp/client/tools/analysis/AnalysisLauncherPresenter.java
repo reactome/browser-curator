@@ -47,13 +47,14 @@ public class AnalysisLauncherPresenter extends AbstractPresenter implements Anal
 
     @Override
     public void onStateChanged(StateChangedEvent event) {
-        PathwayPortalTool tool = event.getState().getTool();
-        if (tool.equals(PathwayPortalTool.ANALYSIS)) {
-            display.show();
-            display.center();
-        } else {
-            display.hide();
-        }
+        //No analysis in curator here for curator
+//        PathwayPortalTool tool = event.getState().getTool();
+//        if (tool.equals(PathwayPortalTool.ANALYSIS)) {
+//            display.show();
+//            display.center();
+//        } else {
+//            display.hide();
+//        }
     }
 
     private void retrieveSpeciesList() {
