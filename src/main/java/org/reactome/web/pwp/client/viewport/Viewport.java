@@ -15,9 +15,7 @@ public interface Viewport {
         void setPresenter(Presenter presenter);
 
         void showDiagram();
-
-        void showFireworks();
-
+        
         void showWelcome();
     }
 }

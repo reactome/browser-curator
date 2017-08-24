@@ -6,7 +6,6 @@ import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.user.client.ui.TabLayoutPanel;
 import org.reactome.web.pwp.client.viewport.diagram.Diagram;
-import org.reactome.web.pwp.client.viewport.fireworks.Fireworks;
 import org.reactome.web.pwp.client.viewport.welcome.Welcome;
 
 /**
@@ -17,23 +16,8 @@ public class ViewportDisplay extends TabLayoutPanel implements Viewport.Display 
     @SuppressWarnings({"FieldCanBeLocal", "unused"})
     private Viewport.Presenter presenter;
 
-    private Fireworks.Display fireworks;
     private Diagram.Display diagram;
     private Welcome.Display welcome;
-
-    public ViewportDisplay(Diagram.Display diagram, Fireworks.Display fireworks) {
-        super(0, Style.Unit.PX);
-        this.setAnimationDuration(0);
-        setStyleName(RESOURCES.getCSS().viewportContainer());
-
-        this.fireworks = fireworks;
-        this.fireworks.asWidget().addStyleName(RESOURCES.getCSS().viewportPanel());
-        this.diagram = diagram;
-        this.diagram.asWidget().addStyleName(RESOURCES.getCSS().viewportPanel());
-
-        add(this.fireworks);
-        add(this.diagram);
-    }
 
     public ViewportDisplay( Diagram.Display diagram, Welcome.Display welcome) {
         super(0, Style.Unit.PX);
@@ -57,11 +41,6 @@ public class ViewportDisplay extends TabLayoutPanel implements Viewport.Display 
     @Override
     public void showDiagram() {
         selectTab(getWidgetIndex(this.diagram));
-    }
-
-    @Override
-    public void showFireworks() {
-        selectTab(getWidgetIndex(this.fireworks));
     }
 
     @Override
