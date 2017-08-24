@@ -10,8 +10,6 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.SimplePanel;
-import org.reactome.web.pwp.client.AppConfig;
-import org.reactome.web.pwp.client.common.PathwayPortalTool;
 
 /**
  * @author Antonio Fabregat <fabregat@ebi.ac.uk>
@@ -27,8 +25,7 @@ public class ToolLauncherDisplay extends Composite implements ToolLauncher.Displ
         this.analysisBtn= new LauncherButton("Analyse your data...", RESOURCES.getCSS().analysis(), this);
         flowPanel.add(new SimplePanel(new InlineLabel("Analysis:")));
         flowPanel.add(this.analysisBtn);
-        //The analysis tools are not available for the curation sites
-        flowPanel.setVisible(!AppConfig.getIsCurator());
+        flowPanel.setVisible(false); //The analysis tools are not available for the curation sites
         initWidget(flowPanel);
     }
 
@@ -40,10 +37,10 @@ public class ToolLauncherDisplay extends Composite implements ToolLauncher.Displ
 
     @Override
     public void onClick(ClickEvent event) {
-        LauncherButton btn = (LauncherButton) event.getSource();
-        if(btn.equals(this.analysisBtn)){
-            presenter.toolSelected(PathwayPortalTool.ANALYSIS);
-        }
+//        LauncherButton btn = (LauncherButton) event.getSource();
+//        if(btn.equals(this.analysisBtn)){
+//            presenter.toolSelected(PathwayPortalTool.ANALYSIS);
+//        }
     }
 
     public static Resources RESOURCES;
