@@ -8,8 +8,6 @@ import org.reactome.web.analysis.client.AnalysisClient;
 import org.reactome.web.analysis.client.AnalysisHandler;
 import org.reactome.web.analysis.client.model.AnalysisSummary;
 import org.reactome.web.analysis.client.model.ResourceSummary;
-import org.reactome.web.diagram.events.DiagramObjectsFlagResetEvent;
-import org.reactome.web.diagram.handlers.DiagramObjectsFlagResetHandler;
 import org.reactome.web.pwp.client.common.Selection;
 import org.reactome.web.pwp.client.common.events.*;
 import org.reactome.web.pwp.client.common.handlers.*;
@@ -30,7 +28,7 @@ import java.util.List;
  */
 public class StateManager implements BrowserModule.Manager, ValueChangeHandler<String>,
         State.StateLoadedHandler, StateChangedHandler, DatabaseObjectSelectedHandler, DetailsTabChangedHandler,
-        DiagramObjectsFlagResetHandler, AnalysisCompletedHandler, AnalysisResetHandler, ResourceChangedHandler,
+        AnalysisCompletedHandler, AnalysisResetHandler, ResourceChangedHandler,
         ToolSelectedHandler {
 
     private EventBus eventBus;
@@ -49,7 +47,6 @@ public class StateManager implements BrowserModule.Manager, ValueChangeHandler<S
         this.eventBus.addHandler(ToolSelectedEvent.TYPE, this);
         this.eventBus.addHandler(AnalysisCompletedEvent.TYPE, this);
         this.eventBus.addHandler(AnalysisResetEvent.TYPE, this);
-        this.eventBus.addHandler(DiagramObjectsFlagResetEvent.TYPE, this);
         this.eventBus.addHandler(ResourceChangedEvent.TYPE, this);
     }
 
@@ -146,13 +143,6 @@ public class StateManager implements BrowserModule.Manager, ValueChangeHandler<S
     public void onDetailsTabChanged(DetailsTabChangedEvent event) {
         State desiredState = new State(this.currentState);
         desiredState.setDetailsTab(event.getDetailsTab());
-        this.eventBus.fireEventFromSource(new StateChangedEvent(desiredState), this);
-    }
-
-    @Override
-    public void onDiagramObjectsFlagReset(DiagramObjectsFlagResetEvent event) {
-        State desiredState = new State(this.currentState);
-        desiredState.setFlag(null);
         this.eventBus.fireEventFromSource(new StateChangedEvent(desiredState), this);
     }
 
