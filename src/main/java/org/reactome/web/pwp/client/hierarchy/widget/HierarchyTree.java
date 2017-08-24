@@ -1,7 +1,6 @@
 package org.reactome.web.pwp.client.hierarchy.widget;
 
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.http.client.*;
 import com.google.gwt.user.client.ui.CustomTree;
 import org.reactome.web.analysis.client.model.PathwaySummary;
 import org.reactome.web.pwp.client.common.utils.Console;
@@ -28,42 +27,6 @@ public class HierarchyTree extends CustomTree implements HierarchyItemDoubleClic
     private Species species;
     private static MapSet<Long, HierarchyItem> treeItems = new MapSet<>();
     private static List<Long> ehlds = new ArrayList<>();
-
-    static {
-        String url = "/download/current/ehld/svgsummary.txt?v=" + System.currentTimeMillis();
-        RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, url);
-        try {
-            requestBuilder.sendRequest(null, new RequestCallback() {
-                @Override
-                public void onResponseReceived(Request request, Response response) {
-                    if (response.getStatusCode() == Response.SC_OK) {
-                        for (String id : response.getText().split("\n")) {
-                            try {
-                                ehlds.add(Long.valueOf(id));
-                            } catch (NumberFormatException ex) {
-                                //Nothing here
-                            }
-                        }
-                        //In case there are HierarchyItems already loaded, these might need to be updated
-                        for (HierarchyItem hierarchyItem : treeItems.getValues()) {
-                            if(ehlds.contains(hierarchyItem.getEvent().getDbId())) {
-                                hierarchyItem.setEHLD();
-                            }
-                        }
-                    } else {
-                        Console.warn("No EHLD summary found");
-                    }
-                }
-
-                @Override
-                public void onError(Request request, Throwable throwable) {
-                    Console.warn("It was no possible to connect to the server to get the EHLD summary found");
-                }
-            });
-        } catch (RequestException e) {
-            Console.warn("It was no possible to connect to the server to get the EHLD summary found");
-        }
-    }
 
     public HierarchyTree(Species species) {
         super();
