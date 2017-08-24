@@ -10,7 +10,7 @@ public class AppConfig extends JavaScriptObject {
     protected AppConfig() {
     }
 
-    public static native boolean getIsCurator() /*-{
-        return $wnd.CURATOR != null ? $wnd.CURATOR : false;
+    public static native boolean getEventBusVerbose() /*-{
+        return $wnd.CURATOR != null ? $wnd.EVENT_BUS_VERBOSE : false;
     }-*/;
 }
