@@ -2,7 +2,6 @@ package org.reactome.web.pwp.client.viewport.diagram;
 
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.Timer;
-import org.reactome.web.diagram.events.DiagramObjectsFlagResetEvent;
 import org.reactome.web.pwp.client.common.AnalysisStatus;
 import org.reactome.web.pwp.client.common.Selection;
 import org.reactome.web.pwp.client.common.events.*;
@@ -119,29 +118,6 @@ public class DiagramPresenter extends AbstractPresenter implements Diagram.Prese
         } else {
             this.eventBus.fireEventFromSource(new DatabaseObjectHoveredEvent(), DiagramPresenter.this);
         }
-    }
-
-    @Override
-    public void fireworksOpened(final Long dbId) {
-        DatabaseObjectFactory.get(dbId, new DatabaseObjectCreatedHandler() {
-            @Override
-            public void onDatabaseObjectLoaded(DatabaseObject databaseObject) {
-                Pathway pathway = (Pathway) databaseObject;
-                eventBus.fireEventFromSource(new FireworksOpenedEvent(pathway), DiagramPresenter.this);
-            }
-
-            @Override
-            public void onDatabaseObjectError(Throwable exception) {
-                String errorMsg = "An error has occurred while retrieving data for " + dbId;
-                eventBus.fireEventFromSource(new ErrorMessageEvent(errorMsg, exception), DiagramPresenter.this);
-            }
-        });
-
-    }
-
-    @Override
-    public void resetFlag(DiagramObjectsFlagResetEvent event) {
-        this.eventBus.fireEventFromSource(event, this);
     }
 
     @Override
