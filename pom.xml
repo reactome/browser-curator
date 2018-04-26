@@ -6,7 +6,7 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.reactome.web.pwp</groupId>
-    <artifactId>browser</artifactId>
+    <artifactId>browser-curator</artifactId>
     <packaging>war</packaging>
     <version>3.4.0</version>
     <name>Reactome Pathway Portal</name>
