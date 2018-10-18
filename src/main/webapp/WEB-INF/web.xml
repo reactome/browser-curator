@@ -20,129 +20,25 @@
         <init-param>
             <param-name>proxyHost</param-name>
             <!--<param-value>localhost</param-value>-->
-            <!--<param-value>reactome.org</param-value>-->
-            <param-value>reactomedev.oicr.on.ca</param-value>
-            <!--<param-value>reactomecurator.oicr.on.ca</param-value>-->
-            <!--<param-value>reactomerelease.oicr.on.ca</param-value>-->
+            <param-value>reactomecurator.oicr.on.ca</param-value>
         </init-param>
         <init-param>
             <param-name>proxyPort</param-name>
-            <!--<param-value>9090</param-value>-->
             <param-value>80</param-value>
-            <!--<param-value>8080</param-value>-->
+        </init-param>
+        <!-- Comment the following one to connect to https -->
+        <init-param>
+            <param-name>proxyProtocol</param-name>
+            <param-value>http</param-value>
         </init-param>
         <init-param>
             <param-name>proxyPath</param-name>
             <param-value>/ReactomeRESTfulAPI/RESTfulWS</param-value>
         </init-param>
-        <!--<init-param>-->
-        <!--<param-name>maxFileUploadSize</param-name>-->
-        <!--<param-value></param-value>-->
-        <!--</init-param>-->
     </servlet>
     <servlet-mapping>
         <servlet-name>ReactomeRESTfulAPI</servlet-name>
         <url-pattern>/ReactomeRESTfulAPI/RESTfulWS/*</url-pattern>
-    </servlet-mapping>
-
-    <!-- RESTFul WS PROXY Configuration (ONLY USED IN DEV MODE) -->
-    <servlet>
-        <servlet-name>ReactomeAnalysis</servlet-name>
-        <servlet-class>org.reactome.server.utils.proxy.ProxyServlet</servlet-class>
-        <init-param>
-            <param-name>proxyHost</param-name>
-            <!--<param-value>localhost</param-value>-->
-            <!--<param-value>reactome.org</param-value>-->
-            <param-value>reactomedev.oicr.on.ca</param-value>
-        </init-param>
-        <init-param>
-            <param-name>proxyPort</param-name>
-            <!--<param-value>8080</param-value>-->
-            <param-value>80</param-value>
-            <!--<param-value>7080</param-value>-->
-        </init-param>
-        <init-param>
-            <param-name>proxyPath</param-name>
-            <!--<param-value>/</param-value>-->
-            <param-value>/AnalysisService</param-value>
-        </init-param>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>ReactomeAnalysis</servlet-name>
-        <url-pattern>/AnalysisService/*</url-pattern>
-    </servlet-mapping>
-
-    <!-- Reactome Content Service Configuration (ONLY USED IN DEV MODE) -->
-    <servlet>
-        <servlet-name>ContentServiceProxy</servlet-name>
-        <servlet-class>org.reactome.server.utils.proxy.ProxyServlet</servlet-class>
-        <init-param>
-            <param-name>proxyHost</param-name>
-            <!--<param-value>localhost</param-value>-->
-            <param-value>reactomedev.oicr.on.ca</param-value>
-            <!--<param-value>reactome.org</param-value>-->
-            <!--<param-value>reactomecurator.oicr.on.ca</param-value>-->
-        </init-param>
-        <init-param>
-            <param-name>proxyPort</param-name>
-            <!--<param-value>8585</param-value>-->
-            <param-value>80</param-value>
-            <!--<param-value>8080</param-value>-->
-        </init-param>
-        <init-param>
-            <param-name>proxyPath</param-name>
-            <!--<param-value>/</param-value>-->
-            <param-value>/ContentService/</param-value>
-        </init-param>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>ContentServiceProxy</servlet-name>
-        <url-pattern>/ContentService/*</url-pattern>
-    </servlet-mapping>
-
-    <!-- Reactome Fireworks static files local server (ONLY USED IN DEV MODE) -->
-    <!-- Please note a "reactome" user (or a symlink) needs to be set up -->
-    <servlet>
-        <servlet-name>FireworksProxy</servlet-name>
-        <servlet-class>org.reactome.server.utils.proxy.StaticFilesProxyServlet</servlet-class>
-        <init-param>
-            <param-name>proxyFilePath</param-name>
-            <param-value>/Users/reactome/Reactome/fireworks/static</param-value>
-        </init-param>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>FireworksProxy</servlet-name>
-        <url-pattern>/download/current/fireworks/*</url-pattern>
-    </servlet-mapping>
-
-    <!-- static files local server (ONLY USED IN DEV MODE) -->
-    <!-- Please note a "reactome" user (or a symlink) needs to be set up -->
-    <servlet>
-        <servlet-name>DiagramJSONProxy</servlet-name>
-        <servlet-class>org.reactome.server.utils.proxy.StaticFilesProxyServlet</servlet-class>
-        <init-param>
-            <param-name>proxyFilePath</param-name>
-            <param-value>/Users/reactome/Reactome/diagram/static</param-value>
-        </init-param>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>DiagramJSONProxy</servlet-name>
-        <url-pattern>/download/current/diagram/*</url-pattern>
-    </servlet-mapping>
-
-    <!-- static files local server (ONLY USED IN DEV MODE) -->
-    <!-- Please note a "reactome" user (or a symlink) needs to be set up -->
-    <servlet>
-        <servlet-name>DiagramSVGProxy</servlet-name>
-        <servlet-class>org.reactome.server.utils.proxy.StaticFilesProxyServlet</servlet-class>
-        <init-param>
-            <param-name>proxyFilePath</param-name>
-            <param-value>/Users/reactome/Reactome/diagram/svg</param-value>
-        </init-param>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>DiagramSVGProxy</servlet-name>
-        <url-pattern>/download/current/ehld/*</url-pattern>
     </servlet-mapping>
 
     <!-- Reactome IMAGES (ONLY USED IN DEV MODE) -->
@@ -151,12 +47,17 @@
         <servlet-class>org.reactome.server.utils.proxy.ProxyServlet</servlet-class>
         <init-param>
             <param-name>proxyHost</param-name>
-            <param-value>www.reactome.org</param-value>
+            <param-value>reactome.org</param-value>
         </init-param>
         <init-param>
             <param-name>proxyPort</param-name>
             <param-value>80</param-value>
         </init-param>
+        <!-- Comment the following one to connect to https -->
+        <!--<init-param>-->
+            <!--<param-name>proxyProtocol</param-name>-->
+            <!--<param-value>http</param-value>-->
+        <!--</init-param>-->
         <init-param>
             <param-name>proxyPath</param-name>
             <param-value>/figures</param-value>
@@ -179,6 +80,11 @@
             <param-name>proxyPort</param-name>
             <param-value>80</param-value>
         </init-param>
+        <!-- Comment the following one to connect to https -->
+        <!--<init-param>-->
+            <!--<param-name>proxyProtocol</param-name>-->
+            <!--<param-value>http</param-value>-->
+        <!--</init-param>-->
         <init-param>
             <param-name>proxyPath</param-name>
             <param-value>/webservices/chebi/2.0/test/</param-value>
@@ -201,6 +107,11 @@
             <param-name>proxyPort</param-name>
             <param-value>80</param-value>
         </init-param>
+        <!-- Comment the following one to connect to https -->
+        <!--<init-param>-->
+            <!--<param-name>proxyProtocol</param-name>-->
+            <!--<param-value>http</param-value>-->
+        <!--</init-param>-->
         <init-param>
             <param-name>proxyPath</param-name>
             <param-value>/rest/</param-value>
