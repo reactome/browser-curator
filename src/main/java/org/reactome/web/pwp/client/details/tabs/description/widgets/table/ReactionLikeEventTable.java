@@ -39,6 +39,10 @@ public class ReactionLikeEventTable extends EventTable {
             break;*/
             case NORMAL_REACTION:
                 return TableRowFactory.getNormalReactionLikeEventRow(title, this.reactionLikeEvent.getNormalReaction());
+            case POSITIVELY_REGULATED:
+                return TableRowFactory.getRegulationRow(title, this.reactionLikeEvent.getPositiveRegulations());
+            case NEGATIVELY_REGULATED:
+                return TableRowFactory.getRegulationRow(title, this.reactionLikeEvent.getNegativeRegulations());
             default:
                 return super.getTableRow(propertyType);
         }
