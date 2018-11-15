@@ -43,6 +43,7 @@
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
+        <reactome.diagram>1.0.14</reactome.diagram>
         <reactome.web.analyitics>2.0.1</reactome.web.analyitics>
         <reactome.web.model>1.3.4</reactome.web.model>
         <reactome.web.pdb>2.3.0</reactome.web.pdb>
@@ -93,7 +94,7 @@
         <dependency>
             <groupId>org.reactome.diagram</groupId>
             <artifactId>pathway-diagram</artifactId>
-            <version>1.0.13</version>
+            <version>${reactome.diagram}</version>
         </dependency>
 
         <dependency>
