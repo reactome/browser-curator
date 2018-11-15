@@ -1,7 +1,6 @@
 package org.reactome.web.pwp.client.hierarchy;
 
 
-import org.reactome.web.analysis.client.model.PathwaySummary;
 import org.reactome.web.pwp.client.common.module.BrowserModule;
 import org.reactome.web.pwp.model.classes.Event;
 import org.reactome.web.pwp.model.classes.Pathway;
@@ -47,8 +46,6 @@ public interface Hierarchy {
         void setPresenter(Presenter presenter);
 
         void show(Species species);
-
-        void showAnalysisResult(List<PathwaySummary> pathwaySummaries);
 
         void select(Event event, Path path);
 

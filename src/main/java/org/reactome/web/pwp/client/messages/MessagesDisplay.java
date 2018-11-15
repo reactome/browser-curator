@@ -1,13 +1,11 @@
 package org.reactome.web.pwp.client.messages;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.*;
-import org.reactome.web.fireworks.controls.common.PwpButton;
 
 /**
  * @author Antonio Fabregat <fabregat@ebi.ac.uk>
@@ -45,12 +43,7 @@ public class MessagesDisplay extends PopupPanel implements Messages.Display {
         header.setStyleName(RESOURCES.getCSS().messageHeader());
 //        message.add(header);
 
-        Button closeBtn = new PwpButton("Close this message", RESOURCES.getCSS().close(), new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent clickEvent) {
-                MessagesDisplay.this.hide();
-            }
-        });
+        Button closeBtn = new Button("Close this message", (ClickHandler) clickEvent -> MessagesDisplay.this.hide());
 
         FlowPanel headerFp = new FlowPanel();
         headerFp.add(header);

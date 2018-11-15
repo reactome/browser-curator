@@ -4,7 +4,6 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.resources.client.ImageResource;
 import org.reactome.web.pwp.client.common.utils.Console;
 import org.reactome.web.pwp.model.classes.DatabaseObject;
-
 import org.reactome.web.pwp.model.classes.ReferenceEntity;
 import org.reactome.web.pwp.model.factory.SchemaClass;
 import org.reactome.web.pwp.model.handlers.DatabaseObjectLoadedHandler;
@@ -85,7 +84,7 @@ public class Molecule extends ReferenceEntity implements Comparable<Molecule>{
     public ImageResource getImageResource() {
         switch (this.schemaClass){
             case ENTITY_WITH_ACCESSIONED_SEQUENCE:
-                return DatabaseObjectImages.INSTANCE.entityWithAccessionedSequence();
+                return DatabaseObjectImages.INSTANCE.protein();
             case SIMPLE_ENTITY:
                 return DatabaseObjectImages.INSTANCE.simpleEntity();
             case GENOME_ENCODED_ENTITY:
@@ -95,9 +94,9 @@ public class Molecule extends ReferenceEntity implements Comparable<Molecule>{
             case POLYMER:
                 return DatabaseObjectImages.INSTANCE.polymer();
             case REFERENCE_DNA_SEQUENCE:
-                return DatabaseObjectImages.INSTANCE.referenceDNASequence();
+                return DatabaseObjectImages.INSTANCE.dnaSequence();
             case REFERENCE_RNA_SEQUENCE:
-                return DatabaseObjectImages.INSTANCE.referenceRNASequence();
+                return DatabaseObjectImages.INSTANCE.rnaSequence();
         }
         Console.warn("No resource found for " + this.schemaClass, this);
         return DatabaseObjectImages.INSTANCE.exclamation();

@@ -8,13 +8,10 @@ import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.event.shared.HasHandlers;
-import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.*;
-import org.reactome.web.analysis.client.model.EntityStatistics;
-import org.reactome.web.analysis.client.model.PathwaySummary;
 import org.reactome.web.pwp.client.common.CommonImages;
 import org.reactome.web.pwp.client.hierarchy.HierarchyDisplay;
 import org.reactome.web.pwp.client.hierarchy.events.HierarchyItemDoubleClickedEvent;
@@ -224,17 +221,6 @@ public class HierarchyItem extends TreeItem implements HasHandlers, MouseOverHan
 
     public void highlightHitEvent(){
         textContainer.addStyleName(RESOURCES.getCSS().hierarchyItemHit());
-    }
-
-    public void showAnalysisData(PathwaySummary pathwaySummary){
-        StringBuilder sb = new StringBuilder();
-        EntityStatistics entityStatistics = pathwaySummary.getEntities();
-        String found = NumberFormat.getDecimalFormat().format(entityStatistics.getFound());
-        String total = NumberFormat.getDecimalFormat().format(entityStatistics.getTotal());
-        sb.append("(").append(found).append("/").append(total).append(") ");
-        NumberFormat nf = NumberFormat.getFormat("#.##E0");
-        sb.append("FDR: ").append(nf.format(entityStatistics.getFdr()));
-        this.analysisData.setText(sb.toString());
     }
 
     @Override

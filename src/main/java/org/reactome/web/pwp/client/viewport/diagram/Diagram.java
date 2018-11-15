@@ -11,7 +11,6 @@ import org.reactome.web.pwp.model.classes.Pathway;
 public interface Diagram {
 
     interface Presenter extends BrowserModule.Presenter {
-        void analysisReset();
 
         void databaseObjectSelected(Long dbId);
 

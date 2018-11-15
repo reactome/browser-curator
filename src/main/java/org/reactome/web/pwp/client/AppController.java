@@ -13,9 +13,6 @@ import org.reactome.web.pwp.client.details.Details;
 import org.reactome.web.pwp.client.details.DetailsDisplay;
 import org.reactome.web.pwp.client.details.DetailsPresenter;
 import org.reactome.web.pwp.client.details.tabs.DetailsTab;
-import org.reactome.web.pwp.client.details.tabs.analysis.AnalysisTab;
-import org.reactome.web.pwp.client.details.tabs.analysis.AnalysisTabDisplay;
-import org.reactome.web.pwp.client.details.tabs.analysis.AnalysisTabPresenter;
 import org.reactome.web.pwp.client.details.tabs.description.DescriptionTab;
 import org.reactome.web.pwp.client.details.tabs.description.DescriptionTabDisplay;
 import org.reactome.web.pwp.client.details.tabs.description.DescriptionTabPresenter;
@@ -43,9 +40,6 @@ import org.reactome.web.pwp.client.manager.state.StateManager;
 import org.reactome.web.pwp.client.messages.Messages;
 import org.reactome.web.pwp.client.messages.MessagesDisplay;
 import org.reactome.web.pwp.client.messages.MessagesPresenter;
-import org.reactome.web.pwp.client.tools.analysis.AnalysisLauncher;
-import org.reactome.web.pwp.client.tools.analysis.AnalysisLauncherDisplay;
-import org.reactome.web.pwp.client.tools.analysis.AnalysisLauncherPresenter;
 import org.reactome.web.pwp.client.tools.launcher.ToolLauncher;
 import org.reactome.web.pwp.client.tools.launcher.ToolLauncherDisplay;
 import org.reactome.web.pwp.client.tools.launcher.ToolLauncherPresenter;
@@ -106,7 +100,6 @@ public class AppController implements BrowserReadyHandler {
 
     private IsWidget getDesktopBrowser(){
         this.initialiseDetailsTabsList(); //IMPORTANT: It has to be initialised before creating the main details module
-        this.initialiseTools(); //IMPORTANT: Even though the tools are not attached here, they need to be initialised
 
         //Messages is not attached anywhere here but it needs to be initialised
         Messages.Display messages = new MessagesDisplay();
@@ -181,18 +174,9 @@ public class AppController implements BrowserReadyHandler {
         new ExpressionTabPresenter(this.eventBus, expression);
         DETAILS_TABS.add(expression);
 
-        AnalysisTab.Display analysis = new AnalysisTabDisplay();
-        new AnalysisTabPresenter(this.eventBus, analysis);
-        DETAILS_TABS.add(analysis);
-
         DownloadsTab.Display downloads = new DownloadsTabDisplay();
         new DownloadsTabPresenter(this.eventBus, downloads);
         DETAILS_TABS.add(downloads);
-    }
-
-    private void initialiseTools(){
-        AnalysisLauncher.Display analysisDisplay = new AnalysisLauncherDisplay();
-        new AnalysisLauncherPresenter(this.eventBus, analysisDisplay);
     }
 
     private void printMessage(){

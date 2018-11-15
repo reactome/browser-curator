@@ -19,7 +19,6 @@ public enum DetailsTabType {
     PARTICIPATING_MOLECULES("MT", "Molecules"),
     STRUCTURES("ST", "Structures"),
     EXPRESSION("EX", "Expression"),
-    ANALYSIS("AN", "Analysis"),
     PARTICIPATING_PROCESSES("PT", "Processes"),
     DOWNLOADS("DT", "Downloads");
 
@@ -84,7 +83,6 @@ public enum DetailsTabType {
             case PARTICIPATING_MOLECULES: return DetailsTabResources.INSTANCE.moleculesIcon();
             case STRUCTURES: return DetailsTabResources.INSTANCE.structuresIcon();
             case EXPRESSION: return DetailsTabResources.INSTANCE.expressionIcon();
-            case ANALYSIS: return DetailsTabResources.INSTANCE.analysisIcon();
             case DOWNLOADS: return DetailsTabResources.INSTANCE.downloadsIcon();
             default: return CommonImages.INSTANCE.exclamation();
         }
@@ -96,7 +94,6 @@ public enum DetailsTabType {
             case PARTICIPATING_MOLECULES: return DetailsTabResources.INSTANCE.molecules();
             case STRUCTURES: return DetailsTabResources.INSTANCE.structures();
             case EXPRESSION: return DetailsTabResources.INSTANCE.expression();
-            case ANALYSIS: return DetailsTabResources.INSTANCE.analysis();
             case DOWNLOADS: return DetailsTabResources.INSTANCE.downloads();
             default: return CommonImages.INSTANCE.exclamation();
         }
@@ -108,7 +105,6 @@ public enum DetailsTabType {
             case PARTICIPATING_MOLECULES: return DetailsTabResources.INSTANCE.moleculesTxt();
             case STRUCTURES: return DetailsTabResources.INSTANCE.structuresTxt();
             case EXPRESSION: return DetailsTabResources.INSTANCE.expressionTxt();
-            case ANALYSIS: return DetailsTabResources.INSTANCE.analysisTxt();
             case DOWNLOADS: return DetailsTabResources.INSTANCE.downloadsTxt();
             default: throw new RuntimeException("No explanation found for " +  this);
         }

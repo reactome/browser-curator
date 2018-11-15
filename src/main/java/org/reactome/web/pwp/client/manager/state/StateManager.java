@@ -4,31 +4,24 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.History;
-import org.reactome.web.analysis.client.AnalysisClient;
-import org.reactome.web.analysis.client.AnalysisHandler;
-import org.reactome.web.analysis.client.model.AnalysisSummary;
-import org.reactome.web.analysis.client.model.ResourceSummary;
 import org.reactome.web.pwp.client.common.Selection;
 import org.reactome.web.pwp.client.common.events.*;
-import org.reactome.web.pwp.client.common.handlers.*;
+import org.reactome.web.pwp.client.common.handlers.DatabaseObjectSelectedHandler;
+import org.reactome.web.pwp.client.common.handlers.DetailsTabChangedHandler;
+import org.reactome.web.pwp.client.common.handlers.StateChangedHandler;
+import org.reactome.web.pwp.client.common.handlers.ToolSelectedHandler;
 import org.reactome.web.pwp.client.common.module.BrowserModule;
-import org.reactome.web.pwp.client.details.tabs.DetailsTabType;
-import org.reactome.web.pwp.client.details.tabs.analysis.widgets.summary.events.ResourceChangedEvent;
-import org.reactome.web.pwp.client.details.tabs.analysis.widgets.summary.handlers.ResourceChangedHandler;
 import org.reactome.web.pwp.client.manager.state.token.Token;
 import org.reactome.web.pwp.client.manager.state.token.TokenMalformedException;
 import org.reactome.web.pwp.client.manager.title.TitleManager;
 import org.reactome.web.pwp.model.classes.*;
 import org.reactome.web.pwp.model.util.Path;
 
-import java.util.List;
-
 /**
  * @author Antonio Fabregat <fabregat@ebi.ac.uk>
  */
 public class StateManager implements BrowserModule.Manager, ValueChangeHandler<String>,
         State.StateLoadedHandler, StateChangedHandler, DatabaseObjectSelectedHandler, DetailsTabChangedHandler,
-        AnalysisCompletedHandler, AnalysisResetHandler, ResourceChangedHandler,
         ToolSelectedHandler {
 
     private EventBus eventBus;
@@ -45,9 +38,6 @@ public class StateManager implements BrowserModule.Manager, ValueChangeHandler<S
         this.eventBus.addHandler(DatabaseObjectSelectedEvent.TYPE, this);
         this.eventBus.addHandler(DetailsTabChangedEvent.TYPE, this);
         this.eventBus.addHandler(ToolSelectedEvent.TYPE, this);
-        this.eventBus.addHandler(AnalysisCompletedEvent.TYPE, this);
-        this.eventBus.addHandler(AnalysisResetEvent.TYPE, this);
-        this.eventBus.addHandler(ResourceChangedEvent.TYPE, this);
     }
 
     @Override
@@ -63,27 +53,6 @@ public class StateManager implements BrowserModule.Manager, ValueChangeHandler<S
         } catch (TokenMalformedException e) {
             this.tokenError(value);
         }
-    }
-
-    @Override
-    public void onAnalysisCompleted(AnalysisCompletedEvent event) {
-        AnalysisSummary summary = event.getAnalysisResult().getSummary();
-        AnalysisClient.addValidToken(summary.getToken());
-
-        List<ResourceSummary> resources = event.getAnalysisResult().getResourceSummary();
-        ResourceSummary resource = resources.size() == 2 ? resources.get(1) : resources.get(0); //IMPORTANT!
-
-        State desiredState = new State(this.currentState);
-        desiredState.setDetailsTab(DetailsTabType.ANALYSIS);
-        desiredState.setAnalysisParameters(summary.getToken(), resource.getResource());
-        this.eventBus.fireEventFromSource(new StateChangedEvent(desiredState), this);
-    }
-
-    @Override
-    public void onAnalysisReset() {
-        State desiredState = new State(this.currentState);
-        desiredState.setAnalysisParameters(null, null);
-        this.eventBus.fireEventFromSource(new StateChangedEvent(desiredState), this);
     }
 
     @Override
@@ -128,13 +97,10 @@ public class StateManager implements BrowserModule.Manager, ValueChangeHandler<S
             currentState.setSelected(newSelection.getDatabaseObject());
             currentState.setPath(newSelection.getPath());
 
-            currentState.doConsistencyCheck(new State.StateLoadedHandler() {
-                @Override
-                public void onStateLoaded(State state) {
-                    currentState = state;
-                    eventBus.fireEventFromSource(new StateChangedEvent(currentState), StateManager.this);
-                    History.newItem(currentState.toString(), false);
-                }
+            currentState.doConsistencyCheck(state -> {
+                currentState = state;
+                eventBus.fireEventFromSource(new StateChangedEvent(currentState), StateManager.this);
+                History.newItem(currentState.toString(), false);
             });
         }
     }
@@ -143,13 +109,6 @@ public class StateManager implements BrowserModule.Manager, ValueChangeHandler<S
     public void onDetailsTabChanged(DetailsTabChangedEvent event) {
         State desiredState = new State(this.currentState);
         desiredState.setDetailsTab(event.getDetailsTab());
-        this.eventBus.fireEventFromSource(new StateChangedEvent(desiredState), this);
-    }
-
-    @Override
-    public void onResourceChanged(ResourceChangedEvent event) {
-        State desiredState = new State(this.currentState);
-        desiredState.setAnalysisParameters(this.currentState.getAnalysisStatus().getToken(), event.getResource());
         this.eventBus.fireEventFromSource(new StateChangedEvent(desiredState), this);
     }
 
@@ -167,24 +126,9 @@ public class StateManager implements BrowserModule.Manager, ValueChangeHandler<S
         if (state == null) {
             this.eventBus.fireEventFromSource(new ErrorMessageEvent("The data in the URL can not be fit into a state"), this);
         } else if (!state.equals(this.currentState)) {
-            String token = state.getAnalysisStatus().getToken();
-            AnalysisClient.checkTokenAvailability(token, new AnalysisHandler.Token() {
-                @Override
-                public void onTokenAvailabilityChecked(boolean available, String message) {
-                    if (!available) {
-                        eventBus.fireEventFromSource(new ErrorMessageEvent(message), StateManager.this);
-                        state.setAnalysisParameters(null, null);
-                        History.newItem(state.toString(), false);
-                    }
-                    currentState = state;
-                    eventBus.fireEventFromSource(new StateChangedEvent(state), StateManager.this);
-                }
-
-                @Override
-                public void onAnalysisServerException(String message) {
-                    //TODO
-                }
-            });
+            currentState = state;
+            eventBus.fireEventFromSource(new StateChangedEvent(state), StateManager.this);
+            History.newItem(state.toString(), false);
         }
     }
 

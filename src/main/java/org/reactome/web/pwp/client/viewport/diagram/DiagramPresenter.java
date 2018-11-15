@@ -47,11 +47,6 @@ public class DiagramPresenter extends AbstractPresenter implements Diagram.Prese
     }
 
     @Override
-    public void analysisReset() {
-        eventBus.fireEventFromSource(new AnalysisResetEvent(), this);
-    }
-
-    @Override
     public void databaseObjectSelected(final Long dbId) {
         if (timer != null && timer.isRunning()) timer.cancel();
         if (dbId != null) {

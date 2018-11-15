@@ -2,7 +2,6 @@ package org.reactome.web.pwp.client.hierarchy.widget;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.CustomTree;
-import org.reactome.web.analysis.client.model.PathwaySummary;
 import org.reactome.web.pwp.client.common.utils.Console;
 import org.reactome.web.pwp.client.common.utils.MapSet;
 import org.reactome.web.pwp.client.hierarchy.events.HierarchyItemDoubleClickedEvent;
@@ -64,17 +63,6 @@ public class HierarchyTree extends CustomTree implements HierarchyItemDoubleClic
             if (items != null) {
                 for (HierarchyItem item : items) {
                     item.highlightHitEvent();
-                }
-            }
-        }
-    }
-
-    public void showAnalysisData(List<PathwaySummary> pathwaySummaries) {
-        for (PathwaySummary pathwaySummary : pathwaySummaries) {
-            Set<HierarchyItem> items = treeItems.getElements(pathwaySummary.getDbId());
-            if (items != null) {
-                for (HierarchyItem item : items) {
-                    item.showAnalysisData(pathwaySummary);
                 }
             }
         }

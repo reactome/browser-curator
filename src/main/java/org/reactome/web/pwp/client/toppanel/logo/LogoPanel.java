@@ -11,7 +11,7 @@ import org.reactome.web.pwp.client.Browser;
 import org.reactome.web.pwp.client.common.CommonImages;
 import org.reactome.web.pwp.client.common.utils.Console;
 import org.reactome.web.pwp.model.client.RESTFulClient;
-import org.reactome.web.pwp.model.client.handlers.VersionRetrievedHandler;
+import org.reactome.web.pwp.model.client.handlers.DBNameRetrievedHandler;
 
 /**
  * @author Antonio Fabregat <fabregat@ebi.ac.uk>
@@ -70,21 +70,21 @@ public class LogoPanel extends Composite {
         fp.add(new InlineLabel(release));
 
         SafeHtml safeHtml = SafeHtmlUtils.fromSafeConstant(fp.toString());
-        Anchor anchor = new Anchor(safeHtml, "//www.reactome.org/category/release/", "_blank");
+        Anchor anchor = new Anchor(safeHtml, "//reactomecurator.oicr.on.ca/cgi-bin/classbrowser?DB=" + release, "_blank");
         anchor.setTitle(title);
         return anchor;
     }
 
     private void setDataVersion() {
-        RESTFulClient.getVersion(new VersionRetrievedHandler() {
+        RESTFulClient.getDBName(new DBNameRetrievedHandler() {
             @Override
-            public void onVersionRetrieved(String version) {
+            public void onDBNameRetrieved(String name) {
                 releasePanel.clear();
-                releasePanel.add(getReactomeReleasePanel(version, "Reactome database release " + version));
+                releasePanel.add(getReactomeReleasePanel(name, "Reactome database release " + name));
             }
 
             @Override
-            public void onVersionRetrievedError(Throwable ex) {
+            public void onDBNameRetrievedError(Throwable ex) {
                 Console.error(ex.getMessage(), ex);
             }
         });

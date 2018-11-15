@@ -9,11 +9,7 @@ import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.DialogBox;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.Label;
-import org.reactome.web.fireworks.controls.common.PwpButton;
+import com.google.gwt.user.client.ui.*;
 
 
 /**
@@ -45,7 +41,7 @@ public class TourContainer extends DialogBox implements ClickHandler {
         video.setStyleName(RESOURCES.getCSS().video());
 
         FlowPanel container = new FlowPanel();
-        container.add(new PwpButton("Close", RESOURCES.getCSS().close(), this));
+        container.add(new Button("Close", this));
         container.add(video);
         setWidget(container);
     }

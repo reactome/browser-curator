@@ -8,10 +8,7 @@
     <inherits name='com.google.gwt.user.theme.standard.Standard'/>
 
     <!-- Other module inherits                                      -->
-    <inherits name="org.reactome.web.analysis.Analysis"/>
-    <inherits name="org.reactome.web.carrousel.Carrousel"/>
     <inherits name="org.reactome.diagram.PathwayDiagram"/>
-    <inherits name="org.reactome.web.fireworks.Fireworks"/>
     <inherits name='org.reactome.web.pwp.model.PathwayPortalModel'/>
     <inherits name="org.reactome.web.utils.analytics.GoogleAnalytics"/>
     <inherits name="uk.ac.ebi.pwp.widgets.chebi.ChEBI"/>
