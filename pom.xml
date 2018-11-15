@@ -8,7 +8,7 @@
     <groupId>org.reactome.web.pwp</groupId>
     <artifactId>browser-curator</artifactId>
     <packaging>war</packaging>
-    <version>3.4.0</version>
+    <version>3.4.1</version>
     <name>Reactome Pathway Portal</name>
 
     <description>
@@ -44,8 +44,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <reactome.web.analyitics>2.0.1</reactome.web.analyitics>
-        <!--<reactome.web.analysis-client>1.3.0</reactome.web.analysis-client>-->
-        <!--<reactome.web.carrousel>1.0.2</reactome.web.carrousel>-->
         <reactome.web.model>1.3.4</reactome.web.model>
         <reactome.web.pdb>2.3.0</reactome.web.pdb>
         <reactome.web.chebi>1.0.1</reactome.web.chebi>
@@ -92,12 +90,6 @@
             <version>${reactome.web.model}</version>
         </dependency>
 
-        <!--<dependency>-->
-            <!--<groupId>org.reactome.web.pwp</groupId>-->
-            <!--<artifactId>analysis-client</artifactId>-->
-            <!--<version>${reactome.web.analysis-client}</version>-->
-        <!--</dependency>-->
-
         <dependency>
             <groupId>org.reactome.diagram</groupId>
             <artifactId>pathway-diagram</artifactId>
@@ -133,12 +125,6 @@
             <artifactId>analytics</artifactId>
             <version>${reactome.web.analyitics}</version>
         </dependency>
-
-        <!--<dependency>-->
-            <!--<groupId>org.reactome.web</groupId>-->
-            <!--<artifactId>carrousel</artifactId>-->
-            <!--<version>${reactome.web.carrousel}</version>-->
-        <!--</dependency>-->
 
         <dependency>
             <groupId>org.reactome.server.utils</groupId>

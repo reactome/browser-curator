@@ -28,6 +28,7 @@ public class LogoPanel extends Composite {
         hp.setStyleName(RESOURCES.getCSS().logo());
 
         Image image = new Image(CommonImages.INSTANCE.logo());
+        image.addStyleName(RESOURCES.getCSS().logoImg());
         SafeHtml safeHtml = SafeHtmlUtils.fromSafeConstant(image.toString());
         Anchor logo = new Anchor(safeHtml, "/");
         logo.setTitle("Back to homepage");
@@ -55,7 +56,7 @@ public class LogoPanel extends Composite {
     private Widget getBrowserVersionPanel() {
         FlowPanel fp = new FlowPanel();
         fp.add(new Image(RESOURCES.version()));
-        fp.add(new InlineLabel(Browser.VERSION));
+        fp.add(new Label(Browser.VERSION));
 
         SafeHtml safeHtml = SafeHtmlUtils.fromSafeConstant(fp.toString());
         Anchor anchor = new Anchor(safeHtml, "//github.com/reactome-pwp", "_blank");
@@ -67,7 +68,7 @@ public class LogoPanel extends Composite {
     private Widget getReactomeReleasePanel(String release, String title) {
         FlowPanel fp = new FlowPanel();
         fp.add(new Image(RESOURCES.release()));
-        fp.add(new InlineLabel(release));
+        fp.add(new Label(release));
 
         SafeHtml safeHtml = SafeHtmlUtils.fromSafeConstant(fp.toString());
         Anchor anchor = new Anchor(safeHtml, "//reactomecurator.oicr.on.ca/cgi-bin/classbrowser?DB=" + release, "_blank");
@@ -129,6 +130,8 @@ public class LogoPanel extends Composite {
         String CSS = "org/reactome/web/pwp/client/toppanel/logo/LogoPanel.css";
 
         String logo();
+
+        String logoImg();
 
         String beta();
 
