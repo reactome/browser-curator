@@ -4,10 +4,10 @@ import com.google.gwt.event.shared.EventBus;
 import org.reactome.web.pwp.client.common.events.ErrorMessageEvent;
 import org.reactome.web.pwp.client.common.events.SpeciesSelectedEvent;
 import org.reactome.web.pwp.client.common.events.StateChangedEvent;
+import org.reactome.web.pwp.client.common.model.classes.Species;
+import org.reactome.web.pwp.client.common.model.client.RESTFulClient;
+import org.reactome.web.pwp.client.common.model.handlers.DatabaseObjectsLoadedHandler;
 import org.reactome.web.pwp.client.common.module.AbstractPresenter;
-import org.reactome.web.pwp.model.classes.Species;
-import org.reactome.web.pwp.model.client.RESTFulClient;
-import org.reactome.web.pwp.model.handlers.DatabaseObjectsLoadedHandler;
 
 import java.util.LinkedList;
 import java.util.List;

@@ -1,11 +1,11 @@
 package org.reactome.web.pwp.client.hierarchy;
 
 
+import org.reactome.web.pwp.client.common.model.classes.Event;
+import org.reactome.web.pwp.client.common.model.classes.Pathway;
+import org.reactome.web.pwp.client.common.model.classes.Species;
+import org.reactome.web.pwp.client.common.model.util.Path;
 import org.reactome.web.pwp.client.common.module.BrowserModule;
-import org.reactome.web.pwp.model.classes.Event;
-import org.reactome.web.pwp.model.classes.Pathway;
-import org.reactome.web.pwp.model.classes.Species;
-import org.reactome.web.pwp.model.util.Path;
 
 import java.util.List;
 import java.util.Set;

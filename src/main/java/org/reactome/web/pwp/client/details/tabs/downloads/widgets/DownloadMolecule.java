@@ -3,9 +3,9 @@ package org.reactome.web.pwp.client.details.tabs.downloads.widgets;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import org.reactome.web.pwp.client.common.CommonImages;
+import org.reactome.web.pwp.client.common.model.classes.Pathway;
 import org.reactome.web.pwp.client.details.common.widgets.button.CustomButton;
 import org.reactome.web.pwp.client.details.tabs.downloads.DownloadsTab;
-import org.reactome.web.pwp.model.classes.Pathway;
 
 /**
  * @author Kerstin Hausmann <khaus@ebi.ac.uk>

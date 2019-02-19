@@ -10,12 +10,12 @@ import org.reactome.web.pwp.client.common.handlers.DatabaseObjectSelectedHandler
 import org.reactome.web.pwp.client.common.handlers.DetailsTabChangedHandler;
 import org.reactome.web.pwp.client.common.handlers.StateChangedHandler;
 import org.reactome.web.pwp.client.common.handlers.ToolSelectedHandler;
+import org.reactome.web.pwp.client.common.model.classes.*;
+import org.reactome.web.pwp.client.common.model.util.Path;
 import org.reactome.web.pwp.client.common.module.BrowserModule;
 import org.reactome.web.pwp.client.manager.state.token.Token;
 import org.reactome.web.pwp.client.manager.state.token.TokenMalformedException;
 import org.reactome.web.pwp.client.manager.title.TitleManager;
-import org.reactome.web.pwp.model.classes.*;
-import org.reactome.web.pwp.model.util.Path;
 
 /**
  * @author Antonio Fabregat <fabregat@ebi.ac.uk>

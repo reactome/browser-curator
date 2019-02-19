@@ -11,12 +11,12 @@ import org.reactome.web.pwp.client.common.events.StateChangedEvent;
 import org.reactome.web.pwp.client.common.handlers.DatabaseObjectSelectedHandler;
 import org.reactome.web.pwp.client.common.handlers.DetailsTabChangedHandler;
 import org.reactome.web.pwp.client.common.handlers.StateChangedHandler;
+import org.reactome.web.pwp.client.common.model.classes.DatabaseObject;
 import org.reactome.web.pwp.client.common.module.BrowserModule;
 import org.reactome.web.pwp.client.common.utils.Console;
 import org.reactome.web.pwp.client.manager.state.State;
 import org.reactome.web.pwp.client.manager.title.event.TitleChangedEvent;
 import org.reactome.web.pwp.client.manager.title.handler.TitleChangedHandler;
-import org.reactome.web.pwp.model.classes.DatabaseObject;
 import org.reactome.web.utils.analytics.client.GATracker;
 
 import java.util.Objects;

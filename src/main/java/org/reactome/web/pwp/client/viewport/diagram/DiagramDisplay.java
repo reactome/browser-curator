@@ -9,8 +9,8 @@ import org.reactome.diagram.expression.event.ExpressionOverlayStopEvent;
 import org.reactome.diagram.expression.event.ExpressionOverlayStopEventHandler;
 import org.reactome.diagram.model.GraphObject;
 import org.reactome.web.pwp.client.common.AnalysisStatus;
-import org.reactome.web.pwp.model.classes.DatabaseObject;
-import org.reactome.web.pwp.model.classes.Pathway;
+import org.reactome.web.pwp.client.common.model.classes.DatabaseObject;
+import org.reactome.web.pwp.client.common.model.classes.Pathway;
 
 import java.util.LinkedList;
 import java.util.List;

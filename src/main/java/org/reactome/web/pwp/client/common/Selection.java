@@ -1,9 +1,9 @@
 package org.reactome.web.pwp.client.common;
 
+import org.reactome.web.pwp.client.common.model.classes.DatabaseObject;
+import org.reactome.web.pwp.client.common.model.classes.Pathway;
+import org.reactome.web.pwp.client.common.model.util.Path;
 import org.reactome.web.pwp.client.manager.state.State;
-import org.reactome.web.pwp.model.classes.DatabaseObject;
-import org.reactome.web.pwp.model.classes.Pathway;
-import org.reactome.web.pwp.model.util.Path;
 
 /**
  * @author Antonio Fabregat <fabregat@ebi.ac.uk>

@@ -6,11 +6,11 @@ import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.user.client.ui.DisclosurePanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import org.reactome.web.pwp.model.classes.DatabaseObject;
-import org.reactome.web.pwp.model.classes.EntityFunctionalStatus;
-import org.reactome.web.pwp.model.classes.FunctionalStatus;
+import org.reactome.web.pwp.client.common.model.classes.DatabaseObject;
+import org.reactome.web.pwp.client.common.model.classes.EntityFunctionalStatus;
+import org.reactome.web.pwp.client.common.model.classes.FunctionalStatus;
+import org.reactome.web.pwp.client.common.model.handlers.DatabaseObjectLoadedHandler;
 import org.reactome.web.pwp.client.details.common.widgets.disclosure.DisclosurePanelFactory;
-import org.reactome.web.pwp.model.handlers.DatabaseObjectLoadedHandler;
 
 /**
  * @author Antonio Fabregat <fabregat@ebi.ac.uk>
@@ -64,9 +64,9 @@ public class EntityFunctionalStatusPanel extends DetailsPanel implements OpenHan
         vp.addStyleName("elv-Details-OverviewDisclosure-Advanced");
         vp.setWidth("99%");
 
-        if(this.entityFunctionalStatus.getPhysicalEntity()!=null){
-            vp.add(new Label("Physical entity:"));
-            PhysicalEntityPanel aux = new PhysicalEntityPanel(this, this.entityFunctionalStatus.getPhysicalEntity());
+        if(this.entityFunctionalStatus.getDiseaseEntity()!=null){
+            vp.add(new Label("Disease entity:"));
+            PhysicalEntityPanel aux = new PhysicalEntityPanel(this, this.entityFunctionalStatus.getDiseaseEntity());
             aux.setWidth("98%");
             aux.getElement().getStyle().setMarginLeft(15, Style.Unit.PX);
             vp.add(aux);

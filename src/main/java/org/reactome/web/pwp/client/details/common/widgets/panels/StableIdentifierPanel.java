@@ -1,8 +1,8 @@
 package org.reactome.web.pwp.client.details.common.widgets.panels;
 
 import com.google.gwt.user.client.ui.Anchor;
-import org.reactome.web.pwp.model.classes.DatabaseObject;
-import org.reactome.web.pwp.model.classes.StableIdentifier;
+import org.reactome.web.pwp.client.common.model.classes.DatabaseObject;
+import org.reactome.web.pwp.client.common.model.classes.StableIdentifier;
 
 /**
  * @author Antonio Fabregat <fabregat@ebi.ac.uk>

@@ -1,6 +1,6 @@
 package org.reactome.web.pwp.client.details.common.help;
 
-import org.reactome.web.pwp.model.factory.SchemaClass;
+import org.reactome.web.pwp.client.common.model.factory.SchemaClass;
 
 /**
  * @author Antonio Fabregat <fabregat@ebi.ac.uk>

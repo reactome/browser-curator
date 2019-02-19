@@ -3,13 +3,13 @@ package org.reactome.web.pwp.client.details.tabs.molecules;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.ui.*;
 import org.reactome.web.pwp.client.common.CommonImages;
+import org.reactome.web.pwp.client.common.model.classes.DatabaseObject;
+import org.reactome.web.pwp.client.common.model.classes.Pathway;
 import org.reactome.web.pwp.client.common.utils.LRUCache;
 import org.reactome.web.pwp.client.details.tabs.DetailsTabTitle;
 import org.reactome.web.pwp.client.details.tabs.DetailsTabType;
 import org.reactome.web.pwp.client.details.tabs.molecules.model.MoleculesPanel;
 import org.reactome.web.pwp.client.details.tabs.molecules.model.data.Result;
-import org.reactome.web.pwp.model.classes.DatabaseObject;
-import org.reactome.web.pwp.model.classes.Pathway;
 
 /**
  * @author Kerstin Hausmann <khaus@ebi.ac.uk>

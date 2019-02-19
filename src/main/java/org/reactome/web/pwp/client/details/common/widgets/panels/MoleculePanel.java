@@ -9,14 +9,14 @@ import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
 import org.reactome.web.pwp.client.common.CommonImages;
+import org.reactome.web.pwp.client.common.model.classes.DatabaseIdentifier;
+import org.reactome.web.pwp.client.common.model.classes.DatabaseObject;
+import org.reactome.web.pwp.client.common.model.factory.SchemaClass;
+import org.reactome.web.pwp.client.common.model.handlers.DatabaseObjectLoadedHandler;
 import org.reactome.web.pwp.client.details.common.widgets.disclosure.DisclosurePanelFactory;
 import org.reactome.web.pwp.client.details.delegates.MoleculeSelectedListener;
 import org.reactome.web.pwp.client.details.tabs.molecules.model.data.Molecule;
 import org.reactome.web.pwp.client.details.tabs.molecules.model.data.PhysicalToReferenceEntityMap;
-import org.reactome.web.pwp.model.classes.DatabaseIdentifier;
-import org.reactome.web.pwp.model.classes.DatabaseObject;
-import org.reactome.web.pwp.model.factory.SchemaClass;
-import org.reactome.web.pwp.model.handlers.DatabaseObjectLoadedHandler;
 
 import java.util.ArrayList;
 import java.util.List;

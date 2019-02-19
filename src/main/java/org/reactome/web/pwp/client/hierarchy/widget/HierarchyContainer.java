@@ -5,8 +5,8 @@ import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
+import org.reactome.web.pwp.client.common.model.classes.Species;
 import org.reactome.web.pwp.client.hierarchy.events.HierarchyTreeSpeciesNotFoundException;
-import org.reactome.web.pwp.model.classes.Species;
 
 import java.util.HashMap;
 import java.util.Map;

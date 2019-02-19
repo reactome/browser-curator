@@ -5,14 +5,14 @@ import com.google.gwt.event.logical.shared.OpenEvent;
 import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.user.client.ui.*;
 import org.reactome.web.pwp.client.common.CommonImages;
+import org.reactome.web.pwp.client.common.model.classes.DatabaseIdentifier;
+import org.reactome.web.pwp.client.common.model.classes.DatabaseObject;
+import org.reactome.web.pwp.client.common.model.classes.Person;
+import org.reactome.web.pwp.client.common.model.classes.Publication;
+import org.reactome.web.pwp.client.common.model.client.RESTFulClient;
+import org.reactome.web.pwp.client.common.model.client.handlers.LiteratureReferencesLoadedHandler;
+import org.reactome.web.pwp.client.common.model.handlers.DatabaseObjectLoadedHandler;
 import org.reactome.web.pwp.client.details.common.widgets.disclosure.DisclosurePanelFactory;
-import org.reactome.web.pwp.model.classes.DatabaseIdentifier;
-import org.reactome.web.pwp.model.classes.DatabaseObject;
-import org.reactome.web.pwp.model.classes.Person;
-import org.reactome.web.pwp.model.classes.Publication;
-import org.reactome.web.pwp.model.client.RESTFulClient;
-import org.reactome.web.pwp.model.client.handlers.LiteratureReferencesLoadedHandler;
-import org.reactome.web.pwp.model.handlers.DatabaseObjectLoadedHandler;
 
 import java.util.List;
 

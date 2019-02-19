@@ -7,11 +7,11 @@ import com.google.gwt.user.client.ui.DisclosurePanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
+import org.reactome.web.pwp.client.common.model.classes.*;
+import org.reactome.web.pwp.client.common.model.handlers.DatabaseObjectLoadedHandler;
 import org.reactome.web.pwp.client.details.common.widgets.disclosure.DisclosureHeader;
 import org.reactome.web.pwp.client.details.common.widgets.disclosure.DisclosurePanelFactory;
 import org.reactome.web.pwp.client.details.delegates.InstanceSelectedDelegate;
-import org.reactome.web.pwp.model.classes.*;
-import org.reactome.web.pwp.model.handlers.DatabaseObjectLoadedHandler;
 
 /**
  * @author Antonio Fabregat <fabregat@ebi.ac.uk>

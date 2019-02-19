@@ -3,13 +3,13 @@ package org.reactome.web.pwp.client.details.tabs.expression;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.ui.*;
 import org.reactome.web.pwp.client.common.CommonImages;
+import org.reactome.web.pwp.client.common.model.classes.DatabaseObject;
+import org.reactome.web.pwp.client.common.model.classes.Pathway;
+import org.reactome.web.pwp.client.common.model.classes.ReferenceSequence;
+import org.reactome.web.pwp.client.common.model.handlers.DatabaseObjectLoadedHandler;
 import org.reactome.web.pwp.client.common.utils.Console;
 import org.reactome.web.pwp.client.details.tabs.DetailsTabTitle;
 import org.reactome.web.pwp.client.details.tabs.DetailsTabType;
-import org.reactome.web.pwp.model.classes.DatabaseObject;
-import org.reactome.web.pwp.model.classes.Pathway;
-import org.reactome.web.pwp.model.classes.ReferenceSequence;
-import org.reactome.web.pwp.model.handlers.DatabaseObjectLoadedHandler;
 import uk.ac.ebi.pwp.widgets.gxa.ui.GXAViewer;
 
 import java.util.HashMap;

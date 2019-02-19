@@ -3,12 +3,12 @@ package org.reactome.web.pwp.client.details.tabs.structures;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.ui.*;
 import org.reactome.web.pwp.client.common.CommonImages;
+import org.reactome.web.pwp.client.common.model.classes.*;
 import org.reactome.web.pwp.client.details.tabs.DetailsTabTitle;
 import org.reactome.web.pwp.client.details.tabs.DetailsTabType;
 import org.reactome.web.pwp.client.details.tabs.structures.events.StructureLoadedEvent;
 import org.reactome.web.pwp.client.details.tabs.structures.handlers.StructureLoadedHandler;
 import org.reactome.web.pwp.client.details.tabs.structures.widgets.*;
-import org.reactome.web.pwp.model.classes.*;
 
 import java.util.HashMap;
 import java.util.List;

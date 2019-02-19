@@ -4,9 +4,9 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.logical.shared.OpenEvent;
 import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.user.client.ui.*;
+import org.reactome.web.pwp.client.common.model.classes.*;
+import org.reactome.web.pwp.client.common.model.handlers.DatabaseObjectLoadedHandler;
 import org.reactome.web.pwp.client.details.common.widgets.disclosure.DisclosurePanelFactory;
-import org.reactome.web.pwp.model.classes.*;
-import org.reactome.web.pwp.model.handlers.DatabaseObjectLoadedHandler;
 
 import java.util.List;
 

@@ -3,7 +3,7 @@ package org.reactome.web.pwp.client.details.tabs.structures.widgets;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import org.reactome.web.pwp.model.classes.ReferenceSequence;
+import org.reactome.web.pwp.client.common.model.classes.ReferenceSequence;
 import org.reactome.web.pwp.client.details.tabs.structures.events.StructureLoadedEvent;
 import org.reactome.web.pwp.client.details.tabs.structures.handlers.StructureLoadedHandler;
 import uk.ac.ebi.pwp.widgets.pdb.events.PdbStructureLoadedEvent;

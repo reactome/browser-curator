@@ -10,6 +10,12 @@ import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.*;
+import org.reactome.web.pwp.client.common.model.classes.DatabaseObject;
+import org.reactome.web.pwp.client.common.model.classes.Event;
+import org.reactome.web.pwp.client.common.model.classes.Pathway;
+import org.reactome.web.pwp.client.common.model.classes.Species;
+import org.reactome.web.pwp.client.common.model.handlers.DatabaseObjectLoadedHandler;
+import org.reactome.web.pwp.client.common.model.util.Path;
 import org.reactome.web.pwp.client.common.utils.Console;
 import org.reactome.web.pwp.client.hierarchy.events.HierarchyItemDoubleClickedEvent;
 import org.reactome.web.pwp.client.hierarchy.events.HierarchyItemMouseOverEvent;
@@ -20,12 +26,6 @@ import org.reactome.web.pwp.client.hierarchy.handlers.HierarchyItemMouseOverHand
 import org.reactome.web.pwp.client.hierarchy.widget.HierarchyContainer;
 import org.reactome.web.pwp.client.hierarchy.widget.HierarchyItem;
 import org.reactome.web.pwp.client.hierarchy.widget.HierarchyTree;
-import org.reactome.web.pwp.model.classes.DatabaseObject;
-import org.reactome.web.pwp.model.classes.Event;
-import org.reactome.web.pwp.model.classes.Pathway;
-import org.reactome.web.pwp.model.classes.Species;
-import org.reactome.web.pwp.model.handlers.DatabaseObjectLoadedHandler;
-import org.reactome.web.pwp.model.util.Path;
 
 import java.util.HashSet;
 import java.util.List;

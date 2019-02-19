@@ -3,10 +3,10 @@ package org.reactome.web.pwp.client.details.tabs.molecules.model.data;
 import com.google.gwt.http.client.*;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
-import org.reactome.web.pwp.model.client.RESTFulClient;
-import org.reactome.web.pwp.model.factory.DatabaseObjectUtils;
-import org.reactome.web.pwp.model.factory.SchemaClass;
-import org.reactome.web.pwp.model.handlers.DatabaseObjectLoadedHandler;
+import org.reactome.web.pwp.client.common.model.client.RESTFulClient;
+import org.reactome.web.pwp.client.common.model.factory.DatabaseObjectUtils;
+import org.reactome.web.pwp.client.common.model.factory.SchemaClass;
+import org.reactome.web.pwp.client.common.model.handlers.DatabaseObjectLoadedHandler;
 
 /**
  * @author Antonio Fabregat <fabregat@ebi.ac.uk>

@@ -2,6 +2,11 @@ package org.reactome.web.pwp.client.hierarchy.widget;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.CustomTree;
+import org.reactome.web.pwp.client.common.model.classes.Event;
+import org.reactome.web.pwp.client.common.model.classes.Pathway;
+import org.reactome.web.pwp.client.common.model.classes.ReactionLikeEvent;
+import org.reactome.web.pwp.client.common.model.classes.Species;
+import org.reactome.web.pwp.client.common.model.util.Path;
 import org.reactome.web.pwp.client.common.utils.Console;
 import org.reactome.web.pwp.client.common.utils.MapSet;
 import org.reactome.web.pwp.client.hierarchy.events.HierarchyItemDoubleClickedEvent;
@@ -10,11 +15,6 @@ import org.reactome.web.pwp.client.hierarchy.events.HierarchyItemMouseOverEvent;
 import org.reactome.web.pwp.client.hierarchy.handlers.HierarchyItemDoubleClickedHandler;
 import org.reactome.web.pwp.client.hierarchy.handlers.HierarchyItemMouseOutHandler;
 import org.reactome.web.pwp.client.hierarchy.handlers.HierarchyItemMouseOverHandler;
-import org.reactome.web.pwp.model.classes.Event;
-import org.reactome.web.pwp.model.classes.Pathway;
-import org.reactome.web.pwp.model.classes.ReactionLikeEvent;
-import org.reactome.web.pwp.model.classes.Species;
-import org.reactome.web.pwp.model.util.Path;
 
 import java.util.*;
 

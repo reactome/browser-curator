@@ -4,8 +4,8 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
+import org.reactome.web.pwp.client.common.model.classes.*;
 import org.reactome.web.pwp.client.details.common.widgets.panels.*;
-import org.reactome.web.pwp.model.classes.*;
 
 import java.util.HashMap;
 import java.util.LinkedList;

@@ -10,9 +10,9 @@ import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.*;
+import org.reactome.web.pwp.client.common.model.classes.DatabaseObject;
+import org.reactome.web.pwp.client.common.model.factory.SchemaClass;
 import org.reactome.web.pwp.client.details.common.widgets.panels.DetailsPanel;
-import org.reactome.web.pwp.model.classes.DatabaseObject;
-import org.reactome.web.pwp.model.factory.SchemaClass;
 
 /**
  * @author Antonio Fabregat <fabregat@ebi.ac.uk>

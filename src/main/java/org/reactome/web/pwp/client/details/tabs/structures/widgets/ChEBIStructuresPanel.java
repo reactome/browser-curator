@@ -1,8 +1,8 @@
 package org.reactome.web.pwp.client.details.tabs.structures.widgets;
 
 import com.google.gwt.user.client.ui.HTMLPanel;
-import org.reactome.web.pwp.model.classes.ReferenceMolecule;
-import org.reactome.web.pwp.model.classes.SimpleEntity;
+import org.reactome.web.pwp.client.common.model.classes.ReferenceMolecule;
+import org.reactome.web.pwp.client.common.model.classes.SimpleEntity;
 import org.reactome.web.pwp.client.details.tabs.structures.events.StructureLoadedEvent;
 import uk.ac.ebi.pwp.widgets.chebi.client.ChEBIViewer;
 import uk.ac.ebi.pwp.widgets.chebi.events.ChEBIChemicalLoadedEvent;

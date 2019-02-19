@@ -2,12 +2,12 @@ package org.reactome.web.pwp.client.details.tabs.molecules.model.data;
 
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.resources.client.ImageResource;
+import org.reactome.web.pwp.client.common.model.classes.DatabaseObject;
+import org.reactome.web.pwp.client.common.model.classes.ReferenceEntity;
+import org.reactome.web.pwp.client.common.model.factory.SchemaClass;
+import org.reactome.web.pwp.client.common.model.handlers.DatabaseObjectLoadedHandler;
+import org.reactome.web.pwp.client.common.model.images.DatabaseObjectImages;
 import org.reactome.web.pwp.client.common.utils.Console;
-import org.reactome.web.pwp.model.classes.DatabaseObject;
-import org.reactome.web.pwp.model.classes.ReferenceEntity;
-import org.reactome.web.pwp.model.factory.SchemaClass;
-import org.reactome.web.pwp.model.handlers.DatabaseObjectLoadedHandler;
-import org.reactome.web.pwp.model.images.DatabaseObjectImages;
 
 import java.util.List;
 

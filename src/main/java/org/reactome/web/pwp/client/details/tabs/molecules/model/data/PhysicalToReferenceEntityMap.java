@@ -2,11 +2,10 @@ package org.reactome.web.pwp.client.details.tabs.molecules.model.data;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONObject;
-
-import org.reactome.web.pwp.model.classes.StableIdentifier;
+import org.reactome.web.pwp.client.common.model.classes.StableIdentifier;
+import org.reactome.web.pwp.client.common.model.factory.DatabaseObjectUtils;
+import org.reactome.web.pwp.client.common.model.factory.SchemaClass;
 import org.reactome.web.pwp.client.common.utils.Console;
-import org.reactome.web.pwp.model.factory.DatabaseObjectUtils;
-import org.reactome.web.pwp.model.factory.SchemaClass;
 
 /**
  * Instead of adding peDbId to the Class DatabaseObject PhysicalToReferenceEntityMap was created.

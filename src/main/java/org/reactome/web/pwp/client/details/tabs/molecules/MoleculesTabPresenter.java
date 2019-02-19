@@ -11,6 +11,13 @@ import org.reactome.web.pwp.client.common.Selection;
 import org.reactome.web.pwp.client.common.events.DatabaseObjectSelectedEvent;
 import org.reactome.web.pwp.client.common.events.ErrorMessageEvent;
 import org.reactome.web.pwp.client.common.events.StateChangedEvent;
+import org.reactome.web.pwp.client.common.model.classes.DatabaseObject;
+import org.reactome.web.pwp.client.common.model.classes.Event;
+import org.reactome.web.pwp.client.common.model.classes.Pathway;
+import org.reactome.web.pwp.client.common.model.client.RESTFulClient;
+import org.reactome.web.pwp.client.common.model.factory.DatabaseObjectFactory;
+import org.reactome.web.pwp.client.common.model.factory.SchemaClass;
+import org.reactome.web.pwp.client.common.model.handlers.DatabaseObjectCreatedHandler;
 import org.reactome.web.pwp.client.common.module.AbstractPresenter;
 import org.reactome.web.pwp.client.common.utils.Console;
 import org.reactome.web.pwp.client.common.utils.LRUCache;
@@ -22,13 +29,6 @@ import org.reactome.web.pwp.client.details.tabs.molecules.model.data.PhysicalToR
 import org.reactome.web.pwp.client.details.tabs.molecules.model.data.Result;
 import org.reactome.web.pwp.client.details.tabs.molecules.model.type.PathwayType;
 import org.reactome.web.pwp.client.manager.state.State;
-import org.reactome.web.pwp.model.classes.DatabaseObject;
-import org.reactome.web.pwp.model.classes.Event;
-import org.reactome.web.pwp.model.classes.Pathway;
-import org.reactome.web.pwp.model.client.RESTFulClient;
-import org.reactome.web.pwp.model.factory.DatabaseObjectFactory;
-import org.reactome.web.pwp.model.factory.SchemaClass;
-import org.reactome.web.pwp.model.handlers.DatabaseObjectCreatedHandler;
 
 import java.util.*;
 

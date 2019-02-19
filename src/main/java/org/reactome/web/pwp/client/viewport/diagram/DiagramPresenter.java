@@ -7,15 +7,15 @@ import org.reactome.web.pwp.client.common.Selection;
 import org.reactome.web.pwp.client.common.events.*;
 import org.reactome.web.pwp.client.common.handlers.DatabaseObjectHoveredHandler;
 import org.reactome.web.pwp.client.common.handlers.ViewportChangedHandler;
+import org.reactome.web.pwp.client.common.model.classes.DatabaseObject;
+import org.reactome.web.pwp.client.common.model.classes.Pathway;
+import org.reactome.web.pwp.client.common.model.factory.DatabaseObjectFactory;
+import org.reactome.web.pwp.client.common.model.handlers.DatabaseObjectCreatedHandler;
+import org.reactome.web.pwp.client.common.model.util.Path;
 import org.reactome.web.pwp.client.common.module.AbstractPresenter;
 import org.reactome.web.pwp.client.common.utils.Console;
 import org.reactome.web.pwp.client.manager.state.State;
 import org.reactome.web.pwp.client.viewport.ViewportToolType;
-import org.reactome.web.pwp.model.classes.DatabaseObject;
-import org.reactome.web.pwp.model.classes.Pathway;
-import org.reactome.web.pwp.model.factory.DatabaseObjectFactory;
-import org.reactome.web.pwp.model.handlers.DatabaseObjectCreatedHandler;
-import org.reactome.web.pwp.model.util.Path;
 
 import java.util.Objects;
 

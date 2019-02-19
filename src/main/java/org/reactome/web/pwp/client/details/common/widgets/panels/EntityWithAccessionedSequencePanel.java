@@ -5,10 +5,10 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
-import org.reactome.web.pwp.model.classes.AbstractModifiedResidue;
-import org.reactome.web.pwp.model.classes.DatabaseObject;
-import org.reactome.web.pwp.model.classes.EntityWithAccessionedSequence;
-import org.reactome.web.pwp.model.classes.ReferenceSequence;
+import org.reactome.web.pwp.client.common.model.classes.AbstractModifiedResidue;
+import org.reactome.web.pwp.client.common.model.classes.DatabaseObject;
+import org.reactome.web.pwp.client.common.model.classes.EntityWithAccessionedSequence;
+import org.reactome.web.pwp.client.common.model.classes.ReferenceSequence;
 
 import java.util.List;
 

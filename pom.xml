@@ -45,7 +45,6 @@
 
         <reactome.diagram>1.0.14</reactome.diagram>
         <reactome.web.analyitics>2.0.1</reactome.web.analyitics>
-        <reactome.web.model>1.3.5-SNAPSHOT</reactome.web.model>
         <reactome.web.pdb>2.3.0</reactome.web.pdb>
         <reactome.web.chebi>1.0.1</reactome.web.chebi>
         <reactome.web.rhea>1.3.1</reactome.web.rhea>
@@ -83,12 +82,6 @@
         <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-servlet</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.reactome.web.pwp</groupId>
-            <artifactId>model</artifactId>
-            <version>${reactome.web.model}</version>
         </dependency>
 
         <dependency>
