@@ -4,6 +4,7 @@ import com.google.gwt.http.client.*;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
+import org.reactome.web.pwp.client.Browser;
 import org.reactome.web.pwp.client.common.model.classes.*;
 import org.reactome.web.pwp.client.common.model.client.handlers.*;
 import org.reactome.web.pwp.client.common.model.factory.DatabaseObjectFactory;
@@ -19,14 +20,14 @@ import java.util.*;
 public class RESTFulClient {
 
     public static String SERVER = ""; //Here "http://reactome.org" can be set to use CORS
-    public static String CONTENT_SERVICE_PATH = "/ReactomeRESTfulAPICurator/RESTfulWS/";
+    public static String RESTFUL_API_PATH = Browser.RESTFUL_API + "/RESTfulWS/";
 
     public static void getAncestors(Event event, final AncestorsCreatedHandler handler) {
         getAncestors(event.getDbId(), handler);
     }
 
     public static void getAncestors(Long dbId, final AncestorsCreatedHandler handler) {
-        String url = SERVER + CONTENT_SERVICE_PATH + "queryEventAncestors/" + dbId;
+        String url = SERVER + RESTFUL_API_PATH + "queryEventAncestors/" + dbId;
         RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, url);
         requestBuilder.setHeader("Accept", "application/json");
         try {
@@ -67,7 +68,7 @@ public class RESTFulClient {
 
     public static void getFrontPageItems(Species species, DatabaseObjectsLoadedHandler<Event> handler) {
         String speciesName = species.getDisplayName().replaceAll(" ", "+");
-        String url = SERVER + CONTENT_SERVICE_PATH + "frontPageItems/" + speciesName;
+        String url = SERVER + RESTFUL_API_PATH + "frontPageItems/" + speciesName;
         RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, url);
         requestBuilder.setHeader("Accept", "application/json");
         try {
@@ -109,7 +110,7 @@ public class RESTFulClient {
     }
 
     public static void getOrthologous(List<DatabaseObject> list, Species species, MapLoadedHandler<Long, DatabaseObject> handler) {
-        String url = SERVER + CONTENT_SERVICE_PATH + "orthologous/Species/" + species.getDbId();
+        String url = SERVER + RESTFUL_API_PATH + "orthologous/Species/" + species.getDbId();
         RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.POST, url);
         requestBuilder.setHeader("Accept", "application/json");
 
@@ -154,7 +155,7 @@ public class RESTFulClient {
     }
 
     public static void getSpeciesList(final DatabaseObjectsLoadedHandler<Species> handler) {
-        String url = SERVER + CONTENT_SERVICE_PATH + "speciesList/";
+        String url = SERVER + RESTFUL_API_PATH + "speciesList/";
         RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, url);
         requestBuilder.setHeader("Accept", "application/json");
 
@@ -193,7 +194,7 @@ public class RESTFulClient {
     }
 
     public static void loadPublications(final Person person, final LiteratureReferencesLoadedHandler handler) {
-        String url = SERVER + CONTENT_SERVICE_PATH + "queryReferences/" + person.getDbId();
+        String url = SERVER + RESTFUL_API_PATH + "queryReferences/" + person.getDbId();
         RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, url);
         requestBuilder.setHeader("Accept", "application/json");
         try {
@@ -227,7 +228,7 @@ public class RESTFulClient {
     }
 
     public static void loadReferenceSequences(final DatabaseObject databaseObject, DatabaseObjectsLoadedHandler<ReferenceSequence> handler) {
-        String url = SERVER + CONTENT_SERVICE_PATH + "referenceEntity/" + databaseObject.getDbId();
+        String url = SERVER + RESTFUL_API_PATH + "referenceEntity/" + databaseObject.getDbId();
         RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, url);
         requestBuilder.setHeader("Accept", "application/json");
         try {
@@ -272,7 +273,7 @@ public class RESTFulClient {
     }
 
     public static void loadPathwaysWithDiagramForEntity(PhysicalEntity pe, final PathwaysForEntitiesLoadedHandler handler) {
-        String url = SERVER + CONTENT_SERVICE_PATH + "pathwaysWithDiagramForEntity/" + pe.getDbId();
+        String url = SERVER + RESTFUL_API_PATH + "pathwaysWithDiagramForEntity/" + pe.getDbId();
         RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, url);
         requestBuilder.setHeader("Accept", "application/json");
         try {
@@ -314,7 +315,7 @@ public class RESTFulClient {
     private static String version;
 
     public static void getDBName(final DBNameRetrievedHandler handler) {
-        String url = SERVER + CONTENT_SERVICE_PATH + "getDBName";
+        String url = SERVER + RESTFUL_API_PATH + "getDBName";
         RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, url);
         try {
             requestBuilder.sendRequest(null, new RequestCallback() {
@@ -347,7 +348,7 @@ public class RESTFulClient {
         if (version != null && !version.isEmpty()) {
             handler.onVersionRetrieved(version);
         } else {
-            String url = SERVER + CONTENT_SERVICE_PATH + "version";
+            String url = SERVER + RESTFUL_API_PATH + "version";
             RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, url);
             try {
                 requestBuilder.sendRequest(null, new RequestCallback() {

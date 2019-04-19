@@ -31,7 +31,7 @@ public abstract class DatabaseObjectFactory {
             handler.onDatabaseObjectLoaded(databaseObject);
             return;
         }
-        String url = RESTFulClient.SERVER + RESTFulClient.CONTENT_SERVICE_PATH + "detailedView/DatabaseObject/" + identifier;
+        String url = RESTFulClient.SERVER + RESTFulClient.RESTFUL_API_PATH + "detailedView/DatabaseObject/" + identifier;
         RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, url);
         requestBuilder.setHeader("Accept", "application/json");
         try {
@@ -62,7 +62,7 @@ public abstract class DatabaseObjectFactory {
     }
 
     public static void get(Collection<?> identifiers, final DatabaseObjectsCreatedHandler handler){
-        String url = RESTFulClient.SERVER + RESTFulClient.CONTENT_SERVICE_PATH + "mapByIds/DatabaseObject";
+        String url = RESTFulClient.SERVER + RESTFulClient.RESTFUL_API_PATH + "mapByIds/DatabaseObject";
         RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.POST, url);
         requestBuilder.setHeader("Content-Type", "text/plain");
         requestBuilder.setHeader("Accept", "application/json");
@@ -114,7 +114,7 @@ public abstract class DatabaseObjectFactory {
     }
 
     public static void load(final DatabaseObject databaseObject, final DatabaseObjectLoadedHandler handler){
-        String url = RESTFulClient.SERVER + RESTFulClient.CONTENT_SERVICE_PATH + "detailedView/DatabaseObject/" +  databaseObject.getDbId();
+        String url = RESTFulClient.SERVER + RESTFulClient.RESTFUL_API_PATH + "detailedView/DatabaseObject/" +  databaseObject.getDbId();
         RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, url);
         requestBuilder.setHeader("Accept", "application/json");
         try {

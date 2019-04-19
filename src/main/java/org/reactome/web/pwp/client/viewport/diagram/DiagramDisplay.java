@@ -8,6 +8,7 @@ import org.reactome.diagram.event.*;
 import org.reactome.diagram.expression.event.ExpressionOverlayStopEvent;
 import org.reactome.diagram.expression.event.ExpressionOverlayStopEventHandler;
 import org.reactome.diagram.model.GraphObject;
+import org.reactome.web.pwp.client.Browser;
 import org.reactome.web.pwp.client.common.AnalysisStatus;
 import org.reactome.web.pwp.client.common.model.classes.DatabaseObject;
 import org.reactome.web.pwp.client.common.model.classes.Pathway;
@@ -22,7 +23,7 @@ public class DiagramDisplay extends DockLayoutPanel implements Diagram.Display,
         SelectionEventHandler, PathwayChangeEventHandler, ParticipatingMoleculeSelectionEventHandler,
         SubpathwaySelectionEventHandler, ExpressionOverlayStopEventHandler {
 
-    private static final String RESTFUL_WS_FOLDER = "ReactomeRESTfulAPICurator/RESTfulWS/";
+    private static final String RESTFUL_API_PATH = Browser.RESTFUL_API + "/RESTfulWS/";
 
     private PathwayDiagramPanel diagram;
 
@@ -43,7 +44,7 @@ public class DiagramDisplay extends DockLayoutPanel implements Diagram.Display,
         this.diagram = new PathwayDiagramPanel();
         //noinspection GWTStyleCheck
         this.diagram.addStyleName("elv-Diagram-Holder");
-        this.diagram.setRestServiceURL("/" + RESTFUL_WS_FOLDER);
+        this.diagram.setRestServiceURL(RESTFUL_API_PATH);
 
         this.diagram.addSelectionEventHandler(this);
         this.diagram.addPathwayChangeEventHandler(this);

@@ -98,8 +98,8 @@ public class MoleculesTabPresenter extends AbstractPresenter implements Molecule
      */
     @Override
     public void getMoleculesData() {
-        String urlPathway  = RESTFulClient.CONTENT_SERVICE_PATH + "getParticipantsToReferenceEntityMaps/" + currentPathway.getDbId();
-        String urlReaction = RESTFulClient.CONTENT_SERVICE_PATH + "referenceEntity/" + currentDatabaseObject.getDbId();
+        String urlPathway  = RESTFulClient.RESTFUL_API_PATH + "getParticipantsToReferenceEntityMaps/" + currentPathway.getDbId();
+        String urlReaction = RESTFulClient.RESTFUL_API_PATH + "referenceEntity/" + currentDatabaseObject.getDbId();
         if(cachePathway.containsKey(currentPathway)){
             Result result = cachePathway.get(currentPathway);
             if(currentPathway.getDbId().equals(currentDatabaseObject.getDbId())){
@@ -127,7 +127,7 @@ public class MoleculesTabPresenter extends AbstractPresenter implements Molecule
      */
     @Override
     public void updateMoleculesData() {
-        String urlReaction = RESTFulClient.CONTENT_SERVICE_PATH + "referenceEntity/" + currentDatabaseObject.getDbId();
+        String urlReaction = RESTFulClient.RESTFUL_API_PATH + "referenceEntity/" + currentDatabaseObject.getDbId();
 
         Result result = cachePathway.get(currentPathway);
         result.undoHighlighting();

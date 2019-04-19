@@ -20,6 +20,7 @@ public class Browser implements EntryPoint {
     public static final Boolean BETA = false;
 
     public static boolean VERBOSE = true;
+    public static String RESTFUL_API = "/ReactomeRESTfulAPI";
 
     /**
      * This is the entry point method.
@@ -36,6 +37,7 @@ public class Browser implements EntryPoint {
     private void initConfig(){
         String hostName = Window.Location.getHostName();
         Browser.VERBOSE = (hostName.equals("localhost") || hostName.equals("127.0.0.1"));
+        Browser.RESTFUL_API += hostName.equals("release.reactome.org") ? "Curator" : "";
         TitleChangedEvent.REPORT = false;
         Token.DEFAULT_SPECIES_ID = 48887L; //Homo sapiens
         Token.DELIMITER = "&";

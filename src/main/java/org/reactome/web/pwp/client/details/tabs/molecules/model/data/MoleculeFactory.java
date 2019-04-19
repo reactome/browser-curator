@@ -14,7 +14,7 @@ import org.reactome.web.pwp.client.common.model.handlers.DatabaseObjectLoadedHan
 public class MoleculeFactory {
 
     public static void load(final Molecule molecule, final DatabaseObjectLoadedHandler handler) {
-        String url = RESTFulClient.SERVER + RESTFulClient.CONTENT_SERVICE_PATH + "queryById/ReferenceEntity/" + molecule.getDbId();
+        String url = RESTFulClient.SERVER + RESTFulClient.RESTFUL_API_PATH + "queryById/ReferenceEntity/" + molecule.getDbId();
         RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, url);
         requestBuilder.setHeader("Accept", "application/json");
         try {
