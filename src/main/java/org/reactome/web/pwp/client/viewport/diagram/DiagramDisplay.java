@@ -22,7 +22,7 @@ public class DiagramDisplay extends DockLayoutPanel implements Diagram.Display,
         SelectionEventHandler, PathwayChangeEventHandler, ParticipatingMoleculeSelectionEventHandler,
         SubpathwaySelectionEventHandler, ExpressionOverlayStopEventHandler {
 
-    private static final String RESTFUL_WS_FOLDER = "ReactomeRESTfulAPI/RESTfulWS/";
+    private static final String RESTFUL_WS_FOLDER = "ReactomeRESTfulAPICurator/RESTfulWS/";
 
     private PathwayDiagramPanel diagram;
 
@@ -176,7 +176,7 @@ public class DiagramDisplay extends DockLayoutPanel implements Diagram.Display,
     }
 
     private void selectContainedEventIds(final Pathway pathway) {
-        String url = "/ReactomeRESTfulAPI/RESTfulWS/getContainedEventIds/" + pathway.getDbId();
+        String url = "/ReactomeRESTfulAPICurator/RESTfulWS/getContainedEventIds/" + pathway.getDbId();
         RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, url);
         try {
             requestBuilder.sendRequest(null, new RequestCallback() {

@@ -19,7 +19,7 @@ import java.util.*;
 public class RESTFulClient {
 
     public static String SERVER = ""; //Here "http://reactome.org" can be set to use CORS
-    public static String CONTENT_SERVICE_PATH = "/ReactomeRESTfulAPI/RESTfulWS/";
+    public static String CONTENT_SERVICE_PATH = "/ReactomeRESTfulAPICurator/RESTfulWS/";
 
     public static void getAncestors(Event event, final AncestorsCreatedHandler handler) {
         getAncestors(event.getDbId(), handler);
