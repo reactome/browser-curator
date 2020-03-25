@@ -34,7 +34,7 @@ public class MoleculesDownloadPanel extends DockLayoutPanel {
     private Random random = new Random();
 
     private final CustomButton startDownloadBtn = new CustomButton(CommonImages.INSTANCE.downloadFile(), "Start Download");
-    private final CustomButton startGenomeSpaceDownloadBtn = new CustomButton(CommonImages.INSTANCE.downloadFile(), "Save to GenomeSpace");
+//    private final CustomButton startGenomeSpaceDownloadBtn = new CustomButton(CommonImages.INSTANCE.downloadFile(), "Save to GenomeSpace");
     private final MoleculesTab.Presenter presenter;
 
     public MoleculesDownloadPanel(Result result, MoleculesTab.Presenter presenter) {
@@ -157,28 +157,28 @@ public class MoleculesDownloadPanel extends DockLayoutPanel {
                 presenter.moleculeDownloadStarted();
             }
         });
-        buttonField.add(startGenomeSpaceDownloadBtn);
-        startGenomeSpaceDownloadBtn.setStyleName("elv-Download-Button");
-        startGenomeSpaceDownloadBtn.setTitle("Clicking this button should open a window to import the data to GenomeSpace. " +
-        		"Depending on your browser configuration, you may have to enable popups for the Reactome website");
-        startGenomeSpaceDownloadBtn.addClickHandler(new ClickHandler() {
-        	@Override
-        	public void onClick(ClickEvent event) {
-        		if((chemTB.getValue() || protTB.getValue() || sequTB.getValue() || otheTB.getValue())
-        				&& (typeTB.getValue() || nameTB.getValue() || identifierTB.getValue())){
-        			Integer randomInt = random.nextInt(1000 - 1) + 1;
-                    try {
-                        uploadListToGenomeSpace(textArea.getText(), randomInt.toString());
-                    }catch (JavaScriptException exception){
-                        Window.alert(exception.getMessage());
-                    }
-        		}else{
-        			Window.alert("You are trying to download an empty file.\n" +
-                            "Please select at least one type of molecules AND one field for the download.");
-        		}
-        		presenter.moleculeDownloadStarted();
-        	}
-        });
+//        buttonField.add(startGenomeSpaceDownloadBtn);
+//        startGenomeSpaceDownloadBtn.setStyleName("elv-Download-Button");
+//        startGenomeSpaceDownloadBtn.setTitle("Clicking this button should open a window to import the data to GenomeSpace. " +
+//        		"Depending on your browser configuration, you may have to enable popups for the Reactome website");
+//        startGenomeSpaceDownloadBtn.addClickHandler(new ClickHandler() {
+//        	@Override
+//        	public void onClick(ClickEvent event) {
+//        		if((chemTB.getValue() || protTB.getValue() || sequTB.getValue() || otheTB.getValue())
+//        				&& (typeTB.getValue() || nameTB.getValue() || identifierTB.getValue())){
+//        			Integer randomInt = random.nextInt(1000 - 1) + 1;
+//                    try {
+//                        uploadListToGenomeSpace(textArea.getText(), randomInt.toString());
+//                    }catch (JavaScriptException exception){
+//                        Window.alert(exception.getMessage());
+//                    }
+//        		}else{
+//        			Window.alert("You are trying to download an empty file.\n" +
+//                            "Please select at least one type of molecules AND one field for the download.");
+//        		}
+//        		presenter.moleculeDownloadStarted();
+//        	}
+//        });
 
         //Bringing together the two panels.
         FlowPanel controlArea = new FlowPanel();
@@ -218,13 +218,13 @@ public class MoleculesDownloadPanel extends DockLayoutPanel {
     /**
      * Uses GenomeSpace JavaScript method to upload data.
      */
-    public static native void uploadListToGenomeSpace(String list, String randomInt) /*-{    	                                                                                	    
-		var blob = new Blob([list], {type: "text/plain"});
-		var formData = new FormData();
-		var fileName = "Reactome_" + randomInt + "_gene_list.txt";
-		formData.append("webmasterfile", blob, fileName);
-		$wnd.gsUploadByPost(formData);
-	}-*/;
+//    public static native void uploadListToGenomeSpace(String list, String randomInt) /*-{
+//		var blob = new Blob([list], {type: "text/plain"});
+//		var formData = new FormData();
+//		var fileName = "Reactome_" + randomInt + "_gene_list.txt";
+//		formData.append("webmasterfile", blob, fileName);
+//		$wnd.gsUploadByPost(formData);
+//	}-*/;
    
     /**
      * Converting ResultObject into text for preview according to checkboxes.
