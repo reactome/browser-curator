@@ -1,59 +1,76 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project
-        xmlns="http://maven.apache.org/POM/4.0.0"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <groupId>org.reactome.web.pwp</groupId>
     <artifactId>browser-curator</artifactId>
-    <packaging>war</packaging>
     <version>3.4.1</version>
-    <name>Reactome Pathway Portal</name>
+    <packaging>war</packaging>
 
+    <name>Reactome Pathway Portal</name>
     <description>
         The Pathway Browser is Reactome’s primary means of viewing and interacting with specific pathways
     </description>
+    <url>https://github.com/reactome/browser-curator</url>
 
     <organization>
-        <name>The European Bioinformatics Institute</name>
-        <url>http://www.ebi.ac.uk/</url>
+        <name>Reactome</name>
+        <url>https://reactome.org</url>
     </organization>
+
+    <licenses>
+        <license>
+            <name></name>
+            <url></url>
+        </license>
+    </licenses>
 
     <developers>
         <developer>
             <id>fabregat</id>
             <name>Antonio Fabregat</name>
-            <email>fabregat@ebi.ac.uk</email>
-            <organization>http://www.ebi.ac.uk/</organization>
+            <roles>
+                <role>alumni</role>
+            </roles>
         </developer>
     </developers>
 
+    <scm>
+        <connection>scm:git:git://github.com/reactome/browser-curator.git</connection>
+        <developerConnection>scm:git:ssh://github.com:reactome/browser-curator.git</developerConnection>
+        <url>https://github.com/reactome/browser-curator/tree/master</url>
+    </scm>
+
     <properties>
-        <!-- Name that will be used to generate the war file -->
-        <fileName>PathwayBrowserCurator</fileName>
-
-        <!-- Convenience property to set the GWT version -->
-        <gwtVersion>2.8.2</gwtVersion>
-        <gwtStyle>OBF</gwtStyle> <!-- OBF | PRETTY | DETAILED -->
-
-        <!-- GWT needs at least java 1.8 -->
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-        <reactome.diagram>1.0.14</reactome.diagram>
-        <reactome.web.analyitics>2.0.1</reactome.web.analyitics>
-        <reactome.web.pdb>2.3.0</reactome.web.pdb>
-        <reactome.web.chebi>1.0.1</reactome.web.chebi>
-        <reactome.web.rhea>1.3.1</reactome.web.rhea>
-        <reactome.web.gxa>3.0.3</reactome.web.gxa>
-
+        <!-- dependencies -->
+        <gwt.version>2.8.2</gwt.version> <!-- Convenience property to set the GWT version -->
+        <reactome.pathway.diagram.version>1.0.14</reactome.pathway.diagram.version>
+        <reactome.web.analytics.version>2.0.1</reactome.web.analytics.version>
+        <reactome.web.pdb.version>2.3.0</reactome.web.pdb.version>
+        <reactome.web.chebi.version>1.0.1</reactome.web.chebi.version>
+        <reactome.web.rhea.version>1.3.1</reactome.web.rhea.version>
+        <reactome.web.gxa.version>3.0.3</reactome.web.gxa.version>
         <reactome.utils.version>1.0.7</reactome.utils.version>
+        <slf4j.version>1.7.22</slf4j.version>
 
+        <!-- build -->
         <appModule>org.reactome.web.pwp.Browser</appModule>
         <appName>${appModule}</appName>
+        <fileName>PathwayBrowserCurator</fileName> <!-- Name that will be used to generate the war file -->
+        <gwtStyle>OBF</gwtStyle> <!-- OBF | PRETTY | DETAILED -->
+        <jdk.version>1.8</jdk.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- maven build and plugins -->
+        <maven.gpg.version>1.5</maven.gpg.version>
+        <maven.gwt.version>1.0-rc-6</maven.gwt.version>
+        <maven.javadoc.version>2.10.3</maven.javadoc.version>
+        <maven.release.version>2.5.3</maven.release.version>
+        <maven.source.version>2.4</maven.source.version>
+        <maven.war.version>3.3.1</maven.war.version>
+        <nexus-staging-maven-plugin>1.6.7</nexus-staging-maven-plugin>
     </properties>
 
     <dependencyManagement>
@@ -61,7 +78,7 @@
             <dependency>
                 <groupId>com.google.gwt</groupId>
                 <artifactId>gwt</artifactId>
-                <version>${gwtVersion}</version>
+                <version>${gwt.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -87,37 +104,37 @@
         <dependency>
             <groupId>org.reactome.diagram</groupId>
             <artifactId>pathway-diagram</artifactId>
-            <version>${reactome.diagram}</version>
+            <version>${reactome.pathway.diagram.version}</version>
         </dependency>
 
         <dependency>
             <groupId>uk.ac.ebi.pwp.widgets</groupId>
             <artifactId>pdb</artifactId>
-            <version>${reactome.web.pdb}</version>
+            <version>${reactome.web.pdb.version}</version>
         </dependency>
 
         <dependency>
             <groupId>uk.ac.ebi.pwp.widgets</groupId>
             <artifactId>chebi</artifactId>
-            <version>${reactome.web.chebi}</version>
+            <version>${reactome.web.chebi.version}</version>
         </dependency>
 
         <dependency>
             <groupId>uk.ac.ebi.pwp.widgets</groupId>
             <artifactId>rhea</artifactId>
-            <version>${reactome.web.rhea}</version>
+            <version>${reactome.web.rhea.version}</version>
         </dependency>
 
         <dependency>
             <groupId>uk.ac.ebi.pwp.widgets</groupId>
             <artifactId>gxa</artifactId>
-            <version>${reactome.web.gxa}</version>
+            <version>${reactome.web.gxa.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.reactome.web.utils</groupId>
             <artifactId>analytics</artifactId>
-            <version>${reactome.web.analyitics}</version>
+            <version>${reactome.web.analytics.version}</version>
         </dependency>
 
         <dependency>
@@ -130,12 +147,12 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.7.22</version>
+            <version>${slf4j.version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-nop</artifactId>
-            <version>1.7.22</version>
+            <version>${slf4j.version}</version>
         </dependency>
     </dependencies>
 
@@ -148,7 +165,7 @@
             <plugin>
                 <groupId>net.ltgt.gwt.maven</groupId>
                 <artifactId>gwt-maven-plugin</artifactId>
-                <version>1.0-rc-6</version>
+                <version>${maven.gwt.version}</version>
                 <executions>
                     <execution>
                         <goals>
@@ -184,6 +201,88 @@
                     <startupUrls>
                         <startupUrl>index.html</startupUrl>
                     </startupUrls>
+                </configuration>
+            </plugin>
+
+            <!-- Nexus staging plugin for Sonatype deployment -->
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>${nexus-staging-maven-plugin}</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>ossrh</serverId>
+                    <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>${maven.war.version}</version>
+                <configuration>
+                    <source>${jdk.version}</source>
+                    <target>${jdk.version}</target>
+                </configuration>
+            </plugin>
+
+            <!-- Generate source jar file -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>${maven.source.version}</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Generate JavaDoc jar file -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>${maven.javadoc.version}</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Signs deployed jar, source jar, and JavaDoc jar with GPG -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>${maven.gpg.version}</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Allows "release" mvn goal to deploy a SNAPSHOT or version release to Sonatype -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>${maven.release.version}</version>
+                <configuration>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
+                    <useReleaseProfile>false</useReleaseProfile>
+                    <releaseProfiles>release</releaseProfiles>
+                    <goals>deploy</goals>
                 </configuration>
             </plugin>
         </plugins>
@@ -235,4 +334,21 @@
             </snapshots>
         </repository>
     </repositories>
+
+    <!-- Configures the distribution to nexus repository -->
+    <distributionManagement>
+        <!-- Sonatype Release repo -->
+        <repository>
+            <id>ossrh</id>
+            <name>Sonatype Release Repository</name>
+            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2</url>
+        </repository>
+
+        <!-- Sonatype SNAPSHOT repo -->
+        <snapshotRepository>
+            <id>ossrh</id>
+            <name>Sonatype Snapshot Repository</name>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
 </project>
