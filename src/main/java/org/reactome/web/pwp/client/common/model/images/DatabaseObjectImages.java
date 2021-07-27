@@ -74,6 +74,12 @@ public interface DatabaseObjectImages extends ClientBundle {
     @Source("OtherEntity.png")
     ImageResource otherEntity();
 
+    @Source("Reaction.png") //TODO: Create distinct icon for CellDevelopmentStep
+    ImageResource cellDevelopmentStep();
+
+    @Source("Pathway.png") //TODO: Create distinct icon for CellLineagePath
+    ImageResource cellLineagePath();
+
     @Source("Pathway.png")
     ImageResource pathway();
 

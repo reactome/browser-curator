@@ -10,6 +10,8 @@ public enum SchemaClass {
     BOOK("Book"),
     CANDIDATE_SET("CandidateSet"),
     CATALYST_ACTIVITY("CatalystActivity"),
+    CELL_DEVELOPMENT_STEP("CellDevelopmentStep"),
+    CELL_LINEAGE_PATH("CellLineagePath"),
     CELL_TYPE("CellType"),
     CHEMICAL_DRUG("ChemicalDrug"),
     COMPARTMENT("Compartment"),

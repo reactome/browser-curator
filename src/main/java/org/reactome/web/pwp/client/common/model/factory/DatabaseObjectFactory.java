@@ -182,6 +182,12 @@ public abstract class DatabaseObjectFactory {
             case RNA_DRUG:
                 rtn = new RNADrug();
                 break;
+            case CELL_DEVELOPMENT_STEP:
+                rtn = new CellDevelopmentStep();
+                break;
+            case CELL_LINEAGE_PATH:
+                rtn = new CellLineagePath();
+                break;
             case COMPARTMENT:
                 rtn = new Compartment();
                 break;
