@@ -1,7 +1,7 @@
 package org.reactome.web.pwp.client.common;
 
 import org.reactome.web.pwp.client.common.model.classes.DatabaseObject;
-import org.reactome.web.pwp.client.common.model.classes.Pathway;
+import org.reactome.web.pwp.client.common.model.classes.Event;
 import org.reactome.web.pwp.client.common.model.util.Path;
 import org.reactome.web.pwp.client.manager.state.State;
 
@@ -9,7 +9,7 @@ import org.reactome.web.pwp.client.manager.state.State;
  * @author Antonio Fabregat <fabregat@ebi.ac.uk>
  */
 public class Selection {
-    private Pathway diagram;
+    private Event diagram;
     private DatabaseObject databaseObject;
     private Path path;
 
@@ -20,28 +20,26 @@ public class Selection {
     }
 
     public Selection(State state){
-        this.diagram = state.getPathway();
+        this.diagram = state.getEventWithDiagram();
         this.databaseObject = state.getSelected();
         this.path = state.getPath();
     }
 
     public Selection(DatabaseObject databaseObject) {
+        this(null, databaseObject, null);
+    }
+
+    public Selection(Event diagram, Path path) {
+       this(diagram, null, path);
+    }
+
+    public Selection(Event diagram, DatabaseObject databaseObject, Path path) {
+        this.diagram = diagram;
+        this.path = path == null ? new Path() : path;
         this.databaseObject = databaseObject;
     }
 
-    public Selection(Pathway diagram, Path path) {
-        this.diagram = diagram;
-        this.databaseObject = null;
-        this.path = path == null ? new Path() : path;
-    }
-
-    public Selection(Pathway diagram, DatabaseObject databaseObject, Path path) {
-        this.diagram = diagram;
-        this.databaseObject = databaseObject;
-        this.path = path == null ? new Path() : path;
-    }
-
-    public Pathway getDiagram() {
+    public Event getDiagram() {
         return diagram;
     }
 

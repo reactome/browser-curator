@@ -10,6 +10,7 @@ import org.reactome.diagram.expression.event.ExpressionOverlayStopEventHandler;
 import org.reactome.diagram.model.GraphObject;
 import org.reactome.web.pwp.client.Browser;
 import org.reactome.web.pwp.client.common.AnalysisStatus;
+import org.reactome.web.pwp.client.common.model.classes.CellLineagePath;
 import org.reactome.web.pwp.client.common.model.classes.DatabaseObject;
 import org.reactome.web.pwp.client.common.model.classes.Pathway;
 
@@ -64,6 +65,12 @@ public class DiagramDisplay extends DockLayoutPanel implements Diagram.Display,
     public void loadPathway(Pathway pathway) {
         this.selectedDBIds.clear();
         this.diagram.setPathway(pathway.getDbId());
+    }
+
+    @Override
+    public void loadCellLineagePath(CellLineagePath cellLineagePath) {
+        this.selectedDBIds.clear();
+        //this.diagram.setCellLineagePath(cellLineagePath.getDbId());
     }
 
     @Override

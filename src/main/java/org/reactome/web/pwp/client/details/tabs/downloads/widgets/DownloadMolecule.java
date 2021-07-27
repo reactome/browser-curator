@@ -3,7 +3,7 @@ package org.reactome.web.pwp.client.details.tabs.downloads.widgets;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import org.reactome.web.pwp.client.common.CommonImages;
-import org.reactome.web.pwp.client.common.model.classes.Pathway;
+import org.reactome.web.pwp.client.common.model.classes.Event;
 import org.reactome.web.pwp.client.details.common.widgets.button.CustomButton;
 import org.reactome.web.pwp.client.details.tabs.downloads.DownloadsTab;
 
@@ -12,7 +12,7 @@ import org.reactome.web.pwp.client.details.tabs.downloads.DownloadsTab;
  */
 public class DownloadMolecule extends CustomButton {
 
-    public DownloadMolecule(final DownloadsTab.Presenter presenter, final Pathway pathway){
+    public DownloadMolecule(final DownloadsTab.Presenter presenter, final Event eventWithDiagram){
         super();
         this.addStyleName("elv-Download-Item");
         this.setWidth("100px");
@@ -22,7 +22,7 @@ public class DownloadMolecule extends CustomButton {
             @Override
             public void onClick(ClickEvent clickEvent) {
                 //swap to Molecules download
-                presenter.swapToMolecules(pathway);
+                presenter.swapToMolecules(eventWithDiagram);
             }
         });
         this.setTitle("View/download participating molecules.");

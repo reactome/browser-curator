@@ -1,6 +1,7 @@
 package org.reactome.web.pwp.client.details.tabs.molecules;
 
 import org.reactome.web.pwp.client.common.model.classes.DatabaseObject;
+import org.reactome.web.pwp.client.common.model.classes.Event;
 import org.reactome.web.pwp.client.common.model.classes.Pathway;
 import org.reactome.web.pwp.client.details.tabs.DetailsTab;
 import org.reactome.web.pwp.client.details.tabs.molecules.model.data.Result;
@@ -17,8 +18,8 @@ public interface MoleculesTab {
     }
 
     interface Display extends DetailsTab.Display<Presenter> {
-        void showDetails(Pathway pathway, DatabaseObject databaseObject);
-        void updateDetailsIfLoaded(Pathway pathway, DatabaseObject databaseObject);
+        void showDetails(Event event, DatabaseObject databaseObject);
+        void updateDetailsIfLoaded(Event event, DatabaseObject databaseObject);
 
         void setMoleculesData(Result result);
         void updateMoleculesData(Result result);

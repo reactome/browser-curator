@@ -1,5 +1,6 @@
 package org.reactome.web.pwp.client.hierarchy.delgates;
 
+import org.reactome.web.pwp.client.common.model.classes.CellLineagePath;
 import org.reactome.web.pwp.client.common.model.classes.DatabaseObject;
 import org.reactome.web.pwp.client.common.model.classes.Event;
 import org.reactome.web.pwp.client.common.model.classes.Pathway;
@@ -18,6 +19,8 @@ public class HierarchyPathLoader {
 
     public interface HierarchyPathLoaderHandler {
         void expandPathway(Path path, Pathway pathway);
+
+        void expandCellLineagePath(Path path, CellLineagePath cellLineagePath);
 
         void onPathLoaded(Path path);
     }
@@ -59,6 +62,8 @@ public class HierarchyPathLoader {
                 if (next instanceof Pathway) {
                     this.handler.expandPathway(path, (Pathway) next);
                     return;
+                } else if (next instanceof CellLineagePath) {
+                    this.handler.expandCellLineagePath(path, (CellLineagePath) next);
                 }
             }
         }else{

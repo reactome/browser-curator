@@ -11,6 +11,7 @@ import org.reactome.web.pwp.client.common.Selection;
 import org.reactome.web.pwp.client.common.events.DatabaseObjectSelectedEvent;
 import org.reactome.web.pwp.client.common.events.ErrorMessageEvent;
 import org.reactome.web.pwp.client.common.events.StateChangedEvent;
+import org.reactome.web.pwp.client.common.model.classes.CellLineagePath;
 import org.reactome.web.pwp.client.common.model.classes.DatabaseObject;
 import org.reactome.web.pwp.client.common.model.classes.Event;
 import org.reactome.web.pwp.client.common.model.classes.Pathway;
@@ -40,14 +41,14 @@ public class MoleculesTabPresenter extends AbstractPresenter implements Molecule
     private MoleculesTab.Display display;
 
     private DatabaseObject currentDatabaseObject;
-    private Pathway currentPathway;
+    private Event currentEvent;
 
     private int count = 0;
     private List<PhysicalToReferenceEntityMap> toHighlight = new ArrayList<>();
 
-    private final LRUCache<Pathway, Result> cachePathway = new LRUCache<>(15);
+    private final LRUCache<Event, Result> cacheEvent = new LRUCache<>(15);
     private final LRUCache<Long, HashSet<Molecule>> cacheDbObj= new LRUCache<>(10);
-    private Set<Pathway> previouslyLoaded = new HashSet<>();
+    private Set<Event> previouslyLoaded = new HashSet<>();
 
     public MoleculesTabPresenter(EventBus eventBus, MoleculesTab.Display display) {
         super(eventBus);
@@ -62,14 +63,14 @@ public class MoleculesTabPresenter extends AbstractPresenter implements Molecule
     public void onStateChanged(StateChangedEvent event) {
         State state = event.getState();
         this.currentDatabaseObject = state.getTarget();
-        this.currentPathway = state.getPathway();
+        this.currentEvent = state.getEventWithDiagram();
 
-        if(this.currentPathway==null){
+        if(this.currentEvent==null){
             this.display.setInitialState();
         }else {
-            if(state.getDetailsTab().equals(display.getDetailTabType()) || previouslyLoaded.contains(this.currentPathway)) {
-                this.previouslyLoaded.add(this.currentPathway);
-                this.display.showDetails(this.currentPathway, state.getSelected());
+            if(state.getDetailsTab().equals(display.getDetailTabType()) || previouslyLoaded.contains(this.currentEvent)) {
+                this.previouslyLoaded.add(this.currentEvent);
+                this.display.showDetails(this.currentEvent, state.getSelected());
             }else{
                 this.display.setInitialState();
             }
@@ -98,15 +99,15 @@ public class MoleculesTabPresenter extends AbstractPresenter implements Molecule
      */
     @Override
     public void getMoleculesData() {
-        String urlPathway  = RESTFulClient.RESTFUL_API_PATH + "getParticipantsToReferenceEntityMaps/" + currentPathway.getDbId();
+        String urlPathway  = RESTFulClient.RESTFUL_API_PATH + "getParticipantsToReferenceEntityMaps/" + currentEvent.getDbId();
         String urlReaction = RESTFulClient.RESTFUL_API_PATH + "referenceEntity/" + currentDatabaseObject.getDbId();
-        if(cachePathway.containsKey(currentPathway)){
-            Result result = cachePathway.get(currentPathway);
-            if(currentPathway.getDbId().equals(currentDatabaseObject.getDbId())){
+        if(cacheEvent.containsKey(currentEvent)){
+            Result result = cacheEvent.get(currentEvent);
+            if(currentEvent.getDbId().equals(currentDatabaseObject.getDbId())){
                 result.highlight();
                 display.setMoleculesData(result);
             }else{
-                result.undoHighlighting(); //Previous highlighting needs to be undone before new one can be applied.
+                result.undoHighlighting(); // Previous highlighting needs to be undone before new one can be applied.
 
                 if(cacheDbObj.containsKey(currentDatabaseObject.getDbId())){
                     useExistingReactionParticipants(result, false);
@@ -129,7 +130,7 @@ public class MoleculesTabPresenter extends AbstractPresenter implements Molecule
     public void updateMoleculesData() {
         String urlReaction = RESTFulClient.RESTFUL_API_PATH + "referenceEntity/" + currentDatabaseObject.getDbId();
 
-        Result result = cachePathway.get(currentPathway);
+        Result result = cacheEvent.get(currentEvent);
         result.undoHighlighting();
 
         if(cacheDbObj.containsKey(currentDatabaseObject.getDbId())){
@@ -203,8 +204,8 @@ public class MoleculesTabPresenter extends AbstractPresenter implements Molecule
 
                         Result result = new Result(resultList); //resultList is now duplicate-free.
                         result.setPhyEntityToRefEntitySet(mapSet);
-                        cachePathway.put(currentPathway, result);
-                        if(currentPathway.getDbId().equals(currentDatabaseObject.getDbId())){
+                        cacheEvent.put(currentEvent, result);
+                        if(currentEvent.getDbId().equals(currentDatabaseObject.getDbId())){
                             result.highlight();
                             display.setMoleculesData(result);
                         }else{
@@ -215,7 +216,7 @@ public class MoleculesTabPresenter extends AbstractPresenter implements Molecule
                             }
                         }
                     }catch (Exception ex){
-                        String errorMsg = "The received object containing the Molecules for " + currentPathway.getDisplayName() + " is empty or faulty and could not be parsed. ERROR: " + ex.getMessage();
+                        String errorMsg = "The received object containing the Molecules for " + currentEvent.getDisplayName() + " is empty or faulty and could not be parsed. ERROR: " + ex.getMessage();
                         eventBus.fireEventFromSource(new ErrorMessageEvent(errorMsg, ex), MoleculesTabPresenter.this);
                         display.setInitialState();
                     }
@@ -223,13 +224,13 @@ public class MoleculesTabPresenter extends AbstractPresenter implements Molecule
 
                 @Override
                 public void onError(Request request, Throwable exception) {
-                    String errorMsg = "The request for the object containing the Molecules for " + currentPathway.getDisplayName() + "' received an error instead of a response";
+                    String errorMsg = "The request for the object containing the Molecules for " + currentEvent.getDisplayName() + "' received an error instead of a response";
                     eventBus.fireEventFromSource(new ErrorMessageEvent(errorMsg, exception), MoleculesTabPresenter.this);
                     display.setInitialState();
                 }
             });
         } catch (RequestException ex) {
-            String errorMsg = "Server connexion failed for object " + currentPathway.getDisplayName() + ". ERROR: " + ex.getMessage();
+            String errorMsg = "Server connexion failed for object " + currentEvent.getDisplayName() + ". ERROR: " + ex.getMessage();
             eventBus.fireEventFromSource(new ErrorMessageEvent(errorMsg, ex), MoleculesTabPresenter.this);
             display.setInitialState();
         }
@@ -351,26 +352,15 @@ public class MoleculesTabPresenter extends AbstractPresenter implements Molecule
      * @return PathwayType (OGB, NGB, CGB)
      */
     private PathwayType determineType() {
-        List<Event> events = this.currentPathway.getHasEvent();
-        PathwayType pt = null;
-        for(Event e : events){
-            if (e.getSchemaClass() == SchemaClass.PATHWAY){
-                Pathway p = (Pathway) e;
+        List<Event> events = getHasEvents(this.currentEvent);
 
-                if(pt == null){
-                    if(p.getHasDiagram()){
-                        pt = PathwayType.OGB; //only green boxes
-                    }else{
-                        pt = PathwayType.NGB; //no green boxes
-                    }
-                }else{
-                    if(p.getHasDiagram() && pt == PathwayType.NGB || !p.getHasDiagram() && pt == PathwayType.OGB){
-                        return PathwayType.CGB; //diagram that contains green boxes
-                    }
-                }
-            }
+        Iterator<Event> eventIterator = events.iterator();
+        PathwayType currentPathwayType = null;
+        while (eventIterator.hasNext() && currentPathwayType != PathwayType.CGB) {
+            Event event = eventIterator.next();
+            currentPathwayType = getUpdatedPathwayType(currentPathwayType, event);
         }
-        return pt;
+        return currentPathwayType;
     }
 
     /**
@@ -424,6 +414,41 @@ public class MoleculesTabPresenter extends AbstractPresenter implements Molecule
         }else{
             display.setMoleculesData(result);
         }
+    }
+
+    private List<Event> getHasEvents(Event event) {
+        List<Event> hasEvents = new ArrayList<>();
+        if (event instanceof Pathway) {
+            hasEvents.addAll(((Pathway) event).getHasEvent());
+        } else if (event instanceof CellLineagePath) {
+            hasEvents.addAll(((CellLineagePath) event).getHasEvent());
+        }
+        return hasEvents;
+    }
+
+
+    private PathwayType getUpdatedPathwayType(PathwayType currentPathwayType, Event event) {
+        PathwayType updatedPathwayType = null;
+        if (event.getSchemaClass() == SchemaClass.PATHWAY || event.getSchemaClass() == SchemaClass.CELL_LINEAGE_PATH){
+            Pathway p = (Pathway) event;
+
+            if (currentPathwayType == null) {
+                if (p.getHasDiagram()){
+                    updatedPathwayType = PathwayType.OGB; //only green boxes
+                } else {
+                    updatedPathwayType = PathwayType.NGB; //no green boxes
+                }
+            } else {
+                if (p.getHasDiagram() && currentPathwayType == PathwayType.NGB || !p.getHasDiagram() && currentPathwayType == PathwayType.OGB) {
+                    updatedPathwayType = PathwayType.CGB; // diagram that contains green boxes
+                }
+            }
+        }
+
+        if (updatedPathwayType == null) {
+            updatedPathwayType = currentPathwayType;
+        }
+        return updatedPathwayType;
     }
 
 }

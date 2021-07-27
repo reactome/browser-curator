@@ -42,7 +42,7 @@ public class HierarchyPresenter extends AbstractPresenter implements Hierarchy.P
     @Override
     public void onStateChanged(StateChangedEvent event) {
         State state = event.getState();
-        Selection selection = new Selection(state.getPathway(), state.getSelected(), state.getPath());
+        Selection selection = new Selection(state.getEventWithDiagram(), state.getSelected(), state.getPath());
         Species toSpecies = state.getSpecies();
         this.toSelect = selection; //Important!
         if(!toSpecies.equals(currentSpecies)){
@@ -71,6 +71,11 @@ public class HierarchyPresenter extends AbstractPresenter implements Hierarchy.P
     }
 
     @Override
+    public void expandCellLineagePath(Path path, CellLineagePath cellLineagePath) {
+        display.expandCellLineagePath(path, cellLineagePath);
+    }
+
+    @Override
     public void onPathLoaded(Path path) {
         this.pathLoader = null;
         this.selection = toSelect;
@@ -79,8 +84,12 @@ public class HierarchyPresenter extends AbstractPresenter implements Hierarchy.P
 
     @Override
     public void eventHovered(Pathway pathway, Event event, Path path) {
-        Event target = event!=null?event:pathway;
-        this.eventBus.fireEventFromSource(new DatabaseObjectHoveredEvent(target, path), this);
+        eventHovered((Event) pathway, event, path);
+    }
+
+    @Override
+    public void eventHovered(CellLineagePath cellLineagePath, Event event, Path path) {
+        eventHovered((Event) cellLineagePath, event, path);
     }
 
     @Override
@@ -91,6 +100,15 @@ public class HierarchyPresenter extends AbstractPresenter implements Hierarchy.P
     @Override
     public void eventSelected(Pathway pathway, Event event, Path path) {
         Selection selection = new Selection(pathway, event, path);
+        if(!selection.equals(this.selection)) {
+            this.selection = selection;
+            this.eventBus.fireEventFromSource(new DatabaseObjectSelectedEvent(selection), this);
+        }
+    }
+
+    @Override
+    public void eventSelected(CellLineagePath cellLineagePath, Event event, Path path) {
+        Selection selection = new Selection(cellLineagePath, event, path);
         if(!selection.equals(this.selection)) {
             this.selection = selection;
             this.eventBus.fireEventFromSource(new DatabaseObjectSelectedEvent(selection), this);
@@ -113,21 +131,42 @@ public class HierarchyPresenter extends AbstractPresenter implements Hierarchy.P
 
     @Override
     public void openDiagram(Pathway pathway) {
-        this.eventBus.fireEventFromSource(new PathwayDiagramOpenRequestEvent(pathway), this);
+        this.eventBus.fireEventFromSource(new DiagramOpenRequestEvent(pathway), this);
     }
 
     @Override
-    public void pathwayExpanded(Pathway pathway) {
-        if(this.pathLoader!=null) {
+    public void openDiagram(CellLineagePath cellLineagePath) {
+        this.eventBus.fireEventFromSource(new DiagramOpenRequestEvent(cellLineagePath), this);
+    }
+
+    @Override
+    public void eventExpanded(Pathway pathway) {
+        if(this.pathLoader != null) {
             this.pathLoader.expandPath(); //continue expanding path
         }
-        Set<Pathway> pathways = new HashSet<>();
+        Set<Pathway> subPathways = new HashSet<>();
         Set<Pathway> pathwaysWithReactions = new HashSet<>();
         for (Event event : pathway.getHasEvent()) {
             if (event instanceof Pathway) {
-                pathways.add((Pathway) event);
+                subPathways.add((Pathway) event);
             } else {
                 pathwaysWithReactions.add(pathway);
+            }
+        }
+    }
+
+    @Override
+    public void eventExpanded(CellLineagePath cellLineagePath) {
+        if (this.pathLoader != null) {
+            this.pathLoader.expandPath();
+        }
+        Set<Event> subEvents = new HashSet<>();
+        Set<CellLineagePath> cellLineagePathsWithRLEs = new HashSet<>();
+        for (Event event : cellLineagePath.getHasEvent()) {
+            if (event instanceof Pathway || event instanceof CellLineagePath) {
+                subEvents.add(event);
+            } else {
+                cellLineagePathsWithRLEs.add(cellLineagePath);
             }
         }
     }
@@ -163,6 +202,11 @@ public class HierarchyPresenter extends AbstractPresenter implements Hierarchy.P
         });
     }
 
+    private void eventHovered(Event pathwayOrCellLineagePath, Event event, Path path) {
+        Event target = event != null ? event : pathwayOrCellLineagePath;
+        this.eventBus.fireEventFromSource(new DatabaseObjectHoveredEvent(target, path), this);
+    }
+
     private Event getTarget(Selection selection){
         Event event;
         if(selection.getDatabaseObject()!=null && selection.getDatabaseObject() instanceof Event){
@@ -171,5 +215,18 @@ public class HierarchyPresenter extends AbstractPresenter implements Hierarchy.P
             event = selection.getDiagram();
         }
         return event;
+    }
+
+    private List<Event> getHasEvent(Event pathwayOrCellLineagePath) {
+        if (!(pathwayOrCellLineagePath instanceof Pathway) && !(pathwayOrCellLineagePath instanceof CellLineagePath)) {
+            Console.error("Event " + pathwayOrCellLineagePath + " must be a Pathway or Cell Lineage Path");
+            return new ArrayList<>();
+        }
+
+        if (pathwayOrCellLineagePath instanceof Pathway) {
+            return ((Pathway) pathwayOrCellLineagePath).getHasEvent();
+        } else {
+            return ((CellLineagePath) pathwayOrCellLineagePath).getHasEvent();
+        }
     }
 }

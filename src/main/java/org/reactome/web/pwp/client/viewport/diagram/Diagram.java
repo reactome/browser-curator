@@ -1,6 +1,7 @@
 package org.reactome.web.pwp.client.viewport.diagram;
 
 import org.reactome.web.pwp.client.common.AnalysisStatus;
+import org.reactome.web.pwp.client.common.model.classes.CellLineagePath;
 import org.reactome.web.pwp.client.common.model.classes.DatabaseObject;
 import org.reactome.web.pwp.client.common.model.classes.Pathway;
 import org.reactome.web.pwp.client.common.module.BrowserModule;
@@ -24,6 +25,8 @@ public interface Diagram {
         boolean isVisible();
 
         void loadPathway(Pathway pathway);
+
+        void loadCellLineagePath(CellLineagePath cellLineagePath);
 
         void flag(String flag);
 

@@ -4,7 +4,7 @@ import com.google.gwt.event.shared.EventBus;
 import org.reactome.web.pwp.client.common.events.ErrorMessageEvent;
 import org.reactome.web.pwp.client.common.events.StateChangedEvent;
 import org.reactome.web.pwp.client.common.model.classes.DatabaseObject;
-import org.reactome.web.pwp.client.common.model.classes.Pathway;
+import org.reactome.web.pwp.client.common.model.classes.Event;
 import org.reactome.web.pwp.client.common.model.client.RESTFulClient;
 import org.reactome.web.pwp.client.common.model.client.handlers.DBNameRetrievedHandler;
 import org.reactome.web.pwp.client.common.model.handlers.DatabaseObjectLoadedHandler;
@@ -27,10 +27,10 @@ public class DownloadsTabPresenter extends AbstractPresenter implements Download
     }
 
     @Override
-    public void swapToMolecules(Pathway pathway) {
+    public void swapToMolecules(Event eventWithDiagram) {
 //        //Molecules Tab needs to be loaded so this is necessary here, eventhough it is not the best way to do it
 //        eventBus.fireELVEvent(ELVEventType.STATE_MANAGER_DETAILS_TAB_SELECTED, DetailsTabType.PARTICIPATING_MOLECULES);
-//        eventBus.fireELVEvent(ELVEventType.MOLECULES_DOWNLOAD_REQUIRED, pathway);
+//        eventBus.fireELVEvent(ELVEventType.MOLECULES_DOWNLOAD_REQUIRED, eventWithDiagram);
     }
 
     @Override
@@ -41,7 +41,7 @@ public class DownloadsTabPresenter extends AbstractPresenter implements Download
         if(!state.getDetailsTab().equals(display.getDetailTabType())) return;
 
         //Show the data
-        final DatabaseObject databaseObject = state.getPathway(); //IMPORTANT! We only show information related to the selected Pathway!
+        final DatabaseObject databaseObject = state.getEventWithDiagram(); //IMPORTANT! We only show information related to the selected Pathway!
         if(databaseObject==null){
             currentlyShown = null;
             display.setInitialState();

@@ -26,7 +26,7 @@ public enum PropertyType {
     HAS_COMPONENT("Components"),
     TEMPLATE("Template event"),
     NORMAL_REACTION("Normal reaction"),
-    NORMAL_PATHWAY("Normal parthway"),
+    NORMAL_PATHWAY("Normal pathway"),
 
     HAS_MEMBER("Members"),
     HAS_CANDIDATE("Candidates"),

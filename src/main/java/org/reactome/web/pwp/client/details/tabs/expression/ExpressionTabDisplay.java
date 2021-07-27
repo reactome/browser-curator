@@ -4,6 +4,7 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.ui.*;
 import org.reactome.web.pwp.client.common.CommonImages;
 import org.reactome.web.pwp.client.common.model.classes.DatabaseObject;
+import org.reactome.web.pwp.client.common.model.classes.Event;
 import org.reactome.web.pwp.client.common.model.classes.Pathway;
 import org.reactome.web.pwp.client.common.model.classes.ReferenceSequence;
 import org.reactome.web.pwp.client.common.model.handlers.DatabaseObjectLoadedHandler;
@@ -97,12 +98,12 @@ public class ExpressionTabDisplay extends ResizeComposite implements ExpressionT
     }
 
     @Override
-    public void showPathway(final Pathway pathway) {
-        if (this.cache.containsKey(pathway)) {
+    public void showEventWithDiagram(final Event eventWithDiagram) {
+        if (this.cache.containsKey(eventWithDiagram)) {
             this.container.clear();
-            this.container.add(this.cache.get(pathway));
+            this.container.add(this.cache.get(eventWithDiagram));
         }else {
-            pathway.load(new DatabaseObjectLoadedHandler() {
+            eventWithDiagram.load(new DatabaseObjectLoadedHandler() {
                 @Override
                 public void onDatabaseObjectLoaded(DatabaseObject databaseObject) {
                     showDetails(databaseObject);
@@ -110,7 +111,7 @@ public class ExpressionTabDisplay extends ResizeComposite implements ExpressionT
 
                 @Override
                 public void onDatabaseObjectError(Throwable trThrowable) {
-                    Console.error(pathway.getDisplayName() + " details could not be retrieved from the server.", ExpressionTabDisplay.this);
+                    Console.error(eventWithDiagram.getDisplayName() + " details could not be retrieved from the server.", ExpressionTabDisplay.this);
                 }
             });
         }

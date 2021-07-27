@@ -4,6 +4,7 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.ui.*;
 import org.reactome.web.pwp.client.common.CommonImages;
 import org.reactome.web.pwp.client.common.model.classes.DatabaseObject;
+import org.reactome.web.pwp.client.common.model.classes.Event;
 import org.reactome.web.pwp.client.common.model.classes.Pathway;
 import org.reactome.web.pwp.client.common.utils.LRUCache;
 import org.reactome.web.pwp.client.details.tabs.DetailsTabTitle;
@@ -22,11 +23,11 @@ public class MoleculesTabDisplay extends ResizeComposite implements MoleculesTab
     private DetailsTabTitle title;
 
     private boolean download = false;
-    private final LRUCache<Long, MoleculesPanel> panelsLoadedForPathways = new LRUCache<>();
+    private final LRUCache<Long, MoleculesPanel> panelsLoadedForEventsWithDiagrams = new LRUCache<>();
 
     private MoleculesPanel currentPanel;
     private DatabaseObject toShow;
-    private DatabaseObject pathwayDiagram;
+    private DatabaseObject eventWithDiagram;
 
     public MoleculesTabDisplay() {
         this.title = getDetailTabType().getTitle();
@@ -59,24 +60,24 @@ public class MoleculesTabDisplay extends ResizeComposite implements MoleculesTab
     }
 
     @Override
-    public void showDetails(Pathway pathway, DatabaseObject databaseObject){
-        toShow = databaseObject != null ? databaseObject : pathway;
-        pathwayDiagram = pathway;
+    public void showDetails(Event eventWithDiagram, DatabaseObject databaseObject){
+        this.toShow = databaseObject != null ? databaseObject : eventWithDiagram;
+        this.eventWithDiagram = eventWithDiagram;
 
-        if (!this.getPathwayDetailsIfExist(pathway)){
+        if (!this.getEventDetailsIfExist(eventWithDiagram)) {
             showWaitingMessage();
-            if(toShow==null) return;
+            if(this.toShow == null) return;
             this.presenter.getMoleculesData();
-        }else{
+        } else {
             this.presenter.updateMoleculesData();
         }
     }
 
     @Override
-    public void updateDetailsIfLoaded(Pathway pathway, DatabaseObject databaseObject) {
-//        toShow = databaseObject != null ? databaseObject : pathway;
-//        pathwayDiagram = pathway;
-//        if (this.getPathwayDetailsIfExist(pathway)){
+    public void updateDetailsIfLoaded(Event eventWithDiagram, DatabaseObject databaseObject) {
+//        toShow = databaseObject != null ? databaseObject : eventWithDiagram;
+//        pathwayDiagram = eventWithDiagram;
+//        if (this.getPathwayDetailsIfExist(eventWithDiagram)){
 //            this.presenter.updateMoleculesData();
 //        }else{
 //            this.titleContainer.setText(getDetailTabType().getTitle());
@@ -96,47 +97,47 @@ public class MoleculesTabDisplay extends ResizeComposite implements MoleculesTab
     @Override
     public void refreshTitle(Integer highlightedMolecules, Integer loadedMolecules){
         String aux = null;
-        if(loadedMolecules == null){
+        if (loadedMolecules == null) {
             aux = "";
-        }else if(loadedMolecules==0){
+        } else if(loadedMolecules==0) {
             aux = " (0)";
-        }else if(highlightedMolecules > 0){
-            if(highlightedMolecules.equals(loadedMolecules)){
+        } else if(highlightedMolecules > 0) {
+            if (highlightedMolecules.equals(loadedMolecules)) {
                 aux = loadedMolecules.toString();
-            }else{
+            } else {
                 aux = highlightedMolecules + "/" + loadedMolecules;
             }
         }
 
-        if(aux != null){
+        if (aux != null) {
             this.title.setCounter(aux);
         }
     }
 
     /**
-     * Get pathway details if they have already been loaded.
-     * @param pathway that might have been loaded already.
+     * Get event details if they have already been loaded.
+     * @param event that might have been loaded already.
      * @return details exist (true) or don't exist yet (false)
      */
-    private boolean getPathwayDetailsIfExist(Pathway pathway){
-        if(this.panelsLoadedForPathways.containsKey(pathway.getDbId())){
-            this.currentPanel = this.panelsLoadedForPathways.get(pathway.getDbId());
+    private boolean getEventDetailsIfExist(Event event){
+        if (this.panelsLoadedForEventsWithDiagrams.containsKey(event.getDbId())) {
+            this.currentPanel = this.panelsLoadedForEventsWithDiagrams.get(event.getDbId());
             return true;
         }
         return false;
     }
 
 //    /**
-//     * Setter for currentPanel, otherwise nullptr exception for unloaded pathways in case
+//     * Setter for currentPanel, otherwise nullptr exception for unloaded events in case
 //     * DownloadTab requires MoleculesDownload.
-//     * @param pathway current pathway
+//     * @param eventWithDiagram current event with diagram
 //     * @param download true if DownloadView is required
 //     */
 //    @Override
-//    public void setCurrentPanel(Pathway pathway, boolean download){
+//    public void setCurrentPanel(Event eventWithDiagram, boolean download){
 //        this.download = download;
 //        if(currentPanel == null){
-//            currentPanel = new MoleculesPanel(null, pathway, this.presenter);
+//            currentPanel = new MoleculesPanel(null, eventWithDiagram, this.presenter);
 //        }
 //    }
 
@@ -157,7 +158,7 @@ public class MoleculesTabDisplay extends ResizeComposite implements MoleculesTab
     public void setMoleculesData(Result result) {
         this.currentPanel = new MoleculesPanel(result, this.toShow, this.presenter);
         showMoleculesPanel(this.currentPanel);
-        if(download){
+        if (download) {
             this.moleculesDownloadRequired();
         }
     }
@@ -170,7 +171,7 @@ public class MoleculesTabDisplay extends ResizeComposite implements MoleculesTab
     public void updateMoleculesData(Result result) {
         this.currentPanel.update(result);
         showMoleculesPanel(currentPanel);
-        if(download){
+        if (download) {
             this.moleculesDownloadRequired();
         }
     }
@@ -185,7 +186,7 @@ public class MoleculesTabDisplay extends ResizeComposite implements MoleculesTab
 
         this.refreshTitle(panel.getNumberOfHighlightedMolecules(), panel.getNumberOfLoadedMolecules());
 
-        this.panelsLoadedForPathways.put(this.pathwayDiagram.getDbId(), this.currentPanel);
+        this.panelsLoadedForEventsWithDiagrams.put(this.eventWithDiagram.getDbId(), this.currentPanel);
     }
 
     @SuppressWarnings("UnusedDeclaration")

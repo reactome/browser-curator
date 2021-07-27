@@ -60,7 +60,7 @@ public class StateManager implements BrowserModule.Manager, ValueChangeHandler<S
         Selection newSelection = event.getSelection();
         Selection currentSelection = new Selection(currentState);
         if (!currentSelection.equals(newSelection)) {
-            Pathway diagram = newSelection.getDiagram();
+            Event diagram = newSelection.getDiagram();
             DatabaseObject selected = newSelection.getDatabaseObject();
             Path path = newSelection.getPath();
 
@@ -69,7 +69,7 @@ public class StateManager implements BrowserModule.Manager, ValueChangeHandler<S
             //some further checking and detect when an odd case happens
             if (diagram == null) {
                 if (selected == null) {
-                    currentState.setPathway(null);
+                    currentState.setEventWithDiagram(null);
                 } else {
                     Species species = null;
                     if(selected instanceof PhysicalEntity){
@@ -90,7 +90,7 @@ public class StateManager implements BrowserModule.Manager, ValueChangeHandler<S
                     currentState.setSelected(selected);
                 }
             } else {
-                currentState.setPathway(diagram);
+                currentState.setEventWithDiagram(diagram);
                 currentState.setPath(path);
             }
 

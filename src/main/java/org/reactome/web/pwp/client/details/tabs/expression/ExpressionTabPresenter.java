@@ -30,29 +30,29 @@ public class ExpressionTabPresenter extends AbstractPresenter implements Express
     }
 
     @Override
-    public void onStateChanged(StateChangedEvent event) {
-        State state = event.getState();
+    public void onStateChanged(StateChangedEvent stateChangedEvent) {
+        State state = stateChangedEvent.getState();
 
         //Is it me the one to show data?
         if (!state.getDetailsTab().equals(display.getDetailTabType())) return;
 
         //Show the data
         DatabaseObject databaseObject = state.getSelected();
-        if (databaseObject instanceof Pathway) {
+        if (databaseObject instanceof Pathway || databaseObject instanceof CellLineagePath) {
             if(!databaseObject.equals(this.currentlyShown)) {
                 this.currentlyShown = databaseObject;
-                this.display.showPathway((Pathway) databaseObject);
+                this.display.showEventWithDiagram((Event) databaseObject);
             }
         } else if (databaseObject instanceof PhysicalEntity || databaseObject instanceof Event) {
             if(!databaseObject.equals(this.currentlyShown)) {
                 this.currentlyShown = databaseObject;
                 this.display.showProteins(databaseObject);
             }
-        } else if (state.getPathway() != null) {
-            Pathway pathway = state.getPathway();
-            if(!pathway.equals(this.currentlyShown)) {
-                this.currentlyShown = pathway;
-                this.display.showPathway(pathway);
+        } else if (state.getEventWithDiagram() != null) {
+            Event eventWithDiagram = state.getEventWithDiagram();
+            if(!eventWithDiagram.equals(this.currentlyShown)) {
+                this.currentlyShown = eventWithDiagram;
+                this.display.showEventWithDiagram(eventWithDiagram);
             }
         } else {
             this.currentlyShown = null;

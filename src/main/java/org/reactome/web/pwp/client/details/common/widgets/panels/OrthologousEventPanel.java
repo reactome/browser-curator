@@ -41,8 +41,8 @@ public class OrthologousEventPanel extends DetailsPanel implements ChangeHandler
         this.species.addItem("Select a species to go to...","");
 
         this.speciesList = new LinkedList<>();
-        for (Event pathway : orthologousEvent) {
-            for (Species species : pathway.getSpecies()) {
+        for (Event event : orthologousEvent) {
+            for (Species species : event.getSpecies()) {
                 this.speciesList.add(species);
                 this.species.addItem(species.getDisplayName(), species.getDbId().toString());
             }

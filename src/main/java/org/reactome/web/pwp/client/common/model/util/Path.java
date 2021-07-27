@@ -1,6 +1,7 @@
 package org.reactome.web.pwp.client.common.model.util;
 
 
+import org.reactome.web.pwp.client.common.model.classes.CellLineagePath;
 import org.reactome.web.pwp.client.common.model.classes.DatabaseObject;
 import org.reactome.web.pwp.client.common.model.classes.Event;
 import org.reactome.web.pwp.client.common.model.classes.Pathway;
@@ -77,20 +78,23 @@ public class Path implements Iterable<Event> {
     }
 
     /**
-     * Returns the pathway where the event is involved
-     * @return the pathway where the event is involved
+     * Returns the last event in the path
+     * @return the last event in the path
      */
-    public Pathway getLastPathway(){
+    public Event getLastEvent(){
         int pos = this.path.size() - 2;
-        return (Pathway) (pos > -1 ? this.path.get(pos) : this.path.get(0));
+        return (pos > -1 ? this.path.get(pos) : this.path.get(0));
     }
 
-    public Pathway getLastPathwayWithDiagram(){
+    public Event getLastEventWithDiagram(){
         for (int i = this.path.size() - 1 ; i >= 0; i--) {
             Event event = this.path.get(i);
-            if(event instanceof Pathway){
+            if (event instanceof Pathway) {
                 Pathway pathway = (Pathway) event;
-                if(pathway.getHasDiagram()) return pathway;
+                if (pathway.getHasDiagram()) return pathway;
+            } else if (event instanceof CellLineagePath) {
+                CellLineagePath cellLineagePath = (CellLineagePath) event;
+                if (cellLineagePath.getHasDiagram()) return cellLineagePath;
             }
         }
         return null;
@@ -106,10 +110,12 @@ public class Path implements Iterable<Event> {
     }
 
     public boolean rootHasDiagram(){
-        if(!this.path.isEmpty()){
+        if (!this.path.isEmpty()) {
             DatabaseObject databaseObject = this.path.get(0);
-            if(databaseObject instanceof Pathway){
+            if (databaseObject instanceof Pathway) {
                 return ((Pathway) databaseObject).getHasDiagram();
+            } else if (databaseObject instanceof CellLineagePath) {
+                return ((CellLineagePath) databaseObject).getHasDiagram();
             }
         }
         return false;

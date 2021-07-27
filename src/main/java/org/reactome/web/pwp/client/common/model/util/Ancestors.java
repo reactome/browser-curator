@@ -65,15 +65,15 @@ public class Ancestors implements Iterable<Path>, Comparator<Path> {
         return list;
     }
 
-    public List<Pathway> getPathways(){
-        List<Pathway> pathwayList = new LinkedList<>();
+    public List<Event> getEvents(){
+        List<Event> eventList = new LinkedList<>();
         for (Path path : this.pathList) {
-            Pathway pathway = path.getLastPathway();
-            if(pathway!=null){
-                pathwayList.add(pathway);
+            Event event = path.getLastEvent();
+            if (event != null){
+                eventList.add(event);
             }
         }
-        return pathwayList;
+        return eventList;
     }
 
     public int size(){

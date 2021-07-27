@@ -81,7 +81,7 @@ public class GAManager implements BrowserModule.Manager,
 
         Selection selection = event.getSelection();
         if(selection!=null){
-            if(!Objects.equals(selection.getDiagram(), currentState.getPathway())){
+            if(!Objects.equals(selection.getDiagram(), currentState.getEventWithDiagram())){
                 trackEvent(selection.getDiagram(), action, module);
             }
             if(!Objects.equals(selection.getDatabaseObject(), currentState.getSelected())){

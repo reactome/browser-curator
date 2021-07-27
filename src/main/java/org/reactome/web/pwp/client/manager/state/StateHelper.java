@@ -29,17 +29,17 @@ public abstract class StateHelper {
         return rtn;
     }
 
-    public interface PathwayWithDiagramHandler {
-        void setPathwayWithDiagram(Pathway pathway, Path path);
-        void onPathwayWithDiagramRetrievalError(Throwable throwable);
+    public interface EventWithDiagramHandler {
+        void setEventWithDiagram(Event event, Path path);
+        void onEventWithDiagramRetrievalError(Throwable throwable);
     }
 
-    public static void getPathwayWithDiagram(Event event, Path path, final PathwayWithDiagramHandler handler){
-        //Trying first to figure out the diagram from the provided path (if there is any)
-        if(path!=null && !path.isEmpty()){
-            Pathway diagram = path.getLastPathwayWithDiagram();
-            if(diagram!=null){
-                handler.setPathwayWithDiagram(diagram, path);
+    public static void getEventWithDiagram(Event event, Path path, final EventWithDiagramHandler handler){
+        // Trying first to figure out the diagram from the provided path (if there is any)
+        if(path != null && !path.isEmpty()){
+            Event diagram = path.getLastEventWithDiagram();
+            if(diagram != null){
+                handler.setEventWithDiagram(diagram, path);
                 return;
             }
         }
@@ -48,28 +48,28 @@ public abstract class StateHelper {
             @Override
             public void onAncestorsLoaded(Ancestors ancestors) {
                 for (final Path ancestor : ancestors) {
-                    Pathway diagram = ancestor.getLastPathwayWithDiagram();
-                    if (diagram != null) { //The pathway with diagram object needs to be filled before sending it back
+                    Event diagram = ancestor.getLastEventWithDiagram();
+                    if (diagram != null) { // The event with diagram object needs to be filled before sending it back
                         diagram.load(new DatabaseObjectLoadedHandler() {
                             @Override
                             public void onDatabaseObjectLoaded(DatabaseObject databaseObject) {
-                                handler.setPathwayWithDiagram((Pathway) databaseObject, ancestor);
+                                handler.setEventWithDiagram((Pathway) databaseObject, ancestor);
                             }
 
                             @Override
                             public void onDatabaseObjectError(Throwable trThrowable) {
-                                handler.onPathwayWithDiagramRetrievalError(trThrowable);
+                                handler.onEventWithDiagramRetrievalError(trThrowable);
                             }
                         });
                         return;
                     }
                 }
-                handler.setPathwayWithDiagram(null, new Path());
+                handler.setEventWithDiagram(null, new Path());
             }
 
             @Override
             public void onAncestorsError(Throwable exception) {
-                handler.onPathwayWithDiagramRetrievalError(exception);
+                handler.onEventWithDiagramRetrievalError(exception);
             }
         });
     }

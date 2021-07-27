@@ -8,7 +8,6 @@ import org.reactome.web.pwp.client.common.handlers.SpeciesSelectedHandler;
 import org.reactome.web.pwp.client.common.handlers.StateChangedHandler;
 import org.reactome.web.pwp.client.common.model.classes.DatabaseObject;
 import org.reactome.web.pwp.client.common.model.classes.Event;
-import org.reactome.web.pwp.client.common.model.classes.Pathway;
 import org.reactome.web.pwp.client.common.model.client.RESTFulClient;
 import org.reactome.web.pwp.client.common.model.handlers.MapLoadedHandler;
 import org.reactome.web.pwp.client.common.model.util.Path;
@@ -41,14 +40,14 @@ public class OrthologyManager implements BrowserModule.Manager, StateChangedHand
     @Override
     public void onSpeciesSelected(SpeciesSelectedEvent event) {
         this.desiredState = new State(this.currentState);
-        this.desiredState.setPathway(null);
+        this.desiredState.setEventWithDiagram(null);
         this.desiredState.setSelected(null);
         this.desiredState.setPath(null);
         this.desiredState.setSpecies(event.getSpecies()); //Keep this after the rest have been set to null;
 
         List<DatabaseObject> list = new LinkedList<>();
-        if (this.currentState.getPathway() != null) {
-            list.add(this.currentState.getPathway());
+        if (this.currentState.getEventWithDiagram() != null) {
+            list.add(this.currentState.getEventWithDiagram());
             if (this.currentState.getSelected() != null) {
                 list.add(this.currentState.getSelected());
             }
@@ -80,10 +79,10 @@ public class OrthologyManager implements BrowserModule.Manager, StateChangedHand
     }
 
     private void onOrthologousRetrieved(Map<Long, DatabaseObject> map) {
-        Pathway pathway = this.currentState.getPathway();
-        if (pathway != null) { //Not really needed because we have check it above
-            if (map.containsKey(pathway.getDbId())) {
-                this.desiredState.setPathway((Pathway) map.get(pathway.getDbId()));
+        Event eventWithDiagram = this.currentState.getEventWithDiagram();
+        if (eventWithDiagram != null) { //Not really needed because we have check it above
+            if (map.containsKey(eventWithDiagram.getDbId())) {
+                this.desiredState.setEventWithDiagram((Event) map.get(eventWithDiagram.getDbId()));
 
                 DatabaseObject selected = this.currentState.getSelected();
                 if (selected != null) {

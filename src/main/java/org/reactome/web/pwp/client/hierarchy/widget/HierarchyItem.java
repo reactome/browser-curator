@@ -13,10 +13,7 @@ import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.*;
 import org.reactome.web.pwp.client.common.CommonImages;
-import org.reactome.web.pwp.client.common.model.classes.DatabaseObject;
-import org.reactome.web.pwp.client.common.model.classes.Event;
-import org.reactome.web.pwp.client.common.model.classes.Pathway;
-import org.reactome.web.pwp.client.common.model.classes.Species;
+import org.reactome.web.pwp.client.common.model.classes.*;
 import org.reactome.web.pwp.client.common.model.util.Path;
 import org.reactome.web.pwp.client.hierarchy.HierarchyDisplay;
 import org.reactome.web.pwp.client.hierarchy.events.HierarchyItemDoubleClickedEvent;
@@ -116,7 +113,7 @@ public class HierarchyItem extends TreeItem implements HasHandlers, MouseOverHan
 
         setWidget(itemContent);
 
-        if(event instanceof Pathway){
+        if(event instanceof Pathway || event instanceof CellLineagePath){
             FlowPanel loaderMsg = new FlowPanel();
             loaderMsg.add(new Image(CommonImages.INSTANCE.loader()));
             InlineLabel loadingLabel = new InlineLabel("Loading...");
@@ -175,8 +172,8 @@ public class HierarchyItem extends TreeItem implements HasHandlers, MouseOverHan
 
     public boolean hasDiagram(){
         DatabaseObject databaseObject = getEvent();
-        Pathway pathway = (databaseObject instanceof Pathway) ? (Pathway) databaseObject : null;
-        return ( pathway==null ) ? false : pathway.getHasDiagram();
+        return (databaseObject instanceof Pathway && ((Pathway) databaseObject).getHasDiagram()) ||
+               (databaseObject instanceof CellLineagePath && ((CellLineagePath) databaseObject).getHasDiagram());
     }
 
     public void highlightPath(){
@@ -192,7 +189,7 @@ public class HierarchyItem extends TreeItem implements HasHandlers, MouseOverHan
 
     public void setEHLD(){
         this.icon.setResource(HierarchyDisplay.RESOURCES.ehldPathway());
-        this.icon.setTitle("Pathway with an enhanced diagram");
+        this.icon.setTitle("Pathway/CellLineagePath with an enhanced diagram");
     }
 
     public void setChildrenLoaded(boolean childrenLoaded) {
@@ -212,7 +209,7 @@ public class HierarchyItem extends TreeItem implements HasHandlers, MouseOverHan
             return new Path(this.getEvent());
         }else{
             Path path = ((HierarchyItem) this.getParentItem()).getPathToItem();
-            if(this.getEvent() instanceof Pathway){
+            if(this.getEvent() instanceof Pathway || this.getEvent() instanceof CellLineagePath){
                 path.add(this.getEvent());
             }
             return path;

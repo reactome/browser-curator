@@ -7,7 +7,9 @@ import org.reactome.web.pwp.client.common.Selection;
 import org.reactome.web.pwp.client.common.events.*;
 import org.reactome.web.pwp.client.common.handlers.DatabaseObjectHoveredHandler;
 import org.reactome.web.pwp.client.common.handlers.ViewportChangedHandler;
+import org.reactome.web.pwp.client.common.model.classes.CellLineagePath;
 import org.reactome.web.pwp.client.common.model.classes.DatabaseObject;
+import org.reactome.web.pwp.client.common.model.classes.Event;
 import org.reactome.web.pwp.client.common.model.classes.Pathway;
 import org.reactome.web.pwp.client.common.model.factory.DatabaseObjectFactory;
 import org.reactome.web.pwp.client.common.model.handlers.DatabaseObjectCreatedHandler;
@@ -29,7 +31,7 @@ public class DiagramPresenter extends AbstractPresenter implements Diagram.Prese
 
     private Pathway displayedPathway;
 
-    private Pathway pathway;
+    private Event event;
     private DatabaseObject selected;
     private Path path;
     private AnalysisStatus analysisStatus = new AnalysisStatus();
@@ -53,7 +55,7 @@ public class DiagramPresenter extends AbstractPresenter implements Diagram.Prese
             DatabaseObjectFactory.get(dbId, new DatabaseObjectCreatedHandler() {
                 @Override
                 public void onDatabaseObjectLoaded(DatabaseObject databaseObject) {
-                    Selection selection = new Selection(pathway, databaseObject, path);
+                    Selection selection = new Selection(event, databaseObject, path);
                     eventBus.fireEventFromSource(new DatabaseObjectSelectedEvent(selection), DiagramPresenter.this);
                 }
 
@@ -66,7 +68,7 @@ public class DiagramPresenter extends AbstractPresenter implements Diagram.Prese
         } else {
             if (selected != null) {
                 this.selected = null;
-                Selection selection = new Selection(this.pathway, this.path);
+                Selection selection = new Selection(this.event, this.path);
                 this.eventBus.fireEventFromSource(new DatabaseObjectSelectedEvent(selection), DiagramPresenter.this);
             }
         }
@@ -118,15 +120,15 @@ public class DiagramPresenter extends AbstractPresenter implements Diagram.Prese
     @Override
     public void onStateChanged(StateChangedEvent event) {
         State state = event.getState();
-        boolean isNewDiagram = !Objects.equals(this.pathway, state.getPathway());
-        this.pathway = state.getPathway();
+        boolean isNewDiagram = !Objects.equals(this.event, state.getEventWithDiagram());
+        this.event = state.getEventWithDiagram();
         this.selected = state.getSelected();
         this.path = state.getPath();
         this.analysisStatus = state.getAnalysisStatus();
         this.flag = state.getFlag();
         if(this.display.isVisible()) {
             if (isNewDiagram) {
-                this.loadCurrentPathway();
+                this.loadCurrentDiagram();
             } else {
                 updateView();
             }
@@ -136,7 +138,7 @@ public class DiagramPresenter extends AbstractPresenter implements Diagram.Prese
     @Override
     public void onViewportChanged(ViewportChangedEvent event) {
         if(event.getViewportTool().equals(ViewportToolType.DIAGRAM)) {
-            this.loadCurrentPathway();
+            this.loadCurrentDiagram();
         }
     }
 
@@ -146,11 +148,11 @@ public class DiagramPresenter extends AbstractPresenter implements Diagram.Prese
             @Override
             public void onDatabaseObjectLoaded(DatabaseObject databaseObject) {
                 displayedPathway = (Pathway) databaseObject;
-                if (Objects.equals(pathway, displayedPathway)) {
+                if (Objects.equals(event, displayedPathway)) {
                     updateView();
                 } else {
-                    pathway = displayedPathway;
-                    Selection selection = new Selection(pathway, new Path());
+                    event = displayedPathway;
+                    Selection selection = new Selection(event, new Path());
                     eventBus.fireEventFromSource(new DatabaseObjectSelectedEvent(selection), DiagramPresenter.this);
                 }
             }
@@ -162,11 +164,18 @@ public class DiagramPresenter extends AbstractPresenter implements Diagram.Prese
         });
     }
 
-    private void loadCurrentPathway(){
-        if (this.pathway == null) {
-            Console.warn("Undetermined pathway...", this);
-        } else if (!Objects.equals(pathway, displayedPathway)) {
-            this.display.loadPathway(this.pathway);
+    private void loadCurrentDiagram(){
+        if (this.event == null) {
+            Console.warn("Undetermined event for diagram...", this);
+        } else if (!Objects.equals(event, displayedPathway)) {
+            if (this.event instanceof Pathway) {
+                this.display.loadPathway((Pathway) this.event);
+            } else if (this.event instanceof CellLineagePath) {
+                this.display.loadCellLineagePath((CellLineagePath) this.event);
+            } else {
+                Console.warn("Unknown event type for displaying diagram for " + event.getDisplayName() +
+                    ": " + this.event.getClass().getName());
+            }
         } else {
             updateView();
         }

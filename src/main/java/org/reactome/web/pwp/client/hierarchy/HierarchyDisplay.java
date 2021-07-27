@@ -10,10 +10,7 @@ import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.*;
-import org.reactome.web.pwp.client.common.model.classes.DatabaseObject;
-import org.reactome.web.pwp.client.common.model.classes.Event;
-import org.reactome.web.pwp.client.common.model.classes.Pathway;
-import org.reactome.web.pwp.client.common.model.classes.Species;
+import org.reactome.web.pwp.client.common.model.classes.*;
 import org.reactome.web.pwp.client.common.model.handlers.DatabaseObjectLoadedHandler;
 import org.reactome.web.pwp.client.common.model.util.Path;
 import org.reactome.web.pwp.client.common.utils.Console;
@@ -64,6 +61,8 @@ public class HierarchyDisplay extends Composite implements OpenHandler<TreeItem>
         Event event = e.getItem().getEvent();
         if(event instanceof Pathway) {
             this.presenter.openDiagram((Pathway) event);
+        } else if (event instanceof CellLineagePath) {
+            this.presenter.openDiagram((CellLineagePath) event);
         }
     }
 
@@ -78,11 +77,16 @@ public class HierarchyDisplay extends Composite implements OpenHandler<TreeItem>
         if (item == null) return;
 
         HierarchyItem pwd = item.getParentWithDiagram();
-        Pathway pathway = (Pathway) pwd.getEvent();
+        //Pathway pathway = (Pathway) pwd.getEvent();
         Event event = item.getEvent();
-        if (event.equals(pathway)) event = null;
+        if (event.equals(pwd.getEvent())) event = null;
+
         Path path = pwd.getPath();
-        this.presenter.eventHovered(pathway, event, path);
+        if (pwd.getEvent() instanceof Pathway) {
+            this.presenter.eventHovered((Pathway) pwd.getEvent(), event, path);
+        } else if (pwd.getEvent() instanceof CellLineagePath) {
+            this.presenter.eventHovered((CellLineagePath) pwd.getEvent(), event, path);
+        }
     }
 
     @Override
@@ -101,25 +105,29 @@ public class HierarchyDisplay extends Composite implements OpenHandler<TreeItem>
 
         HierarchyItem pwd = item.getParentWithDiagram();
         if (pwd != null) {
-            final Pathway pathway = (Pathway) pwd.getEvent();
+            //final Pathway pathway = (Pathway) pwd.getEvent();
             Event aux = item.getEvent();
-            final Event event = pathway.equals(aux) ? null : aux;
+            final Event event = pwd.getEvent().equals(aux) ? null : aux;
             final Path path = pwd.getPath();
             //This is needed because the State will be checking the species of the pathway and it needs to be ready
-            pathway.load(new DatabaseObjectLoadedHandler() {
+            pwd.getEvent().load(new DatabaseObjectLoadedHandler() {
                 @Override
                 public void onDatabaseObjectLoaded(DatabaseObject databaseObject) {
-                    presenter.eventSelected((Pathway) databaseObject, event, path);
+                    if (databaseObject instanceof Pathway) {
+                        presenter.eventSelected((Pathway) databaseObject, event, path);
+                    } else if (databaseObject instanceof CellLineagePath) {
+                        presenter.eventSelected((CellLineagePath) databaseObject, event, path);
+                    }
                 }
 
                 @Override
                 public void onDatabaseObjectError(Throwable trThrowable) {
-                    Console.error("There has been an error retrieving data for " + pathway.getDisplayName(), HierarchyDisplay.this);
+                    Console.error("There has been an error retrieving data for " + pwd.getEvent().getDisplayName(), HierarchyDisplay.this);
                 }
             });
 
         } else {
-            Console.error("Events hierarchy: No pathway with diagram found in the path.", this);
+            Console.error("Events hierarchy: No pathway or cell lineage path with diagram found in the path.", this);
         }
     }
 
@@ -133,14 +141,12 @@ public class HierarchyDisplay extends Composite implements OpenHandler<TreeItem>
 
     @Override
     public void expandPathway(Path path, Pathway pathway) {
-        if (this.hierarchyTree == null) return;
-        HierarchyItem treeItem = this.hierarchyTree.getHierarchyItemByDatabaseObject(path, pathway);
-        if (treeItem != null) {
-            treeItem.setState(true, false);
-            this.onOpen(treeItem);
-        } else {
-            Console.error(getClass() + " could not find the node for " + pathway, this);
-        }
+        expandEvent(path, pathway);
+    }
+
+    @Override
+    public void expandCellLineagePath(Path path, CellLineagePath cellLineagePath) {
+        expandEvent(path, cellLineagePath);
     }
 
     @Override
@@ -156,10 +162,29 @@ public class HierarchyDisplay extends Composite implements OpenHandler<TreeItem>
     }
 
     @Override
+    public Set<CellLineagePath> getLoadedCellLineagePaths() {
+        Set<CellLineagePath> cellLineagePaths = new HashSet<>();
+        if (this.hierarchyTree == null) return cellLineagePaths;
+        for (HierarchyItem item : this.hierarchyTree.getHierarchyItems()) {
+            if (item.getEvent() instanceof CellLineagePath) {
+                cellLineagePaths.add((CellLineagePath) item.getEvent());
+            }
+        }
+        return cellLineagePaths;
+    }
+
+    @Override
     public Set<Pathway> getPathwaysWithLoadedReactions() {
         Set<Pathway> pathways = new HashSet<>();
         if(hierarchyTree==null) return pathways;
         return hierarchyTree.getHierarchyPathwaysWithReactionsLoaded();
+    }
+
+    @Override
+    public Set<CellLineagePath> getCellLineagePathsWithLoadedReactions() {
+        Set<CellLineagePath> cellLineagePaths = new HashSet<>();
+        if (hierarchyTree == null) return cellLineagePaths;
+        return hierarchyTree.getHierarchyCellLineagePathsWithReactionsLoaded();
     }
 
 
@@ -224,10 +249,28 @@ public class HierarchyDisplay extends Composite implements OpenHandler<TreeItem>
         }
     }
 
-
+    private void expandEvent(Path path, Event event) {
+        if (this.hierarchyTree == null) return;
+        HierarchyItem treeItem = this.hierarchyTree.getHierarchyItemByDatabaseObject(path, event);
+        if (treeItem != null) {
+            treeItem.setState(true, false);
+            this.onOpen(treeItem);
+        } else {
+            Console.error(getClass() + " could not find the node for " + event, this);
+        }
+    }
 
     private void onOpen(final HierarchyItem item) {
-        final Pathway pathway = (Pathway) item.getEvent();
+        if (item.getEvent() instanceof Pathway) {
+            onOpen(item, (Pathway) item.getEvent());
+        } else if (item.getEvent() instanceof CellLineagePath) {
+            onOpen(item, (CellLineagePath) item.getEvent());
+        }
+
+        item.setState(true, false);
+    }
+
+    private void onOpen(final HierarchyItem item, Pathway pathway) {
         if (!item.isChildrenLoaded()) {
             pathway.load(new DatabaseObjectLoadedHandler() {
                 @Override
@@ -235,7 +278,7 @@ public class HierarchyDisplay extends Composite implements OpenHandler<TreeItem>
                     Pathway pathway = databaseObject.cast();
                     try {
                         hierarchyTree.loadPathwayChildren(item, pathway.getHasEvent());
-                        presenter.pathwayExpanded(pathway);
+                        presenter.eventExpanded(pathway);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -247,10 +290,34 @@ public class HierarchyDisplay extends Composite implements OpenHandler<TreeItem>
                 }
             });
         } else {
-            this.presenter.pathwayExpanded(pathway);
+            this.presenter.eventExpanded(pathway);
         }
-        item.setState(true, false);
     }
+
+    private void onOpen(final HierarchyItem item, CellLineagePath cellLineagePath) {
+        if (!item.isChildrenLoaded()) {
+            cellLineagePath.load(new DatabaseObjectLoadedHandler() {
+                @Override
+                public void onDatabaseObjectLoaded(DatabaseObject databaseObject) {
+                    CellLineagePath cellLineagePath = databaseObject.cast();
+                    try {
+                        hierarchyTree.loadPathwayChildren(item, cellLineagePath.getHasEvent());
+                        presenter.eventExpanded(cellLineagePath);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onDatabaseObjectError(Throwable trThrowable) {
+                    Console.error("Error loading " + cellLineagePath, HierarchyDisplay.this);
+                }
+            });
+        } else {
+            this.presenter.eventExpanded(cellLineagePath);
+        }
+    }
+
     public static Resources RESOURCES;
 
     static {

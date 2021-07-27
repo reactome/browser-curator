@@ -3,10 +3,7 @@ package org.reactome.web.pwp.client.manager.state;
 import com.google.gwt.http.client.URL;
 import org.reactome.web.pwp.client.common.AnalysisStatus;
 import org.reactome.web.pwp.client.common.PathwayPortalTool;
-import org.reactome.web.pwp.client.common.model.classes.DatabaseObject;
-import org.reactome.web.pwp.client.common.model.classes.Event;
-import org.reactome.web.pwp.client.common.model.classes.Pathway;
-import org.reactome.web.pwp.client.common.model.classes.Species;
+import org.reactome.web.pwp.client.common.model.classes.*;
 import org.reactome.web.pwp.client.common.model.factory.DatabaseObjectFactory;
 import org.reactome.web.pwp.client.common.model.handlers.DatabaseObjectsCreatedHandler;
 import org.reactome.web.pwp.client.common.model.util.Path;
@@ -123,29 +120,29 @@ public class State {
     }
 
     public void doConsistencyCheck(final StateLoadedHandler handler){
-        if(event !=null){
-            if((event instanceof Pathway) && ((Pathway) event).getHasDiagram()){
+        if(event != null) {
+            if (isEventWithDiagram(event)) {
                 handler.onStateLoaded(this);
-            }else{
-                StateHelper.getPathwayWithDiagram(event, path, new StateHelper.PathwayWithDiagramHandler() {
+            } else {
+                StateHelper.getEventWithDiagram(event, path, new StateHelper.EventWithDiagramHandler() {
                     @Override
-                    public void setPathwayWithDiagram(Pathway pathway, Path path) {
+                    public void setEventWithDiagram(Event event, Path path) {
                         if(State.this.selected==null){
                             State.this.selected = State.this.event;
                         }
-                        State.this.event = pathway;
+                        State.this.event = event;
                         State.this.path = path;
-                        State.this.path = State.this.getPrunedPath(); //Very important!
+                        State.this.path = State.this.getPrunedPath(); // Very important!
                         handler.onStateLoaded(State.this);
                     }
 
                     @Override
-                    public void onPathwayWithDiagramRetrievalError(Throwable throwable) {
-                        Console.error("on Pathway with diagram retrieval error: " + throwable.getMessage());
+                    public void onEventWithDiagramRetrievalError(Throwable throwable) {
+                        Console.error("on Event with diagram retrieval error: " + throwable.getMessage());
                     }
                 });
             }
-        }else {
+        } else {
             handler.onStateLoaded(this);
         }
     }
@@ -158,17 +155,17 @@ public class State {
         this.species = species;
     }
 
-    public Pathway getPathway() {
-        return (Pathway) event;
+    public Event getEventWithDiagram() {
+        return event;
     }
 
-    public void setPathway(Pathway pathway) {
-        if (pathway == null) {
+    public void setEventWithDiagram(Event eventWithDiagram) {
+        if (eventWithDiagram == null) {
             this.species = getSpecies();
             this.selected = null;
             this.path = null;
         }
-        this.event = pathway;
+        this.event = eventWithDiagram;
     }
 
     public DatabaseObject getSelected() {
@@ -328,5 +325,10 @@ public class State {
     @Override
     public int hashCode() {
         return toString().hashCode();
+    }
+
+    private boolean isEventWithDiagram(Event event) {
+        return (event instanceof Pathway && ((Pathway) event).getHasDiagram()) ||
+            (event instanceof CellLineagePath && ((CellLineagePath) event).getHasDiagram());
     }
 }

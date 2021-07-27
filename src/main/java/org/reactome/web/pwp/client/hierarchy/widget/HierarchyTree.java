@@ -2,10 +2,7 @@ package org.reactome.web.pwp.client.hierarchy.widget;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.CustomTree;
-import org.reactome.web.pwp.client.common.model.classes.Event;
-import org.reactome.web.pwp.client.common.model.classes.Pathway;
-import org.reactome.web.pwp.client.common.model.classes.ReactionLikeEvent;
-import org.reactome.web.pwp.client.common.model.classes.Species;
+import org.reactome.web.pwp.client.common.model.classes.*;
 import org.reactome.web.pwp.client.common.model.util.Path;
 import org.reactome.web.pwp.client.common.utils.Console;
 import org.reactome.web.pwp.client.common.utils.MapSet;
@@ -108,6 +105,22 @@ public class HierarchyTree extends CustomTree implements HierarchyItemDoubleClic
         }
         return rtn;
     }
+
+    public Set<CellLineagePath> getHierarchyCellLineagePathsWithReactionsLoaded(){
+        Set<CellLineagePath> rtn = new HashSet<>();
+        for (Long eventId : this.treeItems.keySet()) {
+            for (HierarchyItem item : this.treeItems.getElements(eventId)) {
+                if(item.getEvent() instanceof ReactionLikeEvent){
+                    HierarchyItem parent = (HierarchyItem) item.getParentItem();
+                    if (parent.getEvent() instanceof CellLineagePath) {
+                        rtn.add((CellLineagePath) parent.getEvent());
+                    }
+                }
+            }
+        }
+        return rtn;
+    }
+
 
     public Set<HierarchyItem> getHierarchyItems() {
         Set<HierarchyItem> rtn = new HashSet<>();
