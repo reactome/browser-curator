@@ -109,6 +109,49 @@ public class RESTFulClient {
         }
     }
 
+    public static void getCellLineagePathItems(Species species, DatabaseObjectsLoadedHandler<CellLineagePath> handler) {
+        String speciesName = species.getDisplayName().replaceAll(" ", "+");
+        String url = SERVER + RESTFUL_API_PATH + "cellLineagePaths/" + speciesName;
+        RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, url);
+        requestBuilder.setHeader("Accept", "application/json");
+        try {
+            requestBuilder.sendRequest(null, new RequestCallback() {
+                @Override
+                public void onResponseReceived(Request request, Response response) {
+                    switch (response.getStatusCode()) {
+                        case Response.SC_OK:
+                            List<CellLineagePath> cellLineagePathItems = new ArrayList<>();
+                            try {
+                                JSONArray list = JSONParser.parseStrict(response.getText()).isArray();
+                                for (int i = 0; i < list.size(); ++i) {
+                                    CellLineagePath cellLineagePath = (CellLineagePath) DatabaseObjectFactory.create(list.get(i).isObject());
+                                    cellLineagePathItems.add(cellLineagePath);
+                                }
+                            } catch (Exception ex) {
+                                String msg = "The received data for the cell line path items of '" + species.getDisplayName() + "' is empty or faulty and could not be parsed. ERROR: " + ex.getMessage();
+                                handler.onDatabaseObjectError(new Exception(msg));
+                                return;
+                            }
+                            handler.onDatabaseObjectLoaded(cellLineagePathItems);
+                            break;
+                        default:
+                            String msg = "Server error while retrieving hierarchy cell lineage pathways for url " + url + ": " + response.getStatusText();
+                            handler.onDatabaseObjectError(new Exception(msg));
+                    }
+                }
+
+                @Override
+                public void onError(Request request, Throwable exception) {
+                    String msg = "The cell-lineage-paths-request for '" + species.getDisplayName() + "' received an error instead of a valid response. ERROR: " + exception.getMessage();
+                    handler.onDatabaseObjectError(new Exception(msg));
+                }
+            });
+        } catch (RequestException ex) {
+            String msg = "The cell lineage path items for '" + species.getDisplayName() + "' could not be received. ERROR: " + ex.getMessage();
+            handler.onDatabaseObjectError(new Exception(msg));
+        }
+    }
+
     public static void getOrthologous(List<DatabaseObject> list, Species species, MapLoadedHandler<Long, DatabaseObject> handler) {
         String url = SERVER + RESTFUL_API_PATH + "orthologous/Species/" + species.getDbId();
         RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.POST, url);
