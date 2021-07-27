@@ -4,6 +4,7 @@ import com.google.gwt.event.shared.EventBus;
 import org.reactome.web.pwp.client.common.AnalysisStatus;
 import org.reactome.web.pwp.client.common.Selection;
 import org.reactome.web.pwp.client.common.events.*;
+import org.reactome.web.pwp.client.common.model.classes.CellLineagePath;
 import org.reactome.web.pwp.client.common.model.classes.Event;
 import org.reactome.web.pwp.client.common.model.classes.Pathway;
 import org.reactome.web.pwp.client.common.model.classes.Species;
@@ -15,10 +16,7 @@ import org.reactome.web.pwp.client.common.utils.Console;
 import org.reactome.web.pwp.client.hierarchy.delgates.HierarchyPathLoader;
 import org.reactome.web.pwp.client.manager.state.State;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Antonio Fabregat <fabregat@ebi.ac.uk>
@@ -136,11 +134,25 @@ public class HierarchyPresenter extends AbstractPresenter implements Hierarchy.P
 
     @Override
     public void retrieveData(final Species species) {
+        List<Event> topLevelEvents = new ArrayList<>();
         RESTFulClient.getFrontPageItems(species, new DatabaseObjectsLoadedHandler<Event>() {
             @Override
             public void onDatabaseObjectLoaded(List<Event> objects) {
-                display.setData(species, objects);
+                topLevelEvents.addAll(objects);
 
+                RESTFulClient.getCellLineagePathItems(species, new DatabaseObjectsLoadedHandler<CellLineagePath>() {
+                    @Override
+                    public void onDatabaseObjectLoaded(List<CellLineagePath> objects) {
+                        topLevelEvents.addAll(objects);
+                        display.setData(species, topLevelEvents);
+                    }
+
+                    @Override
+                    public void onDatabaseObjectError(Throwable ex) {
+                        Console.error(ex.getMessage(), HierarchyPresenter.this);
+                        eventBus.fireEventFromSource(new ErrorMessageEvent(ex.getMessage()), this);
+                    }
+                });
             }
 
             @Override
