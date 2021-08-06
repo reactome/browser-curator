@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author Antonio Fabregat <fabregat@ebi.ac.uk>
@@ -124,6 +125,14 @@ public abstract class TableRowFactory {
         return getOverviewRow(title, panels);
     }
 
+    public static Widget getMarkerReferenceRow(String title, List<MarkerReference> markerReferences) {
+        List<DetailsPanel> panels = new LinkedList<>();
+        for (MarkerReference markerReference : markerReferences) {
+            panels.add(new MarkerReferencePanel(markerReference));
+        }
+        return getOverviewRow(title, panels);
+    }
+
     public static Widget getOrthologousEventRow(String title, List<Event> orthologousEvents){
         return getOverviewRow(title, new OrthologousEventPanel(orthologousEvents));
     }
@@ -155,6 +164,15 @@ public abstract class TableRowFactory {
         container.add(title, cont);
 
         return container;
+    }
+
+    public static OverviewRow getEntityWithAccessionedSequenceRow(
+        String title, List<EntityWithAccessionedSequence> entityWithAccessionedSequences
+    ) {
+        return getPhysicalEntityRow(
+            title,
+            entityWithAccessionedSequences.stream().map(ewas -> (PhysicalEntity) ewas).collect(Collectors.toList())
+        );
     }
 
     public static OverviewRow getPhysicalEntityRow(String title, List<PhysicalEntity> physicalEntities){

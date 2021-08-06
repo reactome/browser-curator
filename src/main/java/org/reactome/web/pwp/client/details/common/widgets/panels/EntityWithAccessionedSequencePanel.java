@@ -34,13 +34,19 @@ public class EntityWithAccessionedSequencePanel extends DetailsPanel implements 
         VerticalPanel vp = new VerticalPanel();
         vp.setWidth("100%");
         vp.addStyleName("elv-Details-OverviewDisclosure-content");
+
         if(this.ewas.getStartCoordinate()!=null && this.ewas.getEndCoordinate()!=null){
             vp.add(getCoordinatesPanel(this.ewas.getStartCoordinate(), this.ewas.getEndCoordinate()));
         }
-        vp.add(getReferenceSequencePanel(this.ewas.getReferenceEntity()));
+
+        if(this.ewas.getReferenceEntity() != null) {
+            vp.add(getReferenceSequencePanel(this.ewas.getReferenceEntity()));
+        }
+
         if(this.ewas.getHasModifiedResidue()!=null && !this.ewas.getHasModifiedResidue().isEmpty()){
             vp.add(getModifiedResiduePanel(this.ewas.getHasModifiedResidue()));
         }
+
         initWidget(vp);
     }
 

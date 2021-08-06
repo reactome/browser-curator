@@ -24,8 +24,16 @@ public abstract class OverviewTableFactory {
             return new ReactionTable((Reaction) databaseObject);
         }
 
+        if(databaseObject instanceof CellDevelopmentStep){
+            return new CellDevelopmentStepTable((CellDevelopmentStep) databaseObject);
+        }
+
         if(databaseObject instanceof ReactionLikeEvent){
             return new ReactionLikeEventTable((ReactionLikeEvent) databaseObject);
+        }
+
+        if(databaseObject instanceof CellLineagePath){
+            return new CellLineagePathTable((CellLineagePath) databaseObject);
         }
 
         if(databaseObject instanceof Pathway){
@@ -43,6 +51,10 @@ public abstract class OverviewTableFactory {
 
         if(databaseObject instanceof GenomeEncodedEntity){
             return new GenomeEncodedEntityTable((GenomeEncodedEntity) databaseObject);
+        }
+
+        if (databaseObject instanceof Cell){
+            return new CellTable((Cell) databaseObject);
         }
 
         if(databaseObject instanceof Complex){
