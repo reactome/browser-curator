@@ -158,6 +158,9 @@ public abstract class DatabaseObjectFactory {
                 rtn = new Affiliation();
                 break;
             //case ABSTRACT_MODIFIED_RESIDUE:  //NOT USED HERE
+            case ANATOMY:
+                rtn = new Anatomy();
+                break;
             case BLACK_BOX_EVENT:
                 rtn = new BlackBoxEvent();
                 break;
@@ -169,6 +172,9 @@ public abstract class DatabaseObjectFactory {
                 break;
             case CATALYST_ACTIVITY:
                 rtn = new CatalystActivity();
+                break;
+            case CELL:
+                rtn = new Cell();
                 break;
             case CELL_TYPE:
                 rtn = new CellType();
@@ -280,6 +286,9 @@ public abstract class DatabaseObjectFactory {
                 break;
             case LITERATURE_REFERENCE:
                 rtn = new LiteratureReference();
+                break;
+            case MARKER_REFERENCE:
+                rtn = new MarkerReference();
                 break;
             case MODIFIED_RESIDUE:
                 rtn = new ModifiedResidue();

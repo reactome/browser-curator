@@ -1,18 +1,22 @@
 package org.reactome.web.pwp.client.common.model.classes;
 
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONString;
 import com.google.gwt.resources.client.ImageResource;
 import org.reactome.web.pwp.client.common.model.factory.DatabaseObjectFactory;
 import org.reactome.web.pwp.client.common.model.factory.DatabaseObjectUtils;
 import org.reactome.web.pwp.client.common.model.factory.SchemaClass;
 import org.reactome.web.pwp.client.common.model.images.DatabaseObjectImages;
+import org.reactome.web.pwp.client.common.utils.Console;
 
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * @author Joel Weiser (joel.weiser@oicr.on.ca)
+ */
 public class CellLineagePath extends Event {
-    private String tissue;
-    private String tissueClass;
+    private Anatomy tissue;
     private List<Event> hasEvent;
     private boolean hasDiagram;
 
@@ -30,11 +34,7 @@ public class CellLineagePath extends Event {
         }
 
         if (jsonObject.containsKey("tissue")) {
-            this.tissue = DatabaseObjectUtils.getStringValue(jsonObject, "tissue");
-        }
-
-        if (jsonObject.containsKey("tissueClass")) {
-            this.tissueClass = DatabaseObjectUtils.getStringValue(jsonObject, "tissueClass");
+            this.tissue = DatabaseObjectUtils.getDatabaseObject(jsonObject, "tissue");
         }
 
         if (jsonObject.containsKey("hasDiagram")) {
@@ -50,12 +50,8 @@ public class CellLineagePath extends Event {
         return DatabaseObjectImages.INSTANCE.cellLineagePath();
     }
 
-    public String getTissue() {
+    public Anatomy getTissue() {
         return this.tissue;
-    }
-
-    public String getTissueClass() {
-        return this.tissueClass;
     }
 
     public List<Event> getHasEvent() {

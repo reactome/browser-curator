@@ -27,6 +27,13 @@ public enum PropertyType {
     TEMPLATE("Template event"),
     NORMAL_REACTION("Normal reaction"),
     NORMAL_PATHWAY("Normal pathway"),
+    ORGAN("Organ"),
+    TISSUE("Tissue"),
+    TISSUE_LAYER("Tissue layer"),
+    CELL_TYPE("Cell type"),
+    PROTEIN_MARKER("Protein marker"),
+    RNA_MARKER("RNA marker"),
+    MARKER_REFERENCE("Marker reference"),
 
     HAS_MEMBER("Members"),
     HAS_CANDIDATE("Candidates"),

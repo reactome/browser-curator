@@ -6,9 +6,11 @@ import org.reactome.web.pwp.client.common.model.factory.DatabaseObjectUtils;
 import org.reactome.web.pwp.client.common.model.factory.SchemaClass;
 import org.reactome.web.pwp.client.common.model.images.DatabaseObjectImages;
 
+/**
+ * @author Joel Weiser (joel.weiser@oicr.on.ca)
+ */
 public class CellDevelopmentStep extends ReactionLikeEvent {
-    private String tissue;
-    private String tissueClass;
+    private Anatomy tissue;
 
     public CellDevelopmentStep() {
         super(SchemaClass.CELL_DEVELOPMENT_STEP);
@@ -19,20 +21,12 @@ public class CellDevelopmentStep extends ReactionLikeEvent {
         super.load(jsonObject);
 
         if (jsonObject.containsKey("tissue")) {
-            this.tissue = DatabaseObjectUtils.getStringValue(jsonObject, "tissue");
-        }
-
-        if (jsonObject.containsKey("tissueClass")) {
-            this.tissueClass = DatabaseObjectUtils.getStringValue(jsonObject, "tissueClass");
+            this.tissue = DatabaseObjectUtils.getDatabaseObject(jsonObject, "tissue");
         }
     }
 
-    public String getTissue() {
+    public Anatomy getTissue() {
         return this.tissue;
-    }
-
-    public String getTissueClass() {
-        return this.tissueClass;
     }
 
     @Override
