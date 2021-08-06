@@ -49,7 +49,7 @@ public abstract class DetailsPanel extends Composite {
     protected Widget getErrorMessage(){
         FlowPanel fp = new FlowPanel();
         fp.add(new Image(CommonImages.INSTANCE.exclamation()));
-        fp.add(new InlineLabel("Data could no be loaded"));
+        fp.add(new InlineLabel("Data could not be loaded"));
         return fp;
     }
 
