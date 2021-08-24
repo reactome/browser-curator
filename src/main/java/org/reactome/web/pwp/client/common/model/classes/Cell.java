@@ -6,7 +6,6 @@ import org.reactome.web.pwp.client.common.model.factory.DatabaseObjectFactory;
 import org.reactome.web.pwp.client.common.model.factory.DatabaseObjectUtils;
 import org.reactome.web.pwp.client.common.model.factory.SchemaClass;
 import org.reactome.web.pwp.client.common.model.images.DatabaseObjectImages;
-import org.reactome.web.pwp.client.common.utils.Console;
 
 import java.util.LinkedList;
 import java.util.List;
