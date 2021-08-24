@@ -21,10 +21,10 @@ public abstract class LocationHelper {
             if(hostName.equals("www.reactome.org") || hostName.equals("reactome.org")){
                 return Location.PRODUCTION;
             }
-            if(hostName.equals("reactomedev.oicr.on.ca")){
+            if(hostName.equals("dev.reactome.org")){
                 return Location.DEV;
             }
-            if(hostName.equals("reactomecurator.oicr.on.ca")){
+            if(hostName.equals("curator.reactome.org")){
                 return Location.CURATOR;
             }
         }
