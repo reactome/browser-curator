@@ -70,7 +70,7 @@ public class DiagramDisplay extends DockLayoutPanel implements Diagram.Display,
     @Override
     public void loadCellLineagePath(CellLineagePath cellLineagePath) {
         this.selectedDBIds.clear();
-        //this.diagram.setCellLineagePath(cellLineagePath.getDbId());
+        this.diagram.setCellLineagePath(cellLineagePath.getDbId());
     }
 
     @Override

@@ -29,7 +29,7 @@ public class DiagramPresenter extends AbstractPresenter implements Diagram.Prese
 
     private Diagram.Display display;
 
-    private Pathway displayedPathway;
+    private Event displayedPathwayOrCellLineagePath;
 
     private Event event;
     private DatabaseObject selected;
@@ -147,11 +147,11 @@ public class DiagramPresenter extends AbstractPresenter implements Diagram.Prese
         DatabaseObjectFactory.get(dbId, new DatabaseObjectCreatedHandler() {
             @Override
             public void onDatabaseObjectLoaded(DatabaseObject databaseObject) {
-                displayedPathway = (Pathway) databaseObject;
-                if (Objects.equals(event, displayedPathway)) {
+                setDisplayedPathwayOrCellLineagePath(databaseObject);
+                if (Objects.equals(event, displayedPathwayOrCellLineagePath)) {
                     updateView();
                 } else {
-                    event = displayedPathway;
+                    event = displayedPathwayOrCellLineagePath;
                     Selection selection = new Selection(event, new Path());
                     eventBus.fireEventFromSource(new DatabaseObjectSelectedEvent(selection), DiagramPresenter.this);
                 }
@@ -159,7 +159,7 @@ public class DiagramPresenter extends AbstractPresenter implements Diagram.Prese
 
             @Override
             public void onDatabaseObjectError(Throwable exception) {
-                displayedPathway = null;
+                displayedPathwayOrCellLineagePath = null;
             }
         });
     }
@@ -167,7 +167,7 @@ public class DiagramPresenter extends AbstractPresenter implements Diagram.Prese
     private void loadCurrentDiagram(){
         if (this.event == null) {
             Console.warn("Undetermined event for diagram...", this);
-        } else if (!Objects.equals(event, displayedPathway)) {
+        } else if (!Objects.equals(event, displayedPathwayOrCellLineagePath)) {
             if (this.event instanceof Pathway) {
                 this.display.loadPathway((Pathway) this.event);
             } else if (this.event instanceof CellLineagePath) {
@@ -185,5 +185,15 @@ public class DiagramPresenter extends AbstractPresenter implements Diagram.Prese
         this.display.select(this.selected);
         display.setAnalysisToken(analysisStatus);
         display.flag(this.flag);
+    }
+
+    private void setDisplayedPathwayOrCellLineagePath(DatabaseObject databaseObject) {
+        if (databaseObject instanceof Pathway) {
+            displayedPathwayOrCellLineagePath = (Pathway) databaseObject;
+        } else if (databaseObject instanceof CellLineagePath) {
+            displayedPathwayOrCellLineagePath = (CellLineagePath) databaseObject;
+        } else {
+            Console.warn("Unknown database object type for displaying diagram " + databaseObject);
+        }
     }
 }
