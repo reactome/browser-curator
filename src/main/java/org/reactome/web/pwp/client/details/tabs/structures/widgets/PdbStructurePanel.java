@@ -46,6 +46,6 @@ public class PdbStructurePanel extends StructuresPanel<ReferenceSequence> implem
 
     public void setEmpty() {
         this.container.clear();
-        this.container.add(new HTMLPanel("Object does not contains proteins to show structures"));
+        this.container.add(new HTMLPanel("Object does not contain proteins to show structures"));
     }
 }
